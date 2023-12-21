@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<style>
+
+.card {
+  width: 350px;
+  padding: 10px;
+  border-radius: 20px;
+  background: #fff;
+  border: none;
+  height: 450px;
+  position: relative;
+}
+
+.container {
+  height: 100vh;
+}
+
+body {
+  background: #eee;
+}
+
+.text {
+  color: black;
+  font-size: 15px;
+}
+
+.form-control {
+  margin-right: 12px;
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #17815e;
+  outline: 0;
+  box-shadow: none;
+}
+
+.cursor {
+  cursor: pointer;
+}
+.texts{
+    color:#17815e
+}
+.resend{
+  border: 1px solid #17815e;
+  color:#17815e;
+  text-decoration: none;
+}
+.resend:visited{
+  color:#17815e
+}
+#otpDisplay{
+  font-size: 15px;
+  color: #d10000;
+}
+/* #otpInput:hover{
+  border: 2px solid #666666;
+} */
+</style>
+
+</head>
+<body>
+    
+    <form action="/verifyotp" method="post">
+    <div class="d-flex justify-content-center align-items-center container">
+        <div class="card py-5 px-3">
+            <p class="m-0 fw-bold mb-3"><b>OTP VERIFICATION</b></p><span class="text" >Enter the code we just send on your email
+               <b> <% if(locals.emails) { %>
+                    <%=locals.emails %>
+               <% } %>
+              </b></span>
+             
+              
+              <input type="hidden" name="email" id="email" value="<%= email %>">
+            <div class="d-flex flex-row mt-5"><input id="otpInput" type="text" class="form-control" autofocus="" name="otp"></div>
+            <div class="text-center mt-5"><span class="d-block mobile-text"></span><span class="font-weight-bold text-danger cursor"></span></div>
+          
+           <% if(locals.error) { %>
+            <p class="error text text-danger"><%= locals.error %></p>
+            <% } %>
+            <p id="otpDisplay" ></p>
+            <% if(locals.timeout){ %>
+              <p class="text text-danger"><%= timeout %></p>
+            <% } %>
+           <a href="/resendotp" class="resend btn" style="display: none;">Resend</a>
+            <br>
+
+            <% if(locals.otpExpiration) { %>
+            <input id="otp" type="hidden" name="exp" class="text text-danger" value=" <%= locals.otpExpiration %> ">
+            <% } %>
+            <button class="btn btn-success">verifyotp</button>
+            
+        </div>
+    </div>
+</form>
+<script>
+const otpExpirationn = document.getElementById('otp').value 
+const email = document.getElementById('email').value
+const otpExpiration =  otpExpirationn ;
+  const otpDisplay = document.getElementById('otpDisplay');
+  const otpInput = document.getElementById('otpInput');
+  const resendOtp = document.querySelector('.resend')
+
+  resendOtp.addEventListener('click',function(event){
+    event.preventDefault();
+    fetch('/resendotp',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+      },
+      body:JSON.stringify({email:email}),
+    })
+    .then(response => {
+      window.location.reload();
+})
+.then(data => {
+    console.log(data);
+  
+})
+
+    .catch(error =>{
+    console.log(error)
+  })
+  })
+
+  function updateTimer() {
+      const currentTime = Date.now();
+      const timeRemaining = Math.max(0, otpExpiration - currentTime);
+
+      if (timeRemaining <= 0) {
+          otpDisplay.innerHTML = 'Otp has been timedout, please request for newone';
+          resendOtp.style.display="block"
+      } else {
+          const secondsRemaining = Math.ceil(timeRemaining / 1000);
+          otpDisplay.innerHTML = `Time remaining: ${secondsRemaining} seconds`;
+          setTimeout(updateTimer, 1000); 
+      }
+  }
+
+  updateTimer();
+
+    // function displayErrorMessage(errorMessage){
+    //   errorMessage.innerHTML = errorMessage;
+    // }
+    // displayErrorMessage();
+  
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+</body>
+</html>

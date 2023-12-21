@@ -21,9 +21,9 @@ const userSchema = mongoose.Schema({
     otp:{
         type:String,
     },
-    is_admin:{
-        type:Number,
-        default:0
+    is_active:{
+        type:Boolean,
+        default:true,
     }
 })
 const user = mongoose.model('User',userSchema)

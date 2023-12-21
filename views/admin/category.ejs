@@ -1,0 +1,355 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/admin-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <!-- -----------------------include------------------- -->
+    <%- include('sidenav') %>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="/admin-assets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="/admin-assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="/admin-assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="/admin-assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin-assets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Categories </h2>
+                    <p>Add, edit or delete a category</p>
+                </div>
+                <div>
+                    <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form id="form" method="post" action="/admin/category">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label" >categoreies</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="name" name="name"/>
+                                    <p class="text text-danger" style="display:none" id="categoryError"></p>
+                                  
+                                </div>
+                               
+                                <div class="mb-4">
+                                    <label class="form-label">Main</label>
+                                        
+                                        <select class="form-select"  id="parent" name="parent">
+                                            <option>Clothing</option>
+                                            </select>
+                                        
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Type here" class="form-control"  id="description" name="description"></textarea>
+                                    <p class="text text-danger" style="display:none" id="descriptionError"></p>
+                                </div>
+                             
+                                <div class="d-grid">
+                                    <button class="btn btn-primary" type="submit">Create category</button>
+                                
+                                </div> 
+                            </form>
+                            <p class="text text-danger"></p>
+                           
+                                <%if(locals.msg){ %>
+                                
+                                <script>
+                                Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Something went wrong!",
+                                footer: '<a href="#">Why do I have this issue?</a>'
+                                });
+
+                                </script>
+
+                                <% } %>
+
+
+                        </div>
+                        <div class="col-md-9">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                <!-- <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" />
+                                                </div> -->
+                                            </th>
+                                            <!-- <th>ID</th> -->
+                                            <th>Name</th>
+                                            <th>Parent Category</th>
+                                            <th>stock</th>
+                                            <th>Description</th>
+                                            <th class="text-end">Edit/Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <% if(locals.category){ %>
+                                        <% for(i=0;i<category.length;i++){ %>
+
+                                       
+                                        <tr>
+                                            <td class="text-center">
+                                                <!-- <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" />
+                                                </div> -->
+                                            </td>
+                                            <!-- <td>21</td> -->
+                                            <td><b><%=category[i].name%></b></td>
+                                            
+                                            <td><b><%=category[i].parent%></b></td> 
+                                            <% if(category[i].is_active==true){ %>
+                                                <td><span class="badge rounded-pill alert-success">in stock</span></td>
+                                                <%  }else{ %>
+                                                    <td><span class="badge rounded-pill alert-danger">not in stock</span></td>  
+                                                <%}%> 
+                                            <!-- <td>Men clothes</td>
+                                            <td>/men</td> -->
+                                            <td><%=category[i].description%></td>
+                                            <td class="text-end">
+                                                <div class="dropdown">
+                                                    <!-- <a href="#" data-bs-toggle="dropdown" class="btn btn-primary rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i>Block</a> -->
+                                                  <% if(category[i].is_active==true){ %>
+                                                        <button class="btn btn-sm btn-danger" onclick="blockproduct(`<%=category[i]._id%>`)">block</button>
+                                                  <%  }else{ %>
+                                                    <button class="btn btn-sm btn-brand" onclick="unblockProduct(`<%=category[i]._id%>`)">unblock</button>
+                                                  <% } %>
+                                                  <!-- <button class="btn btn-sm btn-brand">Edit</button> -->
+                                                  <a href="/admin/editcategory?id=<%= category[i]._id %>" class="btn btn-sm btn-brand">Edit</a>
+
+                                                    
+                                                    <!-- <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#">View detail</a>
+                                                        <a class="dropdown-item" href="#">Edit info</a>
+                                                        <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                    </div> -->
+                                                </div> <!-- dropdown //end -->
+                                            </td>
+                                        </tr>
+                                        <% } } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- .col// -->
+                    </div> <!-- .row // -->
+                </div> <!-- card body .// -->
+            </div> <!-- card .// -->
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <!-- <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div> -->
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+   <script>
+
+ function blockproduct(categoryId){
+        Swal.fire({
+  title: "Are you sure?",
+  text: "you Really want to Block the category!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes, block it!"
+}).then((result) => {
+  if (result.isConfirmed) {
+    Swal.fire({
+      title: "Blocked!",
+      text: "The category has been blocked.",
+      icon: "success"
+    }).then((result)=>{
+        if(result.isConfirmed){
+            fetch('/admin/blockcategory',{
+                method:"PATCH",
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({categoryId})
+            }).then(response=>response.json).then(data=>{
+                window.location.reload()
+                console.log(data.message)
+            })
+        }
+    })
+  }
+});
+}
+
+function unblockProduct(categoryId){
+    Swal.fire({
+  title: "Are you sure?",
+  text: "DO you really need to unblock this category!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "yes unblock it!"
+}).then((result) => {
+  if (result.isConfirmed) {
+    Swal.fire({
+      title: "Unblocked!",
+      text: "Your have been unblocked the category.",
+      icon: "success"
+    }).then((result)=>{
+        if(result.isConfirmed){
+            fetch('/admin/unblockcategory',{
+                method:"PATCH",
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({categoryId})
+            }).then(response=>response.json).then(data=>{
+                window.location.reload()
+                console.log(data.message)
+            })
+        }
+    })
+  }
+});
+}
+   </script>
+<script>
+
+const category = document.getElementById('name')
+const categoryError = document.getElementById('categoryError')
+const description = document.getElementById('description')
+const descriptionError = document.getElementById('descriptionError')
+const form = document.getElementById('form')
+
+function validateCategory(){
+    const categorypattern = /^[a-zA-Z][a-zA-Z ]*$/
+    if(categorypattern.test(category.value)){
+            categoryError.innerHTML=''
+  
+    }else{
+        categoryError.innerHTML='must contain only letters'
+        categoryError.style.display='block'
+        setTimeout(() => {
+            categoryError.style.display='none'
+        }, 3000);
+    }
+}
+function validateDescription(){
+    const descriptionpattern = /^[^\s][\s\S]*$/
+     if(descriptionpattern.test(description.value)){
+        descriptionError.innerHTML=''
+     }else{
+        descriptionError.innerHTML='cannot contain space'
+        descriptionError.style.display='block'
+        setTimeout(() => {
+            description.style.display='none'
+        }, 3000);
+     }
+}
+
+
+form.addEventListener('blur',(event)=>{
+    validateCategory();
+    validateDescription()
+
+    if(categoryError.innerHTML||descriptionError.innerHTML){
+        event.preventDefault()
+    }
+})
+
+category.addEventListener('blur',validateCategory)
+description.addEventListener('blur',validateDescription)
+
+</script>
+    <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+</html>
