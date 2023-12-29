@@ -5,7 +5,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:31 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
+    <title>Wild Monkey Clothing</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,60 +25,7 @@
     <%- include('sidenav') %>
 
     <main class="main-wrap">
-        <header class="main-header navbar">
-            <div class="col-search">
-                <form class="searchform">
-                    <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
-                    </div>
-                    <datalist id="search_terms">
-                        <option value="Products">
-                        <option value="New orders">
-                        <option value="Apple iphone">
-                        <option value="Ahmed Hassan">
-                    </datalist>
-                </form>
-            </div>
-            <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon" href="#">
-                            <i class="material-icons md-notifications animation-shake"></i>
-                            <span class="badge rounded-pill">3</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
-                    </li>
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                            <a class="dropdown-item text-brand" href="#"><img src="/admin-assets/imgs/theme/flag-us.png" alt="English">English</a>
-                            <a class="dropdown-item" href="#"><img src="/admin-assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
-                            <a class="dropdown-item" href="#"><img src="/admin-assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
-                            <a class="dropdown-item" href="#"><img src="/admin-assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
-                        </div>
-                    </li>
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin-assets/imgs/people/avatar2.jpg" alt="User"></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </header>
+        <%- include('adminheader') %>
         <section class="content-main">
             <div class="row">
                 <div class="col-9">
@@ -96,79 +43,59 @@
                             <h4>Basic</h4>
                         </div>
                         <div class="card-body">
-                            <form method="post" action="/admin/addproduct" enctype="multipart/form-data">
+                            <form id="form" method="post" action="/admin/addproduct" enctype="multipart/form-data">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="name">
+                                    <input type="text" placeholder="Type here" class="form-control" id="name" name="name">
+                                    <p class="text text-danger"  id="productError"></p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label"> description</label>
-                                    <textarea placeholder="Type here" class="form-control" rows="4" name="description"></textarea>
+                                    <textarea placeholder="Type here" class="form-control" id="description" rows="4" name="description"></textarea>
+                                    <p class="text text-danger" style="display:none" id="descriptionError"></p>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label" >sale price</label>
                                             <div class="row gx-2">
-                                                <input placeholder="$" name="saleprice" type="text" class="form-control">
+                                                <input placeholder="$" name="saleprice" type="text" id="saleprice" class="form-control" >
+                                                <p class="text text-danger" style="display:none" id="salepriceError"></p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label" >regular price</label>
-                                            <input placeholder="$" name="regularprice" type="text" class="form-control">
+                                            <input placeholder="$" name="regularprice" type="text" id="regularprice" class="form-control" >
+                                            <p class="text text-danger" style="display:none" id="regularpriceError"></p>
+                                            <p class="text text-danger" style="display:none" id="lesserPriceError" oninput="validateBothPrices()"></p>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
-                                        <!-- <div class="mb-4">
-                                            <label class="form-label" >size</label>
-                                            <input placeholder="$" name="regularprice" type="text" class="form-control">
-                                        </div> -->
+                                        
                                     </div>
-                                    <!-- <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label" >size</label> -->
-                                            <!-- <input placeholder="$" name="regularprice" type="text" class="form-control"> -->
-                                            <!-- <select class="form-select" name="">
-                                                <option selected>small</option>
-                                                <option>Medium</option>
-                                                <option>Large</option> -->
-                                                <!-- <option>Show all</option> -->
-                                            <!-- </select>
-                                        </div>
-                                    </div> -->
+                                    
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Small quantity</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_name" name="small">
+                                        <input type="text" placeholder="Type here" class="form-control" id="small" name="small">
+                                        <p class="text text-danger" style="display:none" id="smallError"></p>
                                     </div>
-                                    <div class="mb-4">
+                                    <div class="mb-4">  
                                         <label for="product_name" class="form-label">medium quantity</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_name" name="medium">
+                                        <input type="text" placeholder="Type here" class="form-control" id="medium" name="medium">
+                                        <p class="text text-danger" style="display:none" id="mediumError"></p>
                                     </div>
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">large quantity</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_name" name="large">
+                                        <input type="text" placeholder="Type here" class="form-control" id="large" name="large">
+                                        <p class="text text-danger" style="display:none" id="largeError"></p>
                                     </div>
-                                    <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">upload</button>
-                                    <!-- <div class="col-lg-4">
-                                        <label class="form-label">Currency</label>
-                                        <select class="form-select">
-                                            <option> USD </option>
-                                            <option> EUR </option>
-                                            <option> RUBL </option>
-                                        </select>
-                                    </div> -->
+                                    <button class="btn btn-light rounded font-sm mr-5 text-body hover-up" id="btn"  >upload</button>
+                                    <p class="text text-danger" style="display:none" id="submitError"></p>
+                                   
                                 </div>
-                                <!-- <div class="mb-4">
-                                    <label class="form-label">Tax rate</label>
-                                    <input type="text" placeholder="%" class="form-control" id="product_name">
-                                </div> -->
-                                <!-- <label class="form-check mb-4">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-label"> Make a template </span>
-                                </label> -->
-                            <!-- </form> -->
+                              
                         </div>
                     </div> <!-- card end// -->
                      <!-- card end// -->
@@ -180,9 +107,9 @@
                         </div>
                         <div class="card-body">
                             <div class="input-upload">
-                                <img src="/admin-assets/imgs/theme/upload.svg" alt="">
-                                <input class="form-control" type="file" name="image" multiple accept="image/*">
-
+                                <img id="imagePreview" src="" alt="Preview">
+                                <input id="imageInput" class="form-control" type="file" name="image" multiple accept="image/*" onchange="imagePreview()">
+                                    
                             </div>
                         </div>
                     </div> <!-- card end// -->
@@ -191,15 +118,8 @@
                             <div class="row gx-2">
                                 <div class="col-sm-6 mb-3">
                                     <label class="form-label">Category</label>
-                                    <!-- <select class="form-select">
-                                        <option> Automobiles </option>
-                                        <option> Home items </option>
-                                        <option> Electronics </option>
-                                        <option> Smartphones </option>
-                                        <option> Sport items </option>
-                                        <option> Baby and Tous </option>
-                                    </select> -->
-                                    <select name="category" class="form-select">
+                                   
+                                    <select id="category" name="category" class="form-select">
                                     <%if(locals.category){%>
                                        <%for(let i=0;i<category.length;i++){%>
 
@@ -207,19 +127,7 @@
                                 <%}}%>
                             </select>
                                 </div>
-                                <!-- <div class="col-sm-6 mb-3">
-                                    <label class="form-label">Sub-category</label>
-                                    <select class="form-select">
-                                        <option> Nissan </option>
-                                        <option> Honda </option>
-                                        <option> Mercedes </option>
-                                        <option> Chevrolet </option>
-                                    </select>
-                                </div> -->
-                                <!-- <div class="mb-4">
-                                    <label for="product_name" class="form-label">Tags</label>
-                                    <input type="text" class="form-control">
-                                </div> -->
+                              
                             </div> <!-- row.// -->
                         </div>
                     </div> <!-- card end// -->
@@ -243,6 +151,220 @@
             </div>
         </footer>
     </main>
+    <script>
+        const form = document.getElementById('form');
+        const product = document.getElementById('name');
+        const productError = document.getElementById('productError');
+        const description = document.getElementById('description');
+        const descriptionError = document.getElementById('descriptionError');
+        const saleprice = document.getElementById('saleprice');
+        const salepriceError = document.getElementById('salepriceError');
+        const regularprice = document.getElementById('regularprice');
+        const regularpriceError = document.getElementById('regularpriceError');
+        const ifsmallpriceError = document.getElementById('ifsmallpriceError');
+        const small = document.getElementById("small");
+        const smallError = document.getElementById("smallError")
+        const medium = document.getElementById("medium");
+        const mediumError = document.getElementById("mediumError")
+        const large = document.getElementById("large");
+        const largeError = document.getElementById("largeError")
+        const category = document.getElementById('category').value
+        const lesserPriceError = document.getElementById('lesserPriceError')
+        // const submitError = document.getElementById("submitError")
+        // const button = document.getElementById('btn')
+    
+
+
+
+        function validateBothPrices(){
+            const regularPriceValue = parseFloat(regularprice.value);
+            const salePriceValue = parseFloat(saleprice.value);
+            if( regularPriceValue<=salePriceValue){
+                lesserPriceError.innerHTML = 'Regular price must be greater than or equal to sale price.';
+            lesserPriceError.style.display = 'block';
+            }
+        }
+
+
+        function validateProduct() {
+            const productpattern = /^[a-zA-Z][a-zA-Z ]*$/;
+            if (productpattern.test(product.value)) {
+                productError.innerHTML = '';
+            } else {
+                productError.innerHTML = 'Must contain only letters';
+                // productError.style.display = 'block';
+                // setTimeout(() => {
+                //     productError.style.display = 'none';
+                // }, 3000);
+            }
+        }
+    
+        function validateDescription() {
+            const descriptionpattern = /^[^\s][\s\S]*$/;
+            if (descriptionpattern.test(description.value)) {
+                descriptionError.innerHTML = '';
+            } else {
+                descriptionError.innerHTML = 'Invalid input';
+                descriptionError.style.display = 'block';
+                setTimeout(() => {
+                    descriptionError.style.display = 'none';
+                }, 3000);
+            }
+        }
+    
+        function validatesaleSalePrice() {
+            const salepricepattern = /^(?!-)[₹]?\d+$/;
+            if (salepricepattern.test(saleprice.value)) {
+                salepriceError.innerHTML = '';
+            } else {
+                salepriceError.innerHTML = 'Invalid input';
+                salepriceError.style.display = 'block';
+                setTimeout(() => {
+                    salepriceError.style.display = 'none';
+                }, 3000);
+            }
+        }
+    
+        function validateRegularPrice() {
+            const regularpricepattern = /^(?!-)[₹]?\d+$/;
+            if (regularpricepattern.test(regularprice.value)) {
+                regularpriceError.innerHTML = '';
+            } else {
+                regularpriceError.innerHTML = 'Invalid input';
+                regularpriceError.style.display = 'block';
+                setTimeout(() => {
+                    regularpriceError.style.display = 'none';
+                }, 3000);
+            }
+        }
+    
+        function validateSmallQuantity() {
+    const smallPattern = /^\d+$/;
+
+    // Check if the quantity field is empty
+    if (small.value.trim() === '') {
+        smallError.innerHTML = 'Quantity field cannot be empty';
+    } else {
+        // Check if the input matches the numeric pattern
+        if (smallPattern.test(small.value)) {
+            smallError.innerHTML = '';
+        } else {
+            smallError.innerHTML = 'Invalid input. Please enter a valid quantity.';
+        }
+    }
+
+    // Display the error message if any, and set a timeout to hide it
+    smallError.style.display = smallError.innerHTML ? 'block' : 'none';
+    setTimeout(() => {
+        smallError.style.display = 'none';
+    }, 3000);
+}
+
+function validateMediumQuantity() {
+    const mediumPattern = /^\d+$/;
+
+    // Check if the quantity field is empty
+    if (medium.value.trim() === '') {
+        mediumError.innerHTML = 'Quantity field cannot be empty';
+    } else {
+        // Check if the input matches the numeric pattern
+        if (mediumPattern.test(medium.value)) {
+            mediumError.innerHTML = '';
+        } else {
+            mediumError.innerHTML = 'Invalid input. Please enter a valid quantity.';
+        }
+    }
+
+    // Display the error message if any, and set a timeout to hide it
+    mediumError.style.display = mediumError.innerHTML ? 'block' : 'none';
+    setTimeout(() => {
+        mediumError.style.display = 'none';
+    }, 3000);
+}
+        // function largeQuantity() {
+        //    const largepattern =  /^\d+$/
+        //    if(large.value.trim()===''){
+        //     largeError.innerHTML="quantity field cant be empty"
+        //    }
+        //        if(largepattern.test(large.value)){
+        //         largeError.innerHTML=''
+        //        }else{
+        //         largeError.innerHTML = 'Invalid input';
+        //             largeError.style.display = 'block';
+        //             setTimeout(() => {
+        //                 largeError.style.display = 'none';
+        //             }, 3000);
+        //        }
+        // }
+   function validateLargeQuantity(){
+   const  largePattern = /^\d+$/;
+    if(large.value.trim()===''){
+        largeError.innerHTML='Quantity fields cant be empty'
+    }else{
+        if(largePattern.test(large.value)){
+            largeError.innerHTML=''
+        }else{
+            largeError.innerHTML='invalid input. Please enter a valid input'
+        }
+    }
+    largeError.style.display = largeError.innerHTML ? "block" : "none"
+    setTimeout(()=>{
+        largeError.style.display="none"
+    },3000)
+
+   }
+    form.addEventListener('submit', function(event){
+            validateProduct();
+            validateDescription();
+            validatesaleSalePrice();
+            validateRegularPrice();
+            validateSmallQuantity();
+            validateMediumQuantity();
+            validateLargeQuantity();
+            validateBothPrices()
+        
+
+    
+            if(productError.innerHTML||descriptionError.innerHTML||salepriceError.innerHTML||regularpriceError.innerHTML||smallError.innerHTML||mediumError.innerHTML||largeError.innerHTML||lesserPriceError.innerHTML){
+                console.log("submitting prevented")
+                event.preventDefault();
+              
+                setTimeout(() => {
+            window.location.href='/admin/addproduct'
+        }, 200);
+            }
+        });
+    
+        product.addEventListener('blur', validateProduct);
+        description.addEventListener('blur', validateDescription);
+        saleprice.addEventListener('blur', validatesaleSalePrice);
+        regularprice.addEventListener('blur', validateRegularPrice);
+        small.addEventListener('blur',validateSmallQuantity)
+        medium.addEventListener('blur',validateMediumQuantity)
+        large.addEventListener('blur',validateLargeQuantity)
+        // validateBothPrices.addEventListener('blur',)
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const preview = document.getElementById('imagePreview');
+const input = document.getElementById('imageInput');
+
+function imagePreview() {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader(); 
+
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+        };
+
+        reader.readAsDataURL(input.files[0]); 
+    }
+}
+input.addEventListener('change', imagePreview);
+});
+
+
+    </script>
     <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin-assets/js/vendors/select2.min.js"></script>

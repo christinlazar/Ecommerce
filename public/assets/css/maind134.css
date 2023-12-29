@@ -242,6 +242,7 @@ input[type=number]:focus,
 
 .border-radius-10 {
   border-radius: 10px;
+  background-color:white;
 }
 
 .border-radius-20 {
@@ -6447,7 +6448,7 @@ h6.post-title {
 .header-style-1 .header-top-ptb-1 {
   padding: 13px 0;
   border-bottom: 3px solid #39b4ac;
-  background-color: #d8f4e2;
+  background-color:#ffffff;
   background-image: none;
 }
 

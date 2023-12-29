@@ -5,7 +5,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:31 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
+    <title>Wild Monkey Clothing</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -100,80 +100,60 @@
                             <h4>Basic</h4>
                         </div>
                         <div class="card-body">
-                            <form method="post" action="" enctype="multipart/form-data">
+                            <form id="form" method="post" action="" enctype="multipart/form-data">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Name</label>
+                                    <label for="product_name" class="form-label"> Product Name</label>
                                     <input type="text" placeholder="Type here" class="form-control" id="product_name" name="name" value="<%=product.name%>">
+                                    <p class="text text-danger"  id="productError"></p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label"> description</label>
                                     <!-- <textarea placeholder="Type here" class="form-control" rows="4" name="description" value="<%=product.description%>"></textarea> -->
                                     <input type="text" placeholder="Type here" class="form-control" id="description" name="description" value="<%=product.description%>">
+                                    <p class="text text-danger" style="display:none" id="descriptionError"></p>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label" >sale price</label>
                                             <div class="row gx-2">
-                                                <input placeholder="" name="saleprice" type="text" class="form-control" value="<%=product.price.saleprice%>">
+                                                <input placeholder="" name="saleprice" type="text" class="form-control" id="saleprice" value="<%=product.price.saleprice%>">
+                                                <p class="text text-danger" style="display:none" id="salepriceError"></p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label" >regular price</label>
-                                            <input placeholder="" name="regularprice" type="text" class="form-control" value="<%=product.price.regularprice%>">
+                                            <input placeholder="" name="regularprice" type="text" class="form-control" id="regularprice" value="<%=product.price.regularprice%>">
+                                            <p class="text text-danger" style="display:none" id="regularpriceError"></p>
+                                            <p class="text text-danger" style="display:none" id="lesserPriceError" oninput="validateBothPrices()"></p>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
-                                        <!-- <div class="mb-4">
-                                            <label class="form-label" >size</label>
-                                            <input placeholder="$" name="regularprice" type="text" class="form-control">
-                                        </div> -->
+                                      
                                     </div>
-                                    <!-- <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label" >size</label> -->
-                                            <!-- <input placeholder="$" name="regularprice" type="text" class="form-control"> -->
-                                            <!-- <select class="form-select" name="">
-                                                <option selected>small</option>
-                                                <option>Medium</option>
-                                                <option>Large</option> -->
-                                                <!-- <option>Show all</option> -->
-                                            <!-- </select>
-                                        </div>
-                                    </div> -->
+                                 
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Small quantity</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_name" name="small" value="<%=product.size.s.quantity%>">
+                                        <input type="text" placeholder="Type here" class="form-control" id="product_name1" name="small" value="<%=product.size.s.quantity%>">
+                                        <p class="text text-danger" style="display:none" id="smallError"></p>
                                     </div>
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">medium quantity</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_name" name="medium" value="<%=product.size.m.quantity%>">
+                                        <input type="text" placeholder="Type here" class="form-control" id="product_name2" name="medium" value="<%=product.size.m.quantity%>">
+                                        <p class="text text-danger" style="display:none" id="mediumError"></p>
                                     </div>
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">large quantity</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_name" name="large" value="<%=product.size.l.quantity%>">
+                                        <input type="text" placeholder="Type here" class="form-control" id="product_name3" name="large" value="<%=product.size.l.quantity%>">
+                                        <p class="text text-danger" style="display:none" id="largeError"></p>
                                     </div>
                                     <button type="submit" class="btn btn-light rounded font-sm mr-5 text-body hover-up">update</button>
-                                    <!-- <div class="col-lg-4">
-                                        <label class="form-label">Currency</label>
-                                        <select class="form-select">
-                                            <option> USD </option>
-                                            <option> EUR </option>
-                                            <option> RUBL </option>
-                                        </select>
-                                    </div> -->
+                                    
+                                  
                                 </div>
-                                <!-- <div class="mb-4">
-                                    <label class="form-label">Tax rate</label>
-                                    <input type="text" placeholder="%" class="form-control" id="product_name">
-                                </div> -->
-                                <!-- <label class="form-check mb-4">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-label"> Make a template </span>
-                                </label> -->
-                            <!-- </form> -->
+                               
                         </div>
                     </div> <!-- card end// -->
                      <!-- card end// -->
@@ -208,19 +188,7 @@
                                        <% } %>
                             </select>
                                 </div>
-                                <!-- <div class="col-sm-6 mb-3">
-                                    <label class="form-label">Sub-category</label>
-                                    <select class="form-select">
-                                        <option> Nissan </option> 
-                                        <option> Honda </option>
-                                        <option> Mercedes </option>
-                                        <option> Chevrolet </option>
-                                    </select>
-                                </div> -->
-                                <!-- <div class="mb-4">
-                                    <label for="product_name" class="form-label">Tags</label>
-                                    <input type="text" class="form-control">
-                                </div> -->
+                               
                             </div> <!-- row.// -->
                         </div>
                     </div> <!-- card end// -->
@@ -259,8 +227,183 @@
                 console.log(data.message)
             })
         }
-
     </script>
+        <script>
+            const form = document.getElementById('form');
+            const product = document.getElementById('product_name');
+            const productError = document.getElementById('productError');
+            const description = document.getElementById('description');
+            const descriptionError = document.getElementById('descriptionError');
+            const saleprice = document.getElementById('saleprice');
+            const salepriceError = document.getElementById('salepriceError');
+            const regularprice = document.getElementById('regularprice');
+            const regularpriceError = document.getElementById('regularpriceError');
+            const ifsmallpriceError = document.getElementById('ifsmallpriceError');
+            const small = document.getElementById("product_name1");
+            const smallError = document.getElementById("smallError")
+            const medium = document.getElementById("product_name2");
+            const mediumError = document.getElementById("mediumError")
+            const large = document.getElementById("product_name3");
+            const largeError = document.getElementById("largeError")
+            const submitError = document.getElementById("submitError")
+            const button = document.getElementById('btn')
+            const lesserPriceError = document.getElementById('lesserPriceError')
+
+
+
+
+            function validateBothPrices(){
+                const regular = parseFloat(regularprice.value)
+                const sale = parseFloat(saleprice.value)
+            if(regular<sale){
+                lesserPriceError.innerHTML = 'Regular price must be greater than or equal to sale price.';
+            lesserPriceError.style.display = 'block';
+            }
+        }
+        
+            function validateProduct() {
+                const productpattern = /^[a-zA-Z][a-zA-Z ]*$/;
+                if (productpattern.test(product.value)) {
+                    productError.innerHTML = '';
+                } else {
+                    productError.innerHTML = 'Must contain only letters';
+                    // productError.style.display = 'block';
+                    // setTimeout(() => {
+                    //     productError.style.display = 'none';
+                    // }, 3000);
+                }
+            }
+        
+            function validateDescription() {
+                const descriptionpattern = /^[^\s][\s\S]*$/;
+                if (descriptionpattern.test(description.value)) {
+                    descriptionError.innerHTML = '';
+                } else {
+                    descriptionError.innerHTML = 'Invalid input';
+                    descriptionError.style.display = 'block';
+                    setTimeout(() => {
+                        descriptionError.style.display = 'none';
+                    }, 3000);
+                }
+            }
+        
+            function validatesaleSalePrice() {
+                const salepricepattern = /^(?!-)\d+$/;
+                if (salepricepattern.test(saleprice.value)) {
+                    salepriceError.innerHTML = '';
+                } else {
+                    salepriceError.innerHTML = 'Invalid input';
+                    salepriceError.style.display = 'block';
+                    setTimeout(() => {
+                        salepriceError.style.display = 'none';
+                    }, 3000);
+                }
+            }
+        
+            function validateRegularPrice() {
+                const regularpricepattern = /^(?!-)\d+$/;
+                if (regularpricepattern.test(regularprice.value)) {
+                    regularpriceError.innerHTML = '';
+                } else {
+                    regularpriceError.innerHTML = 'Invalid input';
+                    regularpriceError.style.display = 'block';
+                    setTimeout(() => {
+                        regularpriceError.style.display = 'none';
+                    }, 3000);
+                }
+            }
+        
+            function validateSmallQuantity() {
+    const smallPattern = /^\d+$/;
+
+    // Check if the quantity field is empty
+    if (small.value.trim() === '') {
+        smallError.innerHTML = 'Quantity field cannot be empty';
+    } else {
+        // Check if the input matches the numeric pattern
+        if (smallPattern.test(small.value)) {
+            smallError.innerHTML = '';
+        } else {
+            smallError.innerHTML = 'Invalid input. Please enter a valid quantity.';
+        }
+    }
+
+    // Display the error message if any, and set a timeout to hide it
+    smallError.style.display = smallError.innerHTML ? 'block' : 'none';
+    setTimeout(() => {
+        smallError.style.display = 'none';
+    }, 3000);
+}
+
+function validateMediumQuantity() {
+    const mediumPattern = /^\d+$/;
+
+    // Check if the quantity field is empty
+    if (medium.value.trim() === '') {
+        mediumError.innerHTML = 'Quantity field cannot be empty';
+    } else {
+        // Check if the input matches the numeric pattern
+        if (mediumPattern.test(medium.value)) {
+            mediumError.innerHTML = '';
+        } else {
+            mediumError.innerHTML = 'Invalid input. Please enter a valid quantity.';
+        }
+    }
+
+    // Display the error message if any, and set a timeout to hide it
+    mediumError.style.display = mediumError.innerHTML ? 'block' : 'none';
+    setTimeout(() => {
+        mediumError.style.display = 'none';
+    }, 3000);
+}
+function validateLargeQuantity(){
+   const  largePattern = /^\d+$/;
+    if(large.value.trim()===''){
+        largeError.innerHTML='Quantity fields cant be empty'
+    }else{
+        if(largePattern.test(large.value)){
+            largeError.innerHTML=''
+        }else{
+            largeError.innerHTML='invalid input. Please enter a valid input'
+        }
+    }
+    largeError.style.display = largeError.innerHTML ? "block" : "none"
+    setTimeout(()=>{
+        largeError.style.display="none"
+    },3000)
+
+   }
+       
+        form.addEventListener('submit', function(event){
+                validateProduct();
+                validateDescription();
+                validatesaleSalePrice();
+                validateRegularPrice();
+                validateSmallQuantity();
+                validateMediumQuantity();
+                validateLargeQuantity();
+                validateBothPrices();
+               
+    
+        
+                if (productError.innerHTML || descriptionError.innerHTML || salepriceError.innerHTML || regularpriceError.innerHTML||small.innerHTML||mediumError.innerHTML||largeError.innerHTML||lesserPriceError.innerHTML) {
+                    event.preventDefault();
+                  
+                    setTimeout(() => {
+                window.location.href = '/admin/productlist';
+            }, 100);
+                }
+            });
+        
+            product.addEventListener('blur', validateProduct);
+            description.addEventListener('blur', validateDescription);
+            saleprice.addEventListener('blur', validatesaleSalePrice);
+            regularprice.addEventListener('blur', validateRegularPrice);
+            small.addEventListener('blur',validateSmallQuantity)
+            medium.addEventListener('blur',validateMediumQuantity)
+            large.addEventListener('blur',validateLargeQuantity)
+            lesserPriceError.addEventListener('blur',validateBothPrices)
+        </script>
     <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin-assets/js/vendors/select2.min.js"></script>

@@ -1,12 +1,13 @@
 const mongoose = require('mongoose')
 const express = require('express')
 const fs = require('fs')
+const nocache = require('nocache')
 const bodyParser = require('body-parser')
 const userRoute = require('./routes/userRoute')
 const adminRoute = require('./routes/adminRoute')
 require('dotenv').config()
 const path = require('path')
-
+// const blockAuth = require('./middleware/isblock')
 const app = express()
 
 mongoose.set('strictQuery',true)
@@ -27,6 +28,21 @@ app.use(bodyParser.json())
 app.use(express.static('public'))
 
 app.use('/uploads',express.static('uploads'))
+
+
+app.use((req, res, next) => {
+   
+    const timestamp = new Date().getTime();
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('X-Requested-With', 'XMLHttpRequest'); 
+    res.setHeader('Last-Modified', new Date().toUTCString());
+    res.setHeader('ETag', `W/"${timestamp}"`);
+    next();
+});
+
+// app.use('/',blockAuth.isBlock)
 app.use('/',userRoute)
 app.use('/admin',adminRoute)
 

@@ -53,7 +53,7 @@ margin-bottom: 25%;
                     <div class="page-header breadcrumb-wrap">
                         <div class="container">
                             <div class="breadcrumb">
-                                <a href="index.html" rel="nofollow">Home</a>
+                                <a href="/home" rel="nofollow">Home</a>
                                 <span></span> Pages
                                 <span></span> login
                             </div>
@@ -76,18 +76,35 @@ margin-bottom: 25%;
                                         <%if(locals.message){%>
                                             <p class="text text-success"><%=locals.message%></p>
                                         <%}%>
+                                        <%if(locals.blockmessage){%>
+                                            <p class="text text-danger" id="blockmessage" style="display:block"><%=locals.blockmessage%></p>
+                                            <script>
+                                                setTimeout(() => {
+                                                    document.getElementById('blockmessage').style.display="none"
+                                                },3000);
+                                            </script>
+                                        <%}%>
                                         <form id="form" method="post">
                                             <div class="form-group">
-                                                <input type="text" required="" name="email" placeholder="Your Email" id="email">
-                                                <p class="text text-danger font-sm"   id="emailError"></p>
+                                                <input type="text"  name="email" placeholder="Your Email" id="email">
+                                                <p class="text text-danger font-sm" style="display:none;"  id="emailError"></p>
                                             </div>
                                             <div class="form-group">
-                                                <input required="" type="password" name="password" placeholder="Password" id="password">
-                                                <p class="text text-danger font-sm"   id="passwordError"></p>
+                                                <input  type="password" name="password" placeholder="Password" id="password">
+                                                <p class="text text-danger font-sm" style="display: none;"   id="passwordError"></p>
+                                                <p class="text text-success font-sm" style="display: none;"   id="strongPassword"></p>
                                             </div>
                                             <% if(locals.passError){ %>
-                                                <p class="text text-danger"><%= passError %></p>
+                                                <p class="text text-danger" id="passError" style="display:block"><%= passError %></p>
+                                                <script>  
+                                                     setTimeout(() => {
+                                                        document.getElementById('passError').style.display="none"
+                                                    }, 3000);
+                                                    </script>
                                             <% } %>
+
+                                              
+
                                             <div id="write" class="login_footer form-group">
                                                 <div class="chek-form">
                                                     <div class="custome-checkbox">
@@ -147,35 +164,64 @@ margin-bottom: 25%;
         const emailError = document.getElementById('emailError')
         const password = document.getElementById('password')
         const passwordError = document.getElementById('passwordError')
+        const strongPassword = document.getElementById('strongPassword')
         const form = document.getElementById('form')
+        // const blockmessage = document.getElementById('blockmessage')
+        const passError = document.getElementById('passError')
+
+       
+     
+    
 
         function validateEmail(){
             const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if(email.value.trim() ===''){
+                emailError.innerHTML='email is not valid'
+                emailError.style.display="block"
+                setTimeout(() => {
+                    emailError.style.display="none"
+                }, 3000);
+            }
             if(!emailPattern.test(email.value)){
                 emailError.innerHTML = `Email field is not valid`;
+                emailError.style.display='block'
+                setTimeout(() => {
+                    emailError.style.display='none'
+                },3000);
             }else{
-                emailError.innerHTML = '';
+                emailError.innerHTML=''
             }
         }
 
         function validatePassword(){
             const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+]{8,}$/
+            if(password.value.trim() ===''){
+                passwordError.innerHTML='password  is not valid'
+                passwordError.style.display="block"
+                setTimeout(() => {
+                    passwordError.style.display="none"
+                }, 3000);
+            }
             if(!passwordPattern.test(password.value)){
                 passwordError.innerHTML = `Password is not valid`
+                passwordError.style.display='block'
+                setTimeout(() => {
+                passwordError.style.display='none'
+            },3000);
             }else{
-                passwordError.innerHTML = '';
+                passwordError.innerHTML = ``
             }
         }
-
         email.addEventListener('blur',validateEmail)
         password.addEventListener('blur',validatePassword)
 
         form.addEventListener('submit',function(event){
             validateEmail();
             validatePassword();
-
+         
             if(emailError.innerHTML||passwordError.innerHTML){
                 event.preventDefault();
+              
             }
         })
 

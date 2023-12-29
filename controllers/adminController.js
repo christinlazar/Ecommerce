@@ -2,6 +2,7 @@ const Admin = require('../models/adminModel')
 const User = require('../models/userModel')
 const Category = require('../models/categorymodel')
 const Product = require('../models/productModel')
+const path = require('path')
 
 
 const loadLogin = async(req,res)=>{
@@ -19,8 +20,10 @@ const postLoadLogin = async(req,res)=>{
         const password = req.body.password;
          
         const adminData = await Admin.findOne({email:email})
+        
         if(adminData){
             if(adminData.password==password){
+                req.session.admin=adminData._id
                 res.redirect('/admin/admindash')
             }else{
                 res.render('adminlogin',{message:'password is incorrect'})
@@ -69,10 +72,18 @@ const unblockUser = async(req,res)=>{
 }
 const loadCategory = async(req,res)=>{
     try {
-        const category = await Category.find({})
+        const category = await Category.find({}).sort({createdAt:-1})
         res.render('category',{category,message:''})
     } catch (error) {
     console.log(error)        
+    }
+}
+const logOut = async(req,res)=>{
+    try {
+        req.session.destroy();
+        res.redirect('/admin')
+    } catch (error) {
+    console.log(error)    
     }
 }
 
@@ -84,5 +95,6 @@ module.exports = {
     blockUser,
     unblockUser,
     loadCategory,
+    logOut,
     
 }

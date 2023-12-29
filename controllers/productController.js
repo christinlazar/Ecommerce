@@ -1,6 +1,8 @@
 const Category = require('../models/categorymodel')
 const Product = require('../models/productModel')
 const fs = require('fs')
+const sharp = require('sharp')
+const path = require('path')
 
 const categorySave = async(req,res)=>{
    try{
@@ -10,7 +12,7 @@ const categorySave = async(req,res)=>{
     const samedata = await Category.findOne({name:name})
    
     if(samedata){
-        res.render('category',{msg:true,category})
+        res.render('category',{msg:"Sorry!..This category already exists",category})
        
     }else{
             console.log("ok")
@@ -73,7 +75,8 @@ const updateEditCategory = async(req,res)=>{
 }
 const loadAddProduct = async(req,res)=>{
     try {
-        const category = await Category.find({})
+
+        const category = await Category.find({is_active:true})
         res.render('addproduct',{category})
     } catch (error) {
      console.log(error)   
@@ -114,6 +117,20 @@ const addProductDetials = async(req,res)=>{
        })
        const savedproduct = await product.save()
        console.log(savedproduct)
+       const croppedImages = await Promise.all(
+
+        images.map(async(image)=>{
+            const inputFilePath = path.join('uploads', image.filename);
+            const outputFilePath = path.join('uploads', `${path.basename(inputFilePath, path.extname(inputFilePath))}_cropped${path.extname(inputFilePath)}`);
+
+            await sharp(inputFilePath)
+            .resize(500,500, { fit: 'cover' })
+            .toFile(outputFilePath)
+            return path.basename(outputFilePath);
+        })
+       )
+       savedproduct.image = croppedImages;
+       await savedproduct.save();
        res.redirect('/admin/addproduct')
         
     } catch (error) {
@@ -122,8 +139,8 @@ const addProductDetials = async(req,res)=>{
 }
 const productList = async(req,res)=>{
    try {
-    const category = await Category.find({})
-    const product = await Product.find({})
+    const category = await Category.find({is_active:true}).sort({createdAt:-1})
+    const product = await Product.find({}).sort({added_at:-1})
     console.log("hi"+product)
     res.render('productlist',{category,product})
    } catch (error) {
@@ -139,7 +156,7 @@ const editProduct = async(req,res)=>{
         console.log(productData)
         const product = await Product.findOne({_id:id})
        
-        const category = await Category.find({})
+        const category = await Category.find({is_active:true})
       
        res.render('editproduct',{product,category,productData}) 
     } catch (error) {
@@ -199,10 +216,22 @@ try {
     const images = req.files
     const newImages = images.map(image=>image.filename)
    const {name,description,saleprice,category,regularprice,small,medium,large} = req.body
+
+   const croppedImages = await Promise.all(
+    images.map(async (image) => {
+        const inputFilePath = path.join('uploads', image.filename);
+        const outputFilePath = path.join('uploads', `${path.basename(inputFilePath, path.extname(inputFilePath))}_cropped${path.extname(inputFilePath)}`);
+
+        await sharp(inputFilePath)
+            .resize(500, 500, { fit: 'cover' })
+            .toFile(outputFilePath)
+        return path.basename(outputFilePath);
+    })
+)
     
-   if(newImages.length>=0){
+   if(newImages.length>0){
     console.log("gonna update")
-    await Product.updateOne({_id:id},{$push:{image:{$each:newImages}}})
+    await Product.updateOne({_id:id},{$push:{image:{$each:croppedImages}}})
    }
   
     await Product.findByIdAndUpdate(id,{$set:{
@@ -219,6 +248,9 @@ try {
             l:{quantity:large},
         }, 
     }})
+
+
+
    res.redirect('/admin/productlist')
 } catch (error) {
  console.log(error)   

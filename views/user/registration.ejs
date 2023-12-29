@@ -46,7 +46,7 @@
                     <div class="page-header breadcrumb-wrap">
                         <div class="container">
                             <div class="breadcrumb">
-                                <a href="index.html" rel="nofollow">Home</a>
+                                <a href="/home" rel="nofollow">Home</a>
                                 <span></span> Pages
                                 <span></span> Register
                             </div>
@@ -71,46 +71,58 @@
                                             Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our privacy policy
                                         </p> -->
                                         <% if(locals.error){ %>
-                                            <p class="text text-danger"><%= locals.error %></p>
+                                            <p class="text text-danger" style="display:block;"   id="error"><%= locals.error %></p>
                                        <%  } %>
+                                            <script>
+                                                setTimeout(() => {
+                                                    document.getElementById('error').style.display='none';
+                                                },3000);
+                                            </script>
+
+                                       <% if(locals.attempts){ %>
+                                        <p class="text text-danger"><%= locals.attempts %></p>
+                                   <%  } %>
                                         <form id="form" method="post" action="/register">
                                             <div class="form-group">
-                                                <input type="text" required="" name="name" placeholder="Username" id="name">
+                                                <input type="text"  name="name" placeholder="Username" id="name">
                                                 <p class="text text-danger font-sm"   id="nameError"></p>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" required="" name="email" placeholder="Email" id="email">
-                                                <p class="text text-danger font-sm"   id="emailError"></p>
+                                                <input type="text"  name="email" placeholder="Email" id="email">
+                                                <p class="text text-danger font-sm"    id="emailError"></p>
                                             </div>
                                             <div class="form-group">
-                                                <input required="" type="phone" name="phone" placeholder="Phone number" id="phonenumber">
+                                                <input  type="phone" name="phone" placeholder="Phone number" id="phonenumber">
                                                 <p class="text text-danger font-sm"   id="phoneError"></p>
                                             </div>
                                             <div class="form-group">
-                                                <input required="" type="password" name="password" placeholder="Password" id="password">
+                                                <input  type="password" name="password" placeholder="Password" id="password">
                                                 <p class="text text-danger font-sm"   id="passwordError"></p>
+                                                <p class="text text-success font-sm"   id="strongPassword"></p>
                                             </div>
                                             <div class="form-group">
-                                                <input required="" type="password" name="confirm_password" placeholder="Confirm_password" id="confirmerror">
+                                                <input  type="password" name="confirm_password" placeholder="Confirm_password" id="confirmerror">
                                                 <p class="text text-danger font-sm"   id="confirmPasswordError"></p>
                                                 <% if(locals.message) { %>
-                                            
-                                                   <p class="alert alert-danger"><%= locals.message %> </p> 
-   
+                                                   <p class="alert alert-danger" id="message" style="display:block;"><%= locals.message %> </p> 
+                                                   <script>
+                                                    setTimeout(() => {
+                                                        document.getElementById('message').style.display='none';
+                                                    },3000);
+                                                </script>
                                               <% } %>
                                             </div>
                                             <% if(locals.exists){ %>
-                                            
-                                                <p class="alert alert-danger"><%= locals.exists %> </p> 
-
+                                                <p style="display:block;" id="exists" class="alert alert-danger"><%= locals.exists %> </p>
+                                                <script>
+                                                    setTimeout(function() {
+                                                        document.getElementById('exists').style.display = 'none';
+                                                    }, 3000);
+                                                </script> 
                                            <% } %>
-                                           
-                                            <!-- <div class="form-group">
-                                                <input required="" type="password" name="password" placeholder="Confirm password">
-                                            </div> -->
+                                          
+                                         
                                             
-
-
                                             <div class="login_footer form-group">
                                                 <div class="chek-form">
                                                     <div class="custome-checkbox">
@@ -131,7 +143,7 @@
                                             <!-- <li><a href="#" class="btn btn-facebook hover-up mb-lg-0 mb-sm-4">Login With Facebook</a></li>
                                             <li><a href="#" class="btn btn-google hover-up">Login With Google</a></li> -->
                                         </ul>
-                                        <div class="text-muted text-center">Already have an account? <a href="/">Log in now</a></div>
+                                        <div class="text-muted text-center">Already have an account? <a href="/login">Log in now</a></div>
                                     </div>
                                 </div>
                             </div>
@@ -170,49 +182,115 @@
         const passwordError = document.getElementById('passwordError')
         const confirmpassword = document.getElementById('confirmerror')
         const confirmpasswordError = document.getElementById('confirmPasswordError')
+        const strongPassword = document.getElementById('strongPassword')
+        
 
         function validateName(){
             const namePattern = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
-            if(name.value.trim() === ''){
+            if(name.value.trim() ===''){
                 nameError.innerHTML='Name required'
+                nameError.style.display="block"
+                setTimeout(() => {
+                    nameError.style.display="none"
+                }, 3000);
             }else if(!namePattern.test(name.value)){
                 nameError.innerHTML = 'Name format is not valid'
+                nameError.style.display="block"
+                setTimeout(() => {
+                    nameError.style.display="none"
+                }, 3000);
             }else{
                 nameError.innerHTML=''
             } 
         }
         function validateEmail(){
             const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if(email.value.trim() ===''){
+                emailError.innerHTML='email required'
+                emailError.style.display="block"
+                setTimeout(() => {
+                    nameError.style.display="none"
+                }, 3000);
+            }
             if(!emailPattern.test(email.value)){
                 emailError.innerHTML = 'Email format is not valid'
+                emailError.style.display='block'
+                setTimeout(() => {
+                    emailError.style.display='none'
+                }, 3000);
             } else{
                 emailError.innerHTML = '';
             } 
         }
         function validatePhone(){
             const phonePattern =  /^\d{10}$/;
+            if(phone.value.trim() ===''){
+                phoneError.innerHTML='phone number is not valid'
+                phoneError.style.display="block"
+                setTimeout(() => {
+                    phoneError.style.display="none"
+                }, 3000);
+            }
             if(!phonePattern.test(phone.value)){
                 phoneError.innerHTML = 'Phone number is not valid'
+                phoneError.style.display='block'
+                setTimeout(() => {
+                    phoneError.style.display='none'
+                }, 3000);
             }else{
                 phoneError.innerHTML = '';
             }
         }
         function validatePassword(){
             const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if(password.value.trim() ===''){
+                passwordError.innerHTML='phone number is not valid'
+                passwordError.style.display="block"
+                setTimeout(() => {
+                    passwordError.style.display="none"
+                }, 3000);
+            }
             if(!passwordPattern.test(password.value)){
                 passwordError.innerHTML='Password must contain Uppercase/lowercase/specialcharacter'
+                passwordError.style.display='block'
+                setTimeout(() => {
+                    passwordError.style.display='none'
+                }, 3000);
             }else{
-                passwordError.innerHTML=''
+                strongPassword.innerHTML='password is strong' 
+               strongPassword.style.display='block'
+               setTimeout(() => {
+                    strongPassword.style.display='none'
+                    strongPassword.innerHTML='' 
+                   passwordError.innerHTML=''
+
+                }, 2000);
             }
         }
-        function validateConfirmPassword(){
-            const confirmpasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            if(!confirmpasswordPattern.test(confirmpassword.value)){
-                confirmpasswordError.innerHTML='password is not valid';
-            }else{
-                confirmpasswordError.innerHTML=''
-            }
-        }
+     
+
+
+
+
+        function validateConfirmPassword() {
+    const confirmpasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (confirmpassword.value.trim() === '') {
+        confirmpasswordError.innerHTML = 'Confirm password is required';
+        confirmpasswordError.style.display = 'block';
+        setTimeout(() => {
+            confirmpasswordError.style.display = 'none';
+        }, 3000);
+    } else if (!confirmpasswordPattern.test(confirmpassword.value)) {
+        confirmpasswordError.innerHTML = 'Confirm password is not valid';
+        confirmpasswordError.style.display = 'block';
+        setTimeout(() => {
+            confirmpasswordError.style.display = 'none';
+        }, 3000);
+    } else {
+        confirmpasswordError.innerHTML = '';
+    }
+}
 
         name.addEventListener('blur',validateName)
         email.addEventListener('blur',validateEmail)
@@ -227,8 +305,9 @@
             validatePassword();
             validateConfirmPassword();
 
-            if(nameError.innerHTML||emailError.innerHTML||phoneError.innerHTML||passwordError.innerHTML||confirmpasswordError.innerHTML){
+            if(nameError.innerHTML||emailError.innerHTML||phoneError.innerHTML||passwordError.innerHTML||confirmpasswordError.innerHTML ){
                 event.preventDefault();
+                
             }
         })
         
