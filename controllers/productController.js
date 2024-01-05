@@ -248,20 +248,18 @@ try {
             l:{quantity:large},
         }, 
     }})
-
-
-
    res.redirect('/admin/productlist')
 } catch (error) {
  console.log(error)   
 }
 }
+
 module.exports = {
-    categorySave,
-    blockCategory,
-    unblockCategory,
-    editCategory,
-    updateEditCategory,
+    // categorySave,
+    // blockCategory,
+    // unblockCategory,
+    // editCategory,
+    // updateEditCategory,
     loadAddProduct,
     addProductDetials,
     productList,
@@ -269,5 +267,6 @@ module.exports = {
     blockProduct,
     unblockProduct,
     deleteImage,
-    verifyEditProduct
+    verifyEditProduct,
+    
 }

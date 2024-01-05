@@ -10,13 +10,14 @@ userRoute.use(session({
     secret:"mySecretkey"
 }))  
 const userController = require('../controllers/userController');
+const cartController = require('../controllers/cartController')
 // const isBlock = require('../middleware/isblock');
 
 // userRoute.get('/',userController.loadLogin)
 userRoute.get('/',userController.loadRealHome)
-userRoute.get('/register',userAuth.isLogin,userBlockingMiddleware.userBlockingMiddleware,userController.loadRegister)
+userRoute.get('/register',userAuth.isLogin,userController.loadRegister)
 userRoute.post('/register',userController.postRegister)
-userRoute.get('/verifyotp',userAuth.isLogout,userController.verifyOtp)
+userRoute.get('/verifyotp',userAuth.isLogin,userController.verifyOtp)
 userRoute.post('/verifyotp',userController.verifiedOtp)
 userRoute.get('/login',userAuth.isLogin,userController.loadLogin)
 userRoute.post('/login',userController.userLogin)
@@ -24,7 +25,9 @@ userRoute.get('/home',userAuth.isLogout,userController.loadHome)
 userRoute.get('/userproductdetail',userAuth.isLogout,userBlockingMiddleware.userBlockingMiddleware,userController.loadSingleProductView)
 userRoute.get('/logout',userController.logOut)
 userRoute.post('/resendotp',userController.resendOtp)
-
+userRoute.get('/cart',cartController.loadCart)
+userRoute.post('/userproductdetail',cartController.addToCart)
+// userRoute.post('/bringsize',userController.fetchTheSize)
 
 
 

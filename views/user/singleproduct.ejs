@@ -19,6 +19,58 @@
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
     <link rel="stylesheet" href="magiczoom/magiczoom.css">
     <script src="magiczoom/magiczoom.js"></script>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Style the select element */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding: 6px; /* Adjust the padding */
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #088178; /* Set the desired background color */
+      color: #fff;; /* Set the text color */
+      width: 40px; /* Set the desired width */
+      text-align: center; /* Center the text */
+    }
+
+    /* Style the custom dropdown arrow */
+    select::after {
+      content: '\25BC'; /* Unicode character for a downward-pointing triangle */
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translateY(-50%);
+    }
+  </style>
+</head>
+<body>
+
+<!-- <label for="size">Choose a Size:</label>
+<select name="sizequanity" id="size">
+  <option value="small">S</option>
+  <option value="medium">M</option>
+  <option value="large">L</option>
+</select> -->
+</head>
+<body>
+
+<!-- <label for="size">Choose a Size:</label>
+<select name="sizequanity" id="size">
+  <option value="small">S</option>
+  <option value="medium">M</option>
+  <option value="large">L</option>
+</select> -->
+
+</body>
+</html>
+
 </head>
 
 <body>
@@ -123,8 +175,6 @@
                                         <li><a href="#">S</a></li>
                                         <li class="active"><a href="#">M</a></li>
                                         <li><a href="#">L</a></li>
-                                        <li><a href="#">XL</a></li>
-                                        <li><a href="#">XXL</a></li>
                                     </ul>
                                 </div>
                                 <div class="bt-1 border-color-1 mt-30 mb-30"></div>
@@ -134,11 +184,11 @@
                                         <span class="qty-val">1</span>
                                         <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                     </div>
-                                    <div class="product-extra-link2">
+                                    <!-- <div class="product-extra-link2">
                                         <button type="submit" class="button button-add-to-cart">Add to cart</button>
                                         <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
                                         <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <ul class="product-meta font-xs color-grey mt-50">
                                     <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
@@ -320,7 +370,7 @@
                 <div class="breadcrumb">
                     <a href="/" rel="nofollow">Home</a>
                     <span></span> Fashion
-                    <span></span> Abstract Print Patchwork Dress
+                    <span></span> 
                 </div>
             </div>
         </div>
@@ -379,11 +429,11 @@
                                             <p><%=product.description%></p>
                                         </div>
                                         <div class="product_sort_info font-xs mb-30">
-                                            <ul>
+                                            <!-- <ul>
                                                 <li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year AL Jazeera Brand Warranty</li>
                                                 <li class="mb-10"><i class="fi-rs-refresh mr-5"></i> 30 Day Return Policy</li>
                                                 <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
-                                            </ul>
+                                            </ul> -->
                                         </div>
                                         <!-- <div class="attr-detail attr-color mb-15">
                                             <strong class="mr-10">Color</strong>
@@ -397,38 +447,51 @@
                                                 <li><a href="#" data-color="Purple"><span class="product-color-purple"></span></a></li>
                                             </ul>
                                         </div> -->
-                                        <div class="attr-detail attr-size">
-                                            <strong class="mr-10">Size</strong>
-                                            <ul class="list-filter size-filter font-small">
+                                        <!-- <form action="" method="post"> -->
+                                        <!-- <div class="attr-detail attr-size"> -->
+                                            <strong class="mr-10">Choose a Size</strong>
+                                            <!-- <ul class="list-filter size-filter font-small">
                                                 <li><a href="#">S</a></li>
                                                 <li class="active"><a href="#">M</a></li>
                                                 <li><a href="#">L</a></li>
                                             </ul>
-                                        </div>
+                                        </div> -->
+                                        <!-- <label for="cars">Choose a Size:</label> -->
+                                            <select onchange="fetchSize()"  name="sizequantity" id="size">
+                                                <option value="s">S</option>
+                                                <option value="m">M</option>
+                                                <option value="l">L</option>
+                                            </select>
                                         <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                         <div class="detail-extralink">
                                             <div class="detail-qty border radius">
-                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                <span class="qty-val">1</span>
-                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                                <a   href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                                <span id="qty" name="quantity" class="qty-val">1</span>
+                                                <a   href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>
                                             <div class="product-extra-link2">
-                                                <button type="submit" class="button button-add-to-cart">Add to cart</button>
-                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                
+                                                <button style="display:block;" id="addtocartbtn" type="submit" class="button button-add-to-cart" data-productid="<%=product._id%>" > Add to cart</button>
+                                                <p id="itemadded" style="display:none;">Item Added to Cart</p>
+                                               
+                    
                                             </div>
+                                           
                                         </div>
+                                        
+                                    <!-- </form> -->
+                                        <!-- <a href="/cart">Add to cart</a> -->
                                         <ul class="product-meta font-xs color-grey mt-50">
                                             <!-- <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li> -->
                                             <!-- <li class="mb-5">Tags: <a href="#" rel="tag">Cloth</a>, <a href="#" rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li> -->
                                            
-                                            <span>Stock In Small</span>
-                                            <li>Availability:<span class="in-stock text-success ml-5"><%=product.size["s"].quantity%></span></li>
-                                            <span>Stock In Medium</span>
-                                            <li>Availability:<span class="in-stock text-success ml-5"><%=product.size["m"].quantity%></span></li>
-                                            <span>Stock In Large</span>
-                                            <li>Availability:<span class="in-stock text-success ml-5"><%=product.size["l"].quantity%></span></li>
-                                           
+                                            <p id="sblock"  class="in-stock text-dark ml-5">Stock Availability In Small:<p id="ssblock" ><%=product.size["s"].quantity%></p></p>
+                                            
+                                            <p id="mblock"  class="in-stock text-dark ml-5">Stock Availability In Medium:<p id="mmblock" ><%=product.size["m"].quantity%></p></p>
+                                            
+                                            <p id="lblock"  class="in-stock text-dark ml-5">Stock Availability In Large:<p id="llblock" ><%=product.size["l"].quantity%></p></p>
+
+                                            <p id="outofstock" style="display:none;" class="text text-danger">Out of stock</p>
                                         </ul>
                                     </div>
                                     <!-- Detail Info -->
@@ -466,104 +529,7 @@
                                             Contact us at info@wildmonkeyclothing.com.
                                         </p>
                                     </div>
-                                    <!-- <h3 class="section-title style-1 mb-30">Additional info</h3> -->
-                                    <!-- <table class="font-md mb-30">
-                                        <tbody>
-                                            <tr class="stand-up">
-                                                <th>Stand Up</th>
-                                                <td>
-                                                    <p>35″L x 24″W x 37-45″H(front to back wheel)</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="folded-wo-wheels">
-                                                <th>Folded (w/o wheels)</th>
-                                                <td>
-                                                    <p>32.5″L x 18.5″W x 16.5″H</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="folded-w-wheels">
-                                                <th>Folded (w/ wheels)</th>
-                                                <td>
-                                                    <p>32.5″L x 24″W x 18.5″H</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="door-pass-through">
-                                                <th>Door Pass Through</th>
-                                                <td>
-                                                    <p>24</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="frame">
-                                                <th>Frame</th>
-                                                <td>
-                                                    <p>Aluminum</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="weight-wo-wheels">
-                                                <th>Weight (w/o wheels)</th>
-                                                <td>
-                                                    <p>20 LBS</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="weight-capacity">
-                                                <th>Weight Capacity</th>
-                                                <td>
-                                                    <p>60 LBS</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="width">
-                                                <th>Width</th>
-                                                <td>
-                                                    <p>24″</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="handle-height-ground-to-handle">
-                                                <th>Handle height (ground to handle)</th>
-                                                <td>
-                                                    <p>37-45″</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="wheels">
-                                                <th>Wheels</th>
-                                                <td>
-                                                    <p>12″ air / wide track slick tread</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="seat-back-height">
-                                                <th>Seat back height</th>
-                                                <td>
-                                                    <p>21.5″</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="head-room-inside-canopy">
-                                                <th>Head room (inside canopy)</th>
-                                                <td>
-                                                    <p>25″</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="pa_color">
-                                                <th>Color</th>
-                                                <td>
-                                                    <p>Black, Blue, Red, White</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="pa_size">
-                                                <th>Size</th>
-                                                <td>
-                                                    <p>M, S</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table> -->
-                                    <!-- <div class="social-icons single-share">
-                                        <ul class="text-grey-5 d-inline-block">
-                                            <li><strong class="mr-10">Share this:</strong></li>
-                                            <li class="social-facebook"><a href="#"><img src="assets/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
-                                            <li class="social-twitter"> <a href="#"><img src="assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
-                                            <li class="social-instagram"><a href="#"><img src="assets/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
-                                            <li class="social-linkedin"><a href="#"><img src="assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
-                                        </ul>
-                                    </div> -->
+                                  
                                     <h3 class="section-title style-1 mb-30 mt-30">Reviews (3)</h3>
                                     <!--Comments-->
                                     <div class="comments-area style-2">
@@ -775,7 +741,7 @@
     </main>
     <%-include('footer')%>
     <!-- Preloader Start -->
-    <div id="preloader-active">
+    <!-- <div id="preloader-active">
         <div class="preloader d-flex align-items-center justify-content-center">
             <div class="preloader-inner position-relative">
                 <div class="text-center">
@@ -788,7 +754,151 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+    <script>
+        const btn = document.getElementById('addtocartbtn')
+        const outofstock = document.getElementById('outofstock')
+        const qty = document.getElementById('qty')
+        const size = document.getElementById('size')
+        const sblock = document.getElementById('sblock')
+        const mblock = document.getElementById('mblock')
+        const lblock = document.getElementById('lblock')
+        let ssblo = document.getElementById('ssblock')
+        let mmblo = document.getElementById('mmblock')
+        let llblo = document.getElementById('llblock')
+        let ssblock = parseInt(document.getElementById('ssblock').innerHTML)
+        let mmblock = parseInt(document.getElementById('mmblock').innerHTML)
+        let llblock = parseInt(document.getElementById('llblock').innerHTML)
+      
+
+        window.onload = function(){
+            if(ssblock===0)
+            {
+                ssblo.style.display = "none"
+                llblo.style.display = "none"
+                mmblo.style.display = "none"
+                mblock.style.display = 'none'
+                lblock.style.display = "none"
+                sblock.style.display = "none"
+               outofstock.style.display = "block"
+            }
+            else
+            {
+                ssblo.style.display = "block"
+                llblo.style.display = "none"
+                mmblo.style.display = "none"
+                mblock.style.display = 'none'
+                lblock.style.display = "none"
+                sblock.style.display = "block"
+               outofstock.style.display = "none"
+            } 
+        }
+        function fetchSize(){
+            console.log(size.value)
+            
+            if(size.value==="m" ){
+
+                if(mmblock===0)
+                {
+                ssblo.style.display = "none"
+                llblo.style.display = "none"
+                mmblo.style.display = "none"
+                mblock.style.display = 'none'
+                lblock.style.display = "none"
+                sblock.style.display = "none"
+               outofstock.style.display = "block"
+               btn.style.display="none"
+                }
+            else
+            {
+                ssblo.style.display = "none"
+                llblo.style.display = "none"
+                mmblo.style.display = "block"
+                mblock.style.display = 'block'
+                lblock.style.display = "none"
+                sblock.style.display = "none"
+               outofstock.style.display = "none"
+               btn.style.display="block"
+            } 
+        }else if(size.value==="s" ){
+            if(ssblock===0)
+            {
+                ssblo.style.display = "none"
+                llblo.style.display = "none"
+                mmblo.style.display = "none"
+                mblock.style.display = 'none'
+                lblock.style.display = "none"
+                sblock.style.display = "none"
+               outofstock.style.display = "block"
+               btn.style.display="none"
+            }
+            else
+            {
+                ssblo.style.display = "block"
+                llblo.style.display = "none"
+                mmblo.style.display = "none"
+                mblock.style.display = 'none'
+                lblock.style.display = "none"
+                sblock.style.display = "block"
+               outofstock.style.display = "none"
+               btn.style.display="block"
+            } 
+        }else if(size.value==="l"){
+            if(llblock===0)
+            {
+                ssblo.style.display = "none"
+                llblo.style.display = "none"
+                mmblo.style.display = "none"
+                mblock.style.display = 'none'
+                lblock.style.display = "none"
+                sblock.style.display = "none"
+               outofstock.style.display = "block"
+               btn.style.display="none"
+            }
+            else{
+                ssblo.style.display = "none"
+                llblo.style.display = "block"
+                mmblo.style.display = "none"
+                mblock.style.display = 'none'
+                lblock.style.display = "block"
+                sblock.style.display = "none"
+               outofstock.style.display = "none"
+               btn.style.display="block"
+            }
+
+        }
+    }
+       function addtocart(productId,quantity){
+        const selectedSize = size.value
+            fetch('/userproductdetail',{
+                method:"post",
+                headers:{
+                    "Content-Type":"application/json"
+               },
+               body:JSON.stringify({productId,quantity,selectedSize})
+            }).then(response =>response.json()).then(data=>{
+                console.log(data)
+                if(data){
+                    document.getElementById('itemadded').style.display="block"
+                }
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000);
+                 
+               
+             
+
+            }).catch(error=>{
+                console.log(error.message)
+            })
+       }
+       btn.addEventListener('click',function(){
+        const qty1 = qty.innerHTML
+        const productid=this.dataset.productid
+        // console.log(qty1,productid,size)
+        addtocart(productid,qty1)
+       })
+    </script>
     <!-- Vendor JS-->
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>

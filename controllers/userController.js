@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
 const Product = require('../models/productModel')
+const myCart = require('../models/cartModel')
 const nodemailer = require('nodemailer')
 const otpGenerator = require('otp-generator')
 const bcrypt = require('bcrypt')
@@ -170,6 +171,8 @@ const verifiedOtp = async(req,res)=>{
            if(otp==globalOtp){
             const userData = req.session.udata
             createUser(userData)
+            req.session.uData = userData
+    
             res.redirect('/login')
            }else{
             const email = req.session.email
@@ -261,7 +264,7 @@ const loadSingleProductView = async(req,res)=>{
         ]);
         const product = await Product.findById(id)
         const relatedproducts = await Product.find({category:product.category})
-        console.log(relatedproducts)
+        // console.log(relatedproducts)
         res.render('singleproduct',{product,totalQuantity,relatedproducts})
 
     } catch (error) {
@@ -319,6 +322,49 @@ const loadRealHome = async(req,res) =>{
     console.log(error)
    } 
 }
+const loadCart = async(req,res)=>{
+    try {
+        const id = req.session.user
+        const cartOfUser = await myCart.find({userId:id}).populate('products.productId').exec()
+        if(cartOfUser){
+            // cartOfUser.forEach(element => {
+            //   console.log(element.products)  
+            // });
+            res.render('cart',{cartOfUser:cartOfUser})
+        }
+    } catch (error) {
+     console.log(error)   
+    }
+}
+const addToCart = async(req,res)=>{
+    try {
+        const productId = req.body.productId
+        const quantity = req.body.quantity
+        const userId = req.session.user
+        const size = req.body.selectedSize
+        console.log(size)
+        console.log(productId)
+        console.log(quantity)
+        console.log(userId)
+
+       const cart = new myCart({
+            userId:userId,
+            products:[{
+                productId:productId,
+                size:size,
+                quantity:quantity}]
+        })
+
+       const savedcart = await cart.save()
+       console.log(savedcart)
+        
+
+        res.status(200).json({data:"success"})
+    } catch (error) {
+    console.log(error)    
+    }
+}
+
 module.exports = {
     loadRegister,
     postRegister,
@@ -330,5 +376,8 @@ module.exports = {
     loadSingleProductView,
     logOut,
     resendOtp,
-    loadRealHome
+    loadRealHome,
+    // loadCart,
+    // addToCart,
+  
 }

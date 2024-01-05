@@ -127,7 +127,7 @@
                                             <label class="form-label" >regular price</label>
                                             <input placeholder="" name="regularprice" type="text" class="form-control" id="regularprice" value="<%=product.price.regularprice%>">
                                             <p class="text text-danger" style="display:none" id="regularpriceError"></p>
-                                            <p class="text text-danger" style="display:none" id="lesserPriceError" oninput="validateBothPrices()"></p>
+                                            <p class="text text-danger" style="display:none" id="lesserPriceError"></p>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
@@ -402,7 +402,7 @@ function validateLargeQuantity(){
             small.addEventListener('blur',validateSmallQuantity)
             medium.addEventListener('blur',validateMediumQuantity)
             large.addEventListener('blur',validateLargeQuantity)
-            lesserPriceError.addEventListener('blur',validateBothPrices)
+            regularprice.addEventListener('blur',validateBothPrices)
         </script>
     <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
