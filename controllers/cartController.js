@@ -39,13 +39,19 @@ const addToCart = async(req,res)=>{
         }
         else {
             console.log("entering userHaveCart")
-            const have = userHaveCart.products.find((product)=>   product.productId._id == productId && product.size == sizee )
-            console.log(have)
+            const have = userHaveCart.products.find((product)=> product.productId._id   == productId && product.size == sizee )
+            console.log("have is:"+have)
             if(have)
             {
+                const currqty = parseInt(have.quantity)
+                const productqty = parseInt(have.productId.size[sizee].quantity)
                 const newqty =  parseInt(quantity)
-                const qtyadd = await myCart.findOneAndUpdate({'products.productId':have.productId._id},{$inc:{'products.$.quantity':newqty}},{new:true})
+                if(currqty+newqty<=productqty===true){
+                    const qtyadd = await myCart.findOneAndUpdate({'products.productId':have.productId._id},{$inc:{'products.$.quantity':newqty}},{new:true})
                 console.log("qty="+qtyadd+"new"+newqty)
+                }else{
+                  res.render('singleproduct',{cantaddmore:"cany add more"})
+                } 
             } 
             else{
                 console.log("entering userhave cart to save")
