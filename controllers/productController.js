@@ -73,7 +73,8 @@ const updateEditCategory = async(req,res)=>{
     }
 
 }
-const loadAddProduct = async(req,res)=>{
+const 
+loadAddProduct = async(req,res)=>{
     try {
 
         const category = await Category.find({is_active:true})

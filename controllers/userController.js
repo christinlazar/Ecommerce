@@ -2,6 +2,8 @@ const User = require('../models/userModel')
 const Product = require('../models/productModel')
 const myCart = require('../models/cartModel')
 const nodemailer = require('nodemailer')
+const Order = require('../models/orderModel')
+const Address = require('../models/addressModel')
 const otpGenerator = require('otp-generator')
 const bcrypt = require('bcrypt')
 require('dotenv').config();
@@ -10,8 +12,8 @@ const category = require('../models/categorymodel');
 const transporter = nodemailer.createTransport({
     service:'gmail',
     auth:{
-        user:"christinlazar19@gmail.com",
-        pass:"ogbe esyu loap nomr",
+        user:process.env.EMAIL,
+        pass:process.env.PASS,
     }
 });
 
@@ -364,7 +366,62 @@ const addToCart = async(req,res)=>{
     console.log(error)    
     }
 }
+const loadUserDashboard = async(req,res)=>{
+    try {
+        
+        const userId = req.session.user
+        const address = await Address.find({userId:userId})
+        const userDetails = await User.findById(userId)
+        // console.log(address)
+        const order = await Order.find({userId:userId})
+        const user = await User.findById(userId)
+        res.render('userdashboard',{user,order,address,user})
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+const updateUserDetails = async(req,res)=>{
+    try {
+        const userId = req.session.user
+        const {name,email} = req.body
+       const updatedUser = await User.findByIdAndUpdate(userId,{$set:{name:name,email:email}})
+       res.redirect('/userdashboard')
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+const loadChangePassword = async(req,res)=>{
+    try {
+        res.render('changepassword')
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 
+const confirmNewPassword = async(req,res)=>{
+    try {
+         const userId = req.session.user
+        const{oldpassword,newpassword,confirmnewpassword} = req.body
+        const userData = await User.findById(userId)
+        const hashed = userData.password
+        console.log(hashed)
+        const isverified = await bcrypt.compare(oldpassword,hashed)
+       if(isverified){
+        console.log(isverified)
+        if(newpassword == confirmnewpassword){
+            const hashednewpassword = await bcrypt.hash(newpassword,10)
+            await User.findByIdAndUpdate(userId,{$set:{password:hashednewpassword}})
+            res.redirect('/userdashboard')
+        }else{
+            res.render('changepassword',{message:"new password & confirm password is not matching"})
+        }
+       }else{
+        res.render('changepassword',{oldpwd:"Old pasword is not correct"})
+       }
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 module.exports = {
     loadRegister,
     postRegister,
@@ -377,7 +434,8 @@ module.exports = {
     logOut,
     resendOtp,
     loadRealHome,
-    // loadCart,
-    // addToCart,
-  
+    loadUserDashboard,
+    updateUserDetails,
+    loadChangePassword,
+    confirmNewPassword
 }

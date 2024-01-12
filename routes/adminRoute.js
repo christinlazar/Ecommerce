@@ -45,6 +45,9 @@ adminRoute.patch('/blockproduct',productController.blockProduct)
 adminRoute.patch('/unblockproduct',productController.unblockProduct)
 adminRoute.patch('/deleteimage',productController.deleteImage)
 adminRoute.get('/logout',adminController.logOut)
+adminRoute.get('/orderdetails',adminAuth.isLogout,adminController.loadOrderDetails)
+adminRoute.get('/orderdetailview',adminAuth.isLogout,adminController.loadOrderDetailView)
+adminRoute.post('/orderdetailview',adminController.adminCancelOrder)
 
 
 

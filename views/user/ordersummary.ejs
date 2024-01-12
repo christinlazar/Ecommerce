@@ -5,7 +5,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:07 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Your Cart</title>
+    <title>OrderSummary</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,31 +14,21 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
     <style>
-        .action {
-            cursor: pointer;
+        .blackfoot, .blackfoot a , .blackfoot li, .blackfoot p, .blackfoot h5{
+            background-color: black !important;
+            color: white !important;
         }
-        .quantity-control {
-        display: flex;
-        align-items: center;
-    }
-    .qty-btn {
-        background-color: #088178;
-        color: #fff;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        margin: 0;
-        border-radius:5px;
-    }
-
-    .qty-val {
-        margin: 0 10px;
-    }
+        .price{
+            border-radius: 20px;
+            background-color: #088178 !important;
+            color: white;
+            padding: 8px 20px;
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -224,134 +214,97 @@
                                     <tr class="main-heading">
                                         <th scope="col">Image</th>
                                         <th scope="col">Name</th>
-                                        <th scope="col">price</th>
-                                        <th scope="col">Size</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Quantity</th>
-                                        <th scope="col">Subtotal</th>
-                                        <th scope="col">Remove</th>
+                                        <!-- <th scope="col">Subtotal</th> -->
+                                        <th scope="col">Cancel oder</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% let sum = 0 %>
-                                    <% if(locals.cartOfUser){ %>
-                                    <% locals.cartOfUser.forEach(element => { element.products.forEach(el=>{ %>
+                                    
+                                    <%if(locals.orderDetails){%>
+                                        <%orderDetails.products.forEach(element=>{%>
+                                            <% sum = element.totalamount %>
                                     <tr>
-                                        <td class="image product-thumbnail"><img src="/uploads/<%=el.productId.image[0]%>" alt="#"></td>
+                                        <td class="image product-thumbnail"><img src="/uploads/<%=element.product.image[0]%>" alt="#"></td>
                                         <td class="product-des product-name">
-                                            <h5 class="product-name"><a href=""><%= el.productId.name %></a></h5>
-                                            <!-- <p class="font-xs">Maboriosam in a tonto nesciung eget<br> distingy magndapibus. </p> -->
-                                           
+                                            <h5 class="product-name"><a href="shop-product-right.html"><%=element.product.name%></a></h5>
+                                            <p class="font-xs"><%=element.product.description.split('.')[0]%><br> 
+                                            </p>
                                         </td>
-                                        <td class="price" data-title="Price"><span>₹ <%=el.productId.price.saleprice%> </span></td>
-                                        <td class="price" data-title="Price"><span><%=el.size%> </span></td>
+                                        <%if(orderDetails.status == "Confirmed"){%>
+                                        <td  data-title="Price"><span class="badge rounded-pill alert-success text-success"><%=orderDetails.status%></span></td>
+                                        <%}%>
+                                        <%if(orderDetails.status == "cancelled"){%>
+                                            <td  data-title="Price"><span class="badge rounded-pill alert-danger text-danger"><%=orderDetails.status%></span></td>
+                                            <%}%>
                                         <td class="text-center" data-title="Stock">
-                                            <!-- <div class="detail-qty border radius  m-auto"> -->
-                                                <!-- <a href=""  class="qty-down"><i  onclick="decQuantityUpdation(`<%=el.productId._id%>`,`<%=el.size%>`)" class="fi-rs-angle-small-down"></i></a>
-                                                <span id="quantity" class="qty-val"><%=el.quantity%></span>
-                                                <a href="" class="qty-up"><i  onclick="incQuantityUpdation(`<%=el.productId._id%>`,`<%=el.size%>`)"  class="fi-rs-angle-small-up"></i></a> -->
-                                                <div class="quantity-control">
-                                                    <button class="qty-btn me-2" onclick="decQuantityUpdation('<%=el.productId._id%>', '<%=el.size%>')">
-                                                        <i class="fi-rs-minus"></i>
-                                                    </button>
-                                                    <span id="quantity" class="qty-val"><%=el.quantity%></span>
-                                                    <button class="qty-btn ms-2" onclick="incQuantityUpdation('<%=el.productId._id%>', '<%=el.size%>')">
-                                                        <i class="fi-rs-plus"></i>
-                                                    </button>
-                                                </div>
+                                            <div class="detail-qty border radius  m-auto">
                                                 
-                                            <!-- </div> -->
-                                            <p id="updateError" style="display:block;" class="text text-danger"></p>
+                                                <span class="qty-val"><%=element.quantity%></span>
+                                               
+                                            </div>
                                         </td>
-                                        <td class="text-right" data-title="Cart">
-                                            <span id="subtotal">₹ <% let sub = el.productId.price.saleprice * el.quantity%> <%= sub %></span>
-                                            <% sum += sub %>
-                                        </td>
-                                        <td class="action" onclick="removeFromCart(`<%=el.productId._id%>`,`<%=el.size%>`)" data-title="Remove"><i class="fi-rs-trash"></i></td>
+                                        <!-- <td class="text-right" data-title="Cart">
+                                            <span>$65.00 </span>
+                                        </td> -->
+                                        <%if(locals.orderDetails.status!="cancelled"){%>
+                                        <td class="action" data-title="Remove"><a href="" onclick="removeSingle(`<%=element.product._id%>`,`<%=orderDetails._id%>`,`<%=element.size%>`)"  class="text-muted"><i class="">Cancel</i></a></td>
+                                        <%}else{%>
+                                            <td class="action" data-title="Remove"><a href="" >Cancelled</i></a></td>
+                                        <%}%>
                                     </tr>
-                                    <!-- <tr>
+                                    <%})}%>
+                                    <tr>
+                                        <%if(locals.orderDetails){%>
+                                            <%if(locals.orderDetails.status!= "cancelled" ){%>
                                         <td colspan="6" class="text-end">
-                                            <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear Cart</a>
+                                            <a href="" onclick="removeOrder(`<%=orderDetails._id%>`)"  class="text-muted"> <i class="fi-rs-cross-small"></i>Cancel order</a>
                                         </td>
-                                    </tr> -->
-                                    <% }) }) } %>
+                                        <script>
+
+                                        </script>
+                                    <%}}%>
+                                        
+                                    </tr>
+                                    
+                               
+
+                                   
+                                    
                                 </tbody>
                             </table>
                         </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    
+                                    <% if(locals.orderDetails){ %>
+                                    <tr>
+                                        <td class="cart_total_label">Cart Subtotal</td>
+                                        <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">Rs.<%=locals.orderDetails.totalamount%></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cart_total_label">Shipping</td>
+                                        <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                                    </tr>
+                               
+                                    <tr>
+                                        <td class="cart_total_label">Total</td>
+                                        <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">Rs.<%=locals.orderDetails.totalamount%></span></strong></td>
+                                    </tr>
+                                    <%}%>
+                                </tbody>
+                         
+                            </table>
+                        </div>
                         <div class="cart-action text-end">
-                            <!-- <a class="btn  mr-10 mb-sm-15"><i class="fi-rs-shuffle mr-10"></i>Update Cart</a>
-                            <a class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a> -->
+                            <a href='/userdashboard' class="btn  mr-10 mb-sm-15">Go to dash-board</a>
                         </div>
                         <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
                         <div class="row mb-50">
-                            <div class="col-lg-6 col-md-12">
-                                <div class="heading_s1 mb-3">
-                                    <h4>Calculate Shipping</h4>
-                                </div>
-                                <p class="mt-15 mb-30">Flat rate: <span class="font-xl text-brand fw-900">5%</span></p>
-                                <form class="field_form shipping_calculator">
-                                    
-                                    <div class="form-row row">
-                                        <div class="form-group col-lg-6">
-                                            <input required="required" placeholder="State / Country" name="name" type="text">
-                                        </div>
-                                        <div class="form-group col-lg-6">
-                                            <input required="required" placeholder="PostCode / ZIP" name="name" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-lg-12">
-                                            <button class="btn  btn-sm"><i class="fi-rs-shuffle mr-10"></i>Update</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <div class="mb-30 mt-50">
-                                    <div class="heading_s1 mb-3">
-                                        <h4>Apply Coupon</h4>
-                                    </div>
-                                    <div class="total-amount">
-                                        <div class="left">
-                                            <div class="coupon">
-                                                <form action="#" target="_blank">
-                                                    <div class="form-row row justify-content-center">
-                                                        <div class="form-group col-lg-6">
-                                                            <input class="font-medium" name="Coupon" placeholder="Enter Your Coupon">
-                                                        </div>
-                                                        <div class="form-group col-lg-6">
-                                                            <button class="btn  btn-sm"><i class="fi-rs-label mr-10"></i>Apply</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12">
-                                <div class="border p-md-4 p-30 border-radius cart-totals">
-                                    <div class="heading_s1 mb-3">
-                                        <h4>Cart Totals</h4>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="cart_total_label">Cart Subtotal</td>
-                                                    <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">Rs.<%= sum %></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="cart_total_label">Shipping</td>
-                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="cart_total_label">Total</td>
-                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">Rs.<%= sum %></span></strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <a href="/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
-                                </div>
-                            </div>
+                            
+                            
                         </div>
                     </div>
                 </div>
@@ -363,58 +316,39 @@
    
     <!-- Vendor JS-->
     <script>
-        const updateError = document.getElementById('updateError')
-
-        function removeFromCart(productId,size){
-            fetch('/removefromcart',{
-                method:"PATCH",
+        async function removeSingle(productId,orderId,size){
+            try {
+                const response = await fetch('/removefromorder',{
+                method:"post",
                 headers:{
-                    'Content-Type':'application/json'
+                    "Content-Type":"application/json"
                 },
-                body:JSON.stringify({productId,size})
-            }).then(response =>response.json()).then(data=>{
-                window.location.reload()
-                console.log(data)
+                body:JSON.stringify({productId,orderId,size})
             })
-        }
-        function incQuantityUpdation(productId,size){
-            fetch('/incquantityupdation',{
-                method:"PATCH",
-                headers:{
-                    'Content-Type':'application/json',
-                    'Cache-Control': 'no-cache'
-                },
-                body:JSON.stringify({productId,size})
-            }).then(response =>response.json()).then(data=>{
-                console.log(data)
-                if(data.success){
-                    console.log(data.success)
-                   
-                }else{
-                    // updateError.textContent=data.updateError1
-                    setTimeout(() => {
-                        updateError.style.display="none";
-                    }, 3000);
-                }
-                window.location.reload( )
-            })
+            const data = await response.json()
+            window.location.reload()
+            } catch (error) {
+                console.log(error)
+            }
         }
 
-        function decQuantityUpdation(productId,size){
-            fetch('/decquantityupdation',{
-                method:"PATCH",
-                headers:{
-                    'Content-Type':'application/json',
-                    'Cache-Control': 'no-cache'
-                },
-                body:JSON.stringify({productId,size})
-            }).then(response =>response.json()).then(data=>{
+        async function removeOrder(orderId){
+            try {
+                const response = await fetch('/removeorder',{
+                    method:"post",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify({orderId})
+                })
+
+                const data = await response.json()
                 window.location.reload()
-                console.log(data)
-            })
+            } catch (error) {
+                console.log(error.message)
+            }
         }
     </script>
-   
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>

@@ -43,9 +43,17 @@ app.use((req, res, next) => {
 });
 
 // app.use('/',blockAuth.isBlock)
+app.use(nocache())
+
+app.set('view engine','ejs')
+app.set('views','./views/user')
+
 app.use('/',userRoute)
 app.use('/admin',adminRoute)
 
+app.use((req, res, next) => {
+    res.status(404).render('404error'); 
+});
 app.listen(3000,()=>{
     console.log("server started running")
 })
