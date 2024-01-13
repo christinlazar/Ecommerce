@@ -110,6 +110,7 @@ const removeOrder = async(req,res)=>{
         console.log(el)
         await Product.findByIdAndUpdate({_id:el.product_id},{$inc:{[`size.${el.size}.quantity`]:el.qty}})
       })
+      res.status(200).json({success:true})
     } catch (error) {
         console.log(error.message)
     }

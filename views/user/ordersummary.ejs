@@ -29,6 +29,12 @@
             padding: 8px 20px;
             margin: 0;
         }
+        #btncancel{
+            background-color: #088178;
+            color:white;
+            border-radius:5px;
+            border:none;
+        }
     </style>
 </head>
 
@@ -259,7 +265,7 @@
                                         <%if(locals.orderDetails){%>
                                             <%if(locals.orderDetails.status!= "cancelled" ){%>
                                         <td colspan="6" class="text-end">
-                                            <a href="" onclick="removeOrder(`<%=orderDetails._id%>`)"  class="text-muted"> <i class="fi-rs-cross-small"></i>Cancel order</a>
+                                            <button onclick="removeOrder(`<%=orderDetails._id%>`)" id="btncancel"  > <i class="fi-rs-cross-small"></i>Cancel order</button>
                                         </td>
                                         <script>
 
@@ -326,15 +332,16 @@
                 body:JSON.stringify({productId,orderId,size})
             })
             const data = await response.json()
-            window.location.reload()
+            // window.location.reload()
             } catch (error) {
                 console.log(error)
             }
         }
 
-        async function removeOrder(orderId){
-            try {
-                const response = await fetch('/removeorder',{
+async function rem(orderId)
+{
+    try {
+        const response = await fetch('/removeorder',{
                     method:"post",
                     headers:{
                         "Content-Type":"application/json"
@@ -343,12 +350,37 @@
                 })
 
                 const data = await response.json()
-                window.location.reload()
+                if(data.success){
+                    window.location.reload()
+                }
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+        async function removeOrder(orderId){
+            try {
+                Swal.fire({
+                    title:"Are you sure?",
+                    icon:"info",
+                    confirmButtonText:"OK",
+                    showConfirmButton:true,
+                    showDenyButton:true,
+                    denyButtonText:"cancel"
+                }).then(res=>{
+                    if(res.isConfirmed){
+                        rem(orderId)
+                    }
+                    else if(res.isDenied){
+                        window.location.reload()
+                    }
+            })
             } catch (error) {
                 console.log(error.message)
             }
         }
     </script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
