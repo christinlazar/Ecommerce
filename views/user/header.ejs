@@ -29,8 +29,12 @@
                                     <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
                                   
                                 </li>
+                                <% if(locals.userId){%>
+                                      <li><i class="fi-rs-user"></i><a href="/logout">Log Out</a></li>
+                                <%}else{%>
+                                    <li><i class="fi-rs-user"></i><a href="/logout">Log in</a></li>
+                                <%}%>
                               
-                                <li><i class="fi-rs-user"></i><a href="/logout">Log Out</a></li>
                             </ul>
                         </div>
                     </div>
@@ -45,21 +49,9 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="#">
-                                <select class="select-active">
-                                    <option>All Categories</option>
-                                    <option>Women's</option>
-                                    <option>Men's</option>
-                                    <option>Cellphones</option>
-                                    <option>Computer</option>
-                                    <option>Electronics</option>
-                                    <option> Accessories</option>
-                                    <option>Home & Garden</option>
-                                    <option>Luggage</option>
-                                    <option>Shoes</option>
-                                    <option>Mother & Kids</option>
-                                </select>
-                                <input type="text" placeholder="Search for items...">
+                            <form action="">
+                                <input type="text" placeholder="Search for items..." name="search">
+                                <button id="but" type="submit" value="search">search</button>
                             </form>
                         </div>
                         <div class="header-action-right">
@@ -280,7 +272,10 @@
                             <nav>
                                 <ul>
                                     <!-- <li> -->
-                                        <a class="active" href="/home">Home<i class=""></i></a>
+                                        <li>
+                                             <a class="" href="/">Home<i class=""></i></a>
+                                        </li>
+                                       
                                         <!-- <ul class="sub-menu">
                                             <li><a href="index.html">Home 1</a></li>
                                             <li><a href="index-2.html">Home 2</a></li>
@@ -289,10 +284,13 @@
                                         </ul> -->
                                     <!-- </li> -->
                                     <li>
-                                        <a href="page-about.html">About</a>
-                                    </li>
+                                        <a href="/aboutus">About</a>
+                                    </li> 
                                     <!-- <li> -->
                                         <a href="/home">Shop <i class=""></i></a>
+                                    <li>
+                                        <a href="/offers">Offers <i class=""></i></a>
+                                    </li>
                                         <!-- <ul class="sub-menu">
                                             <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
                                             <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>

@@ -19,15 +19,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-i2U9qZcFJc7i7eMYJvxNml5P9Dcyd1/42Kc49bhJE0T/8aJw9kRQhzk0c/15/RS2lz9xJwS3aNk1la5QZu27oQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
        #html{
         margin-left: -170px;
        }
+       .blackfoot, .blackfoot a , .blackfoot li, .blackfoot p, .blackfoot h5{
+            background-color: black !important;
+            color: white !important;
+        }
     </style>
+    
 </head>
 
 <body>
-    <%-include('header')%>
+    <%-include('shopheader')%>
     <div class="mobile-header-active mobile-header-wrapper-style">
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
@@ -203,52 +209,31 @@
                 <div class="row">
                     <div class="col-lg-6 mb-sm-15">
                         <div class="toggle_info">
-                            <span><i class="fi-rs-user mr-10"></i><span class="text-muted">Already have an account?</span> <a href="#loginform" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to login</a></span>
+                            <span><i class="fi-rs-user mr-10"></i><span class="text-muted">Need Coupons?</span> <a href="#loginform" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Check down for coupons</a></span>
                         </div>
                         <div class="panel-collapse collapse login_form" id="loginform">
                             <div class="panel-body">
-                                <p class="mb-30 font-sm">If you have shopped with us before, please enter your details below. If you are a new customer, please proceed to the Billing &amp; Shipping section.</p>
-                                <form method="post">
-                                    <div class="form-group">
-                                        <input type="text" name="email" placeholder="Username Or Email">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="password" name="password" placeholder="Password">
-                                    </div>
-                                    <div class="login_footer form-group">
-                                        <div class="chek-form">
-                                            <div class="custome-checkbox">
-                                                <input class="form-check-input" type="checkbox" name="checkbox" id="remember" value="">
-                                                <label class="form-check-label" for="remember"><span>Remember me</span></label>
-                                            </div>
+                                <h4>Coupons</h4>
+                                <br>
+                               
+                                    <% if(locals.coupon){%>
+                                      <%for(let i=0;i<coupon.length;i++){%>
+                                        <div class="form-group">
+                                          
+                                           <pre><span style="color: rgb(3, 3, 3); font-size: 1em;"><%= coupon[i].name %></span> :   <span style="color: rgb(0, 0, 0); font-size: 1em;"><%= coupon[i].code %></span>
+                                            <p id="pp" style="display:block;" class="text text-dark"></p></pre> 
+                                                <br>
+                                             <button style="border-radius: 5px; background-color:black; color:white; font-size: 0.75em;" onclick="copyToClipboard('<%= coupon[i].code %>')">Copy to clipboard</button>
+                                        
                                         </div>
-                                        <a href="#">Forgot password?</a>
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn btn-md" name="login">Log in</button>
-                                    </div>
-                                </form>
+
+                                    <% }}%>
+                                   
+                            
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="toggle_info">
-                            <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
-                        </div>
-                        <div class="panel-collapse collapse coupon_form " id="coupon">
-                            <div class="panel-body">
-                                <p class="mb-30 font-sm">If you have a coupon code, please apply it below.</p>
-                                <form method="post">
-                                    <div class="form-group">
-                                        <input type="text" placeholder="Enter Coupon Code...">
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn  btn-md" name="login">Apply Coupon</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
                 <div class="row">
                     <div class="col-12">
@@ -339,12 +324,62 @@
                                         </tr>
                                         <tr>
                                             <th>Total</th>
-                                            <span><td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900" id="totalprice"><%=sum%></span></td></span>
+                                            <% if(locals.newTotal){%>
+                                                <span><td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900" id="totalprice"><%=newTotal%></span></td></span>
+                                            <%}else{%>
+                                            <span><td style="display:block;" colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900" id="totalprice"><%=sum%></span></td></span>
+                                            <%}%>
                                         </tr>
                                         
+                                        
                                     </tbody>
+                                    
                                 </table>
                             </div>
+                            <form method="post">
+                                <div class="form-group">
+                                    
+                                    <input type="text" name="coupon" placeholder="Enter Coupon Code...">
+                                    <input type="hidden" name="total" value="<%=sum%>">
+                                </div>
+                               
+                                   
+                                    <button  class="btn  btn-md" >Apply Coupon</button>
+                                    <br>
+                                    <% if(locals.applied){%>
+                                    <p id="applied" style="display: block;" class="text text-primary"><%=locals.applied%></p>
+                                    <script>
+                                        setTimeout(() => {
+                                            document.getElementById('applied').style.display="none"
+                                        },3000);
+                                    </script>
+                                    <%}%>
+                                    <% if(locals.expired){%>
+                                        <p id="expired" style="display: block;" class="text text-danger"><%=locals.expired%></p>
+                                        <script>
+                                            setTimeout(() => {
+                                                document.getElementById('expired').style.display="none"
+                                            },3000);
+                                        </script>
+                                    <%}%>
+                                    <% if(locals.minpurchase){%>
+                                        <p id="minpurchase" style="display: block;" class="text text-danger"><%=locals.minpurchase%></p>
+                                        <script>
+                                            setTimeout(() => {
+                                                document.getElementById('minpurchase').style.display="none"
+                                            },3000);
+                                        </script>
+                                    <%}%>
+                                    <% if(locals.used){%>
+                                        <p id="used" style="display: block;" class="text text-danger"><%=locals.used%></p>
+                                        <script>
+                                            setTimeout(() => {
+                                                document.getElementById('used').style.display="none"
+                                            },3000);
+                                        </script>
+                                    <%}%>
+                             
+                            </form>
                             <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                             <div class="payment_method">
                                 <div class="mb-25">
@@ -366,8 +401,8 @@
                                         </div>
                                     </div>
                                     <div class="custome-radio">
-                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" value="paypa" >
-                                        <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Paypal</label>
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" value="wallet" >
+                                        <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Wallet</label>
                                         <div class="form-group collapse in" id="paypal">
                                             <p class="text-muted mt-5">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
                                         </div>
@@ -376,7 +411,8 @@
                             </div>
                            
                             <button onclick="placeOrder(`<%= locals.cartOfUser._id%>`)"  class="btn btn-fill-out btn-block mt-30">Place Order</button>
-                          
+                            <br>
+                            <p id="noBalance" class="text text-danger"></p>
                             
                         </div>
                     </div>
@@ -392,41 +428,180 @@
         
        
        
-        let radiovalue
-        function placeOrder(cartId,radiovalue){
-            console.log("cart id is"+cartId)
-        const radiobtn = document.querySelectorAll('.radiobtn')
-        const paymentMethod = document.querySelector('input[name="payment_option"]:checked').value
-        const totalpricetag = document.getElementById('totalprice')
-        const totalprice = totalpricetag.textContent
-        radiobtn.forEach(element => {    
-                if(element.checked)
-                {
-                 radiovalue = element.value
-                }
-        });
-        if(radiovalue !== undefined)
-        {
-            fetch('/placeorder',{
-                method:"post",
-                headers:{
-                    'Content-Type':'application/json'
+        let radiovalue;
+
+async function placeOrder(cartId, radiovalue) {
+    console.log("cart id is" + cartId);
+    const radiobtn = document.querySelectorAll('.radiobtn');
+    const paymentMethod = document.querySelector('input[name="payment_option"]:checked').value;
+    const totalpricetag = document.getElementById('totalprice');
+    const totalprice = totalpricetag.textContent;
+
+    radiobtn.forEach(element => {
+        if (element.checked) {
+            radiovalue = element.value;
+        }
+    });
+
+    if (radiovalue !== undefined) {
+        if (paymentMethod == "razorpay") {
+            fetch('/createorder', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
                 },
-                body:JSON.stringify({cartId,radiovalue,paymentMethod,totalprice})
-            }).then(response =>response.json()).then(data=>{
-               window.location.href="/orderplaced"
-               console.log(data)
-            })   
-        }
-         
-        else{
-            Swal.fire({
-                title:"Select any Address!!",
-                icon:"info"
+                body: JSON.stringify({ totalprice,cartId, radiovalue, paymentMethod })
+            }).then(response => response.json()).then(data => {
+                const parsedAmount = parseInt(totalprice)
+                const options = {
+                    "key": "rzp_test_giSNf5P5hp9gLU", // Enter the Key ID generated from the Dashboard
+                    "amount":1000000 , // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                    "currency": "INR",
+                    "name": "Acme Corp", //your business name
+                    "description": "Test Transaction",
+                    "image": "https://example.com/your_logo",
+                    "order_id": data.orderId.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                    "handler": function (response){
+                        alert(response.razorpay_payment_id);
+                        alert(response.razorpay_order_id);
+                        alert(response.razorpay_signature)
+                        verify(response,data.orderId.id)
+                    },
+                    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+                        "name": "Gaurav Kumar", //your customer's name
+                        "email": "gaurav.kumar@example.com", 
+                        "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+                    },
+                    "notes": {
+                        "address": "Razorpay Corporate Office"
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                }
+
+               
+                var rzp = new Razorpay(options);
+                rzp.open();
+
+
+
+                async function verify(response,orderid){
+                    try {
+                        fetch('/payment-success', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_signature: response.razorpay_signature,
+                            orderid
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            // Redirect to the 'placeorder' page
+                            fetch('/placeorder', {
+                                method: 'post',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ cartId, radiovalue, paymentMethod:"razorpay", totalprice }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success === true) {
+                                    window.location.href = '/orderplaced';
+                                }
+                            });
+                            // window.location.href = '/placeorder';
+                        } else {
+                            // Handle payment error and display appropriate message
+                            console.error('Payment error:', data.message);
+                            alert('Payment processing failed. Please try again or contact support.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending payment details:', error);
+                        alert('An error occurred while processing the payment. Please try again.');
+                    });
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+                rzp.on('payment.error', (error) => {
+                    console.error('Payment error:', error);
+                    alert('Payment failed. Please try again or use a different payment method.');
+                });
             })
-        }
-        }
+
+        } 
+           else if(paymentMethod=="COD"){
+            fetch('/placeorder', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cartId, radiovalue, paymentMethod, totalprice }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success === true) {
+                    window.location.href = '/orderplaced';
+                }
+            });
+           } 
+
+           else if(paymentMethod=="wallet"){
+            fetch('/placeorder', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cartId, radiovalue, paymentMethod, totalprice }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success === true) {
+                    window.location.href = '/orderplaced';
+                }else if(data.success==false){
+                    document.getElementById('noBalance').textContent=data.error
+                    setTimeout(() => {
+                        document.getElementById('noBalance').style.display="none"
+                    }, 3000);
+                }
+            });
+           } 
+       
+    } else {
+        Swal.fire({
+            title: 'Select any Address!!',
+            icon: 'info',
+        });
+    }
+}
+
+
+      
+    function copyToClipboard(code) {
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        document.getElementById('pp').innerHTML="copied to clipboard"
+        setTimeout(() => {
+            document.getElementById('pp').style.display="none"
+        }, 2000);
+    }
+
+ 
     </script>
+  
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>

@@ -130,7 +130,10 @@ input:focus::-moz-placeholder {
 a {
   color: #088178;
 }
-
+.main-menu a{
+  color: #000;
+  font-weight:bold;
+}
 a:hover {
   color: #046963;
 }
@@ -732,7 +735,7 @@ strong,
 }
 
 .section-title span {
-  color: #088178;
+  color: #0a0a0a;
 }
 
 h3.section-title {
@@ -1854,8 +1857,8 @@ label {
 }
 
 .dot-style-1 ul li.slick-active button {
-  background: #088178;
-  border-color: #088178;
+  background: #7d7373;
+  border-color: #7d7373;
 }
 
 .dot-style-1.dot-style-1-position-1 ul {
@@ -1920,9 +1923,9 @@ label {
 }
 
 .slider-arrow .slider-btn:hover {
-  background-color: #088178;
-  color: #fff;
-  border-color: #088178;
+  background-color: #121313;
+  color: #f3e9e9;
+  border-color: #121313;
 }
 
 .slider-arrow.slider-arrow-2 .slider-btn {
@@ -2024,7 +2027,7 @@ label {
 }
 
 .bg-grey-10 {
-  background-color: #d0f3ec;
+  background-color: #ffffff;
 }
 
 .home-slider .slider-arrow {
@@ -6447,7 +6450,7 @@ h6.post-title {
 
 .header-style-1 .header-top-ptb-1 {
   padding: 13px 0;
-  border-bottom: 3px solid #39b4ac;
+  border-bottom: 3px solid #000000;
   background-color:#ffffff;
   background-image: none;
 }
@@ -7701,6 +7704,8 @@ span.fi-rs-apps {
 
 .section-padding {
   padding: 25px 0;
+  border-top: .5px solid #000;
+  border-bottom: .5px solid #000;
 }
 
 .ptb-0 {

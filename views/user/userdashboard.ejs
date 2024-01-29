@@ -17,6 +17,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         .shadecard{
             box-shadow: 0px 0px 15px #8fad9866;
@@ -40,6 +41,10 @@
         }
         .changediv{
             padding:10px;
+        }
+        .blackfoot, .blackfoot a , .blackfoot li, .blackfoot p, .blackfoot h5{
+            background-color: black !important;
+            color: white !important;
         }
     </style>
 </head>
@@ -236,8 +241,14 @@
                                             <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
                                         </li>
                                         <li class="nav-item">
+                                            <a class="nav-link" id="wallet-tab" data-bs-toggle="tab" href="#wallet" role="tab" aria-controls="wallet" aria-selected="true">
+                                                <i class="fa-solid fa-wallet"></i>Wallet
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
                                             <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
                                         </li>
+                                       
                                         <li class="nav-item">
                                             <a class="nav-link" href="/logout"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
                                         </li>
@@ -268,8 +279,8 @@
                                                             <tr>
                                                                 <th>Order</th>
                                                                 <th>Date</th>
-                                                                
                                                                 <th>Total</th>
+                                                                <th>payment Status</th>
                                                                 <th>View Order</th>
                                                                 
                                                             </tr>
@@ -279,15 +290,36 @@
                                                                 <%for(let i=0;i<order.length;i++){%>
                                                             <tr>
                                                                 <td><%=order[i]._id%></td>
-                                                                <td><%=order[i].createdAt%></td>
+                                                                <td><%= new Date(order[i].createdAt).toLocaleDateString() %></td>
                                                                 <td>Rs.<%=order[i].totalamount%></td>
+                                                                <td><%=order[i].status%></td>
                                                                 <td><a href="/ordersummary?id=<%=order[i]._id%>" class="btn-small d-block">View</a></td>
                                                             </tr>
                                                             <%}}%>
                                                         </tbody>
+                                                     
                                                     </table>
+                                                    <% if (locals.totalPages > 1) { %>
+                                                        <% if (locals.page > 1) { %>
+                                                        <a href="?page=<%= locals.page - 1 %>" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; text-align: center; margin-right: 5px; color: white; background-color: #088178; border-radius: 5px;">Prev</a>
+                                                        <% } %>
+                                                    
+                                                        <% let startPage = Math.max(1, locals.page - 2); %>
+                                                        <% let endPage = Math.min(locals.totalPages, startPage + 3); %>
+                                                    
+                                                        <% for (let i = startPage; i <= endPage; i++) { %>
+                                                            <a href="?page=<%= i %>" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; text-align: center; margin-right: 5px; color: white; background-color: #088178;  border-radius: 5px;"><%= i %></a>
+                                                        <% } %>
+                                                    
+                                                        <% if (locals.page < locals.totalPages) { %>
+                                                            <a href="?page=<%= locals.page + 1 %>" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; text-align: center; margin-right: 5px; color: white; background-color: #088178; border-radius: 5px;">Next</a>
+                                                        <% } %>
+                                                    <% } %>
+                                                    
                                                 </div>
+                                               
                                             </div>
+                                           
                                         </div>
                                     </div>
                                    
@@ -296,16 +328,6 @@
                                             <%if(locals.address){%>
                                                 <% for(let i=0; i < locals.address.length ; i++) { %>
                                             <div class="col-lg-6">
-                                                <!-- <div class="card mb-3 mb-lg-0">
-                                                    <div class="card-header">
-                                                        <h5 class="mb-0">Billing Address</h5>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <address>3522 Interstate<br> 75 Business Spur,<br> Sault Ste. <br>Marie, MI 49783</address>
-                                                        <p>New York</p>
-                                                        <a href="#" class="btn-small">Edit</a>
-                                                    </div>
-                                                </div> -->
                                                <div class="card shadecard mb-4">
                                                 
                                                 <div class="card-body height" style="text-align: left;">
@@ -332,6 +354,25 @@
                                             <%}}%>
                                         </div>
                                     </div>
+                                    
+                                    <div class="tab-pane fade" id="wallet" role="tabpanel" aria-labelledby="wallet-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Your Wallet</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="wallet-balance">
+                                                    <p class="balance-text">Your wallet balance:</p>
+                                                    <br> 
+                                                    <%if(locals.wallet){%>
+                                                    <h2 class="balance-amount">Rs.<%=locals.wallet.balance%></h2>
+                                                    <%}%>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
                                         <div class="card">
                                             <div class="card-header">
@@ -356,19 +397,6 @@
                                                             <input  value="<%=locals.user.email%>" class="form-control square" id="email" name="email" type="email">
                                                             <p id="emailError" class="text text-danger"></p>
                                                         </div>
-                                                      
-                                                        <!-- <div class="form-group col-md-12">
-                                                            <label>Current Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="password" type="password">
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>New Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="npassword" type="password">
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Confirm Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="cpassword" type="password">
-                                                        </div> -->
                                                         <div class="col-md-12">
                                                             <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Update</button>
                                                         </div>
@@ -380,8 +408,13 @@
                                                     </div>
                                                 </form>
                                             </div>
+                                            
                                         </div>
                                     </div>
+
+                                 
+
+
                                 </div>
                             </div>
                         </div>

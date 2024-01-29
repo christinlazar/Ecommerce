@@ -2,17 +2,16 @@ const User = require('../models/userModel')
 const Product = require('../models/productModel')
 const myCart = require('../models/cartModel')
 const address = require('../models/addressModel')
+const Coupon = require('../models/couponModel')
 
 const loadCart = async(req,res)=>{
     try {
         const id = req.session.user
         const cartOfUser = await myCart.find({userId:id}).populate('products.productId').exec()
-        if(cartOfUser){
-            // cartOfUser.forEach(element => {
-            //   console.log(element.products)  
-            // });
-            console.log(cartOfUser)
+        if(cartOfUser&&cartOfUser.length>0){
             res.render('cart',{cartOfUser:cartOfUser})
+        }else{
+            res.render('cart',{cartEmpty:"Your cart is empty"})
         }
     } catch (error) {
      console.log(error)   
@@ -76,6 +75,7 @@ const addToCart = async (req, res) => {
         const userId = req.session.user;
         const sizee = req.body.selectedSize;
 
+    
 
         const userHaveCart = await myCart.findOne({ userId: userId }).populate('products.productId');
 
@@ -233,8 +233,12 @@ const checkOut = async(req,res)=>{
         console.log(userId)
         addressOfUser = await address.find({userId:userId})
         cartOfUser = await myCart.findOne({userId:userId}).populate('products.productId')
-        console.log(cartOfUser);
-       res.render('checkout',{cartOfUser:cartOfUser,addressOfUser:addressOfUser}) 
+        const coupon = await Coupon.find({is_active:true})
+        if(cartOfUser){
+        res.render('checkout',{cartOfUser:cartOfUser,addressOfUser:addressOfUser,coupon:coupon}) 
+        }else{
+        res.render('cart',{cantMoveToCheckout:"Your cart has No proudcts,So cant proceed to checkout",cartEmpty:"Your cart is empty"})  
+        }
     } catch (error) {
         console.log(error.message)
     }

@@ -91,17 +91,23 @@ const addProductDetials = async(req,res)=>{
         const images = req.files
         const imagefilenames = images.map(image =>image.filename)
        const {name,description,saleprice,regularprice,category,small,medium,large} = req.body
-    //    const image = req.file.filename
-        console.log(category)
-      
+        
+        const regPrice = parseInt(regularprice)
+        const discount = parseInt(req.body.discount)
+        const discountAmount = regPrice * (discount/100)
+        const sellPrice = regularprice-discountAmount
+        const sellingPrice = Math.floor(sellPrice)
+
+        console.log(sellPrice)
 
        const product = new Product({
         name:name,
         description:description,
         price:{
-            saleprice:saleprice,
-            regularprice:regularprice,
+            saleprice:sellingPrice,
+            regularprice:regPrice,
         },
+        discount:discount,
         image:imagefilenames,
         category:category,
         size:{
@@ -218,6 +224,14 @@ try {
     const newImages = images.map(image=>image.filename)
    const {name,description,saleprice,category,regularprice,small,medium,large} = req.body
 
+   const regPrice = parseInt(regularprice)
+   const discount = parseInt(req.body.discount)
+   const discountAmount = regPrice * (discount/100)
+   const sellPrice = regularprice-discountAmount
+   const sellingPrice = Math.floor(sellPrice)
+
+   console.log(sellPrice)
+
    const croppedImages = await Promise.all(
     images.map(async (image) => {
         const inputFilePath = path.join('uploads', image.filename);
@@ -239,10 +253,11 @@ try {
         name:name,
         description:description,
         price:{
-            saleprice:saleprice,
-            regularprice:regularprice,
+            saleprice:sellingPrice,
+            regularprice:regPrice,
         },
         category:category,
+        discount:discount,
         size:{
             s:{quantity:small},
             m:{quantity:medium},
@@ -254,7 +269,14 @@ try {
  console.log(error)   
 }
 }
-
+const loadOffers = async(req,res)=>{
+    try {
+        const offerProducts = await Product.find({discount:{$gt:0}})
+        res.render('offers',{offerProducts})
+    } catch (error) {
+        console.log(error)
+    }
+}
 module.exports = {
     // categorySave,
     // blockCategory,
@@ -269,5 +291,5 @@ module.exports = {
     unblockProduct,
     deleteImage,
     verifyEditProduct,
-    
+    loadOffers
 }

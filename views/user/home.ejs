@@ -24,7 +24,10 @@
         .header-bottom {
   border-top: 1px solid black;
 }
-
+.blackfoot, .blackfoot a , .blackfoot li, .blackfoot p, .blackfoot h5{
+            background-color: black !important;
+            color: white !important;
+        }
     </style>
 </head>
 
@@ -220,7 +223,7 @@
                                     <option>Shoes</option>
                                     <option>Mother & Kids</option>
                                 </select> -->
-                                <input type="text" placeholder="Search for items...">
+                                <!-- <input type="text" placeholder="Search for items..."> -->
                             </form>
                         </div>
                         <div class="header-action-right">
@@ -253,7 +256,7 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"><img src="assets/imgs/theme/8a813403a753870be0502b41983f96e3.jpg" alt="logo"></a>
+                        <a href=""><img src="assets/imgs/theme/8a813403a753870be0502b41983f96e3.jpg" alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <!-- <div class="main-categori-wrap d-none d-lg-block"> -->
@@ -441,7 +444,7 @@
                             <nav>
                                 <ul>
                                     <!-- <li> -->
-                                        <a class="active" href="/home">Home<i class=""></i></a>
+                                        <a class="active" href="/">Home<i class=""></i></a>
                                         <!-- <ul class="sub-menu">
                                             <li><a href="index.html">Home 1</a></li>
                                             <li><a href="index-2.html">Home 2</a></li>
@@ -820,7 +823,7 @@
                                             <span> 50 <i class="fi-rs-angle-small-down"></i></span>
                                         </div>
                                     </div>
-                                    <div class="sort-by-dropdown">
+                                    <!-- <div class="sort-by-dropdown">
                                         <ul>
                                             <li><a class="active" href="#">50</a></li>
                                             <li><a href="#">100</a></li>
@@ -828,7 +831,7 @@
                                             <li><a href="#">200</a></li>
                                             <li><a href="#">All</a></li>
                                         </ul>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="sort-by-cover">
                                     <div class="sort-by-product-wrap">
@@ -839,7 +842,7 @@
                                             <span> Featured <i class="fi-rs-angle-small-down"></i></span>
                                         </div>
                                     </div>
-                                    <div class="sort-by-dropdown">
+                                    <!-- <div class="sort-by-dropdown">
                                         <ul>
                                             <li><a class="active" href="#">Featured</a></li>
                                             <li><a href="#">Price: Low to High</a></li>
@@ -847,7 +850,7 @@
                                             <li><a href="#">Release Date</a></li>
                                             <li><a href="#">Avg. Rating</a></li>
                                         </ul>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -885,8 +888,14 @@
                                             </span>
                                         </div>
                                         <div class="product-price">
-                                            <span>₹<%=products[i].price.saleprice%></span>
-                                            <span class="old-price">₹<%=products[i].price.regularprice%></span>
+                                            <%if(products[i].discount==0){%>
+                                                <span  class="old-price-only" >Rs.<%=products[i].price.regularprice%></span>
+                                            <%}else{%>
+                                                <span id="sale">Rs.<%=products[i].price.saleprice%></span>
+                                                <span  class="old-price">Rs.<%=products[i].price.regularprice%></span>
+                                                <span   id="disc" class="text text-danger">-<%=products[i].discount%>%</span>
+                                            <%}%>
+                                          
                                         </div>
                                         <div class="product-action-1 show">
                                             <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>

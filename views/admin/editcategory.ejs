@@ -119,6 +119,13 @@
                                             <option>Clothing</option>
                                             </select>
                                 </div>
+
+                                <div class="mb-4">
+                                    <label for="discount" class="form-label" >Category Discount In %</label>
+                                    <input type="text" value="<%=category.categoryDiscount%>" placeholder="Type here" class="form-control" id="" name="categoryDiscount"/>
+                                    <p class="" style="display:none" id=""></p>
+                                </div>
+
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
                                     <!-- <textarea value="<%=category.description%>" placeholder="Type here" class="form-control"  id="description"></textarea> -->
@@ -131,6 +138,19 @@
                                 </div> -->
                                 <div class="d-grid">
                                     <button class="btn btn-primary" >Edit category</button>
+                                    <br>
+                                    <%if(locals.samecata){%>
+                                        <p id="samecata" class="=text text-danger"><%=locals.samecata%></p>
+                                        <script>
+                                            setTimeout(() => {
+                                                document.getElementById('samecata').style.display="none";
+                                            }, 3000);
+                                            setTimeout(() => {
+                                                window.location.href="/admin/category"
+                                            }, 2000);
+                                          
+                                        </script>
+                                    <%}%>
                                 </div>
                             </form>
 
@@ -164,12 +184,12 @@
         
         
         function validateCategory(){
-            const categorypattern = /^[a-zA-Z][a-zA-Z ]*$/
+            const categorypattern = /^[A-Z][a-zA-Z]*$/
             if(categorypattern.test(category.value)){
                     categoryError.innerHTML=''
           
             }else{
-                categoryError.innerHTML='must contain only letters'
+                categoryError.innerHTML='invalid Input'
                 categoryError.style.display='block'
                 setTimeout(() => {
                     categoryError.style.display='none'
@@ -192,7 +212,7 @@
 
        
         
-        form.addEventListener('blur',(event)=>{
+        form.addEventListener('submit',(event)=>{
             validateCategory();
             validateDescription()
         

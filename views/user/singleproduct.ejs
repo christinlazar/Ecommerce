@@ -49,6 +49,23 @@
       right: 8px;
       transform: translateY(-50%);
     }
+    #disc{
+        font-size:20px;
+        font-weight:bold;
+    }
+    .blackfoot, .blackfoot a , .blackfoot li, .blackfoot p, .blackfoot h5{
+            background-color: black !important;
+            color: white !important;
+        }
+        #reg{
+            text-decoration: none;
+            font-size:30px;
+            color:#088178;
+            font-weight:bold;
+        }
+        #disccc{
+            text-decoration:none;
+        }
   </style>
 </head>
 <body>
@@ -136,7 +153,7 @@
                                 <h3 class="title-detail mt-30">Colorful Pattern Shirts HD450</h3>
                                 <div class="product-detail-rating">
                                     <div class="pro-details-brand">
-                                        <span> Brands: <a href="shop-grid-right.html">Bootstrap</a></span>
+                                        <span> Brand: <a href="shop-grid-right.html">Wild MOnkey</a></span>
                                     </div>
                                     <div class="product-rate-cover text-end">
                                         <div class="product-rate d-inline-block">
@@ -404,11 +421,11 @@
                                     <!-- End Gallery -->
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <div class="detail-info">
+                                    <div class="detail-info"> 
                                         <h2 class="title-detail"><%=product.name%></h2>
                                         <div class="product-detail-rating">
                                             <div class="pro-details-brand">
-                                                <span> Brands: <a href="shop-grid-right.html">Bootstrap</a></span>
+                                                <span> Brand: <a href="shop-grid-right.html">Wild MOnkey</a></span>
                                             </div>
                                             <div class="product-rate-cover text-end">
                                                 <div class="product-rate d-inline-block">
@@ -420,9 +437,13 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
+                                                <%if(product.discount==0){%>
+                                                    <ins><span id="reg" class="old-price font-md ml-15">₹<%=product.price.regularprice%></span></ins>
+                                                <%}else{%>
                                                 <ins><span class="text-brand">₹<%=product.price.saleprice%></span></ins>
                                                 <ins><span class="old-price font-md ml-15">₹<%=product.price.regularprice%></span></ins>
-                                                <span class="save-price  font-md color3 ml-15">25% Off</span>
+                                                <span id="disc" class="save-price  font-lg  color3 ml-15 text-danger">-<%=product.discount%>%</span>
+                                                <%}%>
                                             </div>
                                         </div>
                                         <div class="bt-1 border-color-1 mt-15 mb-15"></div>
@@ -471,9 +492,13 @@
                                                 <a   href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>
                                             <div class="product-extra-link2">
-                                
+                                                
+                                                <%if(locals.userId){%>
                                                 <button style="display:block;" id="addtocartbtn" type="submit" class="button button-add-to-cart" data-productid="<%=product._id%>" > Add to cart</button>
                                                 <p id="itemadded" style="display:none;">Item Added to Cart</p>
+                                                <%}else{%>
+                                                    <button style="display:block;" id="addtocartbtn" type="submit" onclick="toLogin()" class="button button-add-to-cart" > Add to cart</button>
+                                                <%}%>
                                                 
                                                 <p style="display:block;" class="text text-danger" id="errorExceeds"></p>
                     
@@ -717,8 +742,13 @@
                                                         </span>
                                                     </div>
                                                     <div class="product-price">
+                                                        <%if(relatedproducts[i].discount==0){%>
+                                                        <span id="disccc" class="old-price">₹<%=relatedproducts[i].price.regularprice%></span>
+                                                        <%}else{%>
                                                         <span>₹<%=relatedproducts[i].price.saleprice%></span>
                                                         <span class="old-price">₹<%=relatedproducts[i].price.regularprice%></span>
+                                                        <span id="discc" class="save-price  font-lg  color3 ml-15 text-danger">-<%=relatedproducts[i].discount%>%</span>
+                                                        <%}%>
                                                     </div>
                                                 </div>
                                             </div>
@@ -773,6 +803,10 @@
         let mmblock = parseInt(document.getElementById('mmblock').innerHTML)
         let llblock = parseInt(document.getElementById('llblock').innerHTML)
       
+        function toLogin(){
+            window.location.href="/login"
+        }
+       
 
         window.onload = function(){
             if(ssblock===0)

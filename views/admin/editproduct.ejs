@@ -22,12 +22,15 @@
     .delete-icon {
         cursor: pointer;
     }
+    .edit-icon{
+        cursor: pointer;
+    }
 </style>
 <body>
     <div class="screen-overlay"></div>
     <!-- -------------------------INCLUDE------------------------- -->
     <%- include('sidenav') %>
-
+    
     <main class="main-wrap">
         <header class="main-header navbar">
             <div class="col-search">
@@ -131,7 +134,11 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
-                                      
+                                        <div class="mb-4">
+                                            <label class="form-label" >Discount</label>
+                                            <input value="<%=product.discount%>%" placeholder="%" name="discount" type="text" id="discount" class="form-control" >
+                                            <p class="text text-danger" style="display:none" id="discountError"></p> 
+                                        </div>
                                     </div>
                                  
                                     <div class="mb-4">
@@ -165,14 +172,19 @@
                         </div>
                         <div class="card-body">
                             
-                                <%for(let i=0;i<product.image.length;i++){%>
-                                    <div class="input-upload">
-                                    <img src="/uploads/<%=product.image[i]%>" alt="">
-                                    <span class="delete-icon "  data-index="<%= i %>" onclick="deleteImage(`<%=product._id%>`,`<%=i%>`)">&times;</span>
+                            <% for (let i = 0; i < product.image.length; i++) { %>
+                                <span class="edit-icon" onclick="openModal(`<%= product.image[i] %>`)">Crop</span>
+                                <div class="input-upload">
+                                  <img src="/uploads/<%= product.image[i] %>" alt="">
+                                  <span class="delete-icon" data-index="<%= i %>" onclick="deleteImage(`<%= product._id %>`, `<%= i %>`)">Delete &times;</span>
                                 </div>
-                                <%}%>
-                                <input class="form-control" type="file" name="image" multiple accept="image/*">
-                           
+                              <% } %>
+                              <input class="form-control" type="file" name="image" multiple accept="image/*">
+                              
+                              <!-- Bootstrap Modal -->
+                              
+                              
+                                
                         </div> 
                     </div> <!-- card end// -->
                     <div class="card mb-4">
@@ -210,9 +222,42 @@
                     </div> -->
                 </div>
             </div>
+            
+            <div class="modal" id="imageModal">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+              
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">Image Preview</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+              
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                      <img id="modalImage" src="" alt="">
+                    </div>
+              
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+              
+                  </div>
+                </div>
+              </div>
+
         </footer>
     </main>
     <script>
+
+        function openModal(imagePath,btn){
+            const modalImage = document.getElementById('modalImage')
+            modalImage.src = `/uploads/${imagePath}`;
+        
+            $(imageModal).modal('show')
+        
+    }
 
         function deleteImage(productId,index){
             

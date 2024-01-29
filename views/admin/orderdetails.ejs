@@ -90,10 +90,11 @@
                                     <%if(element.status =="Delivered"){%>
                                     <td><span class="badge rounded-pill alert-success"><%=element.status%></span></td>
                                     <%}%>
-                                    <%if(element.status =="Awaiting payment"){%>
-                                        <td><span class="badge rounded-pill alert-warning"><%=element.status%></span></td>
-                                        <%}%>
+                                    <%if(element.status =="returned"){%>
+                                    <td><span class="badge rounded-pill alert-danger"><%=element.status%></span></td>
+                                    <%}%>
                                     <td><%=element.createdAt%></td>
+
                                     <td class="text-end">
                                         <a href="/admin/orderdetailview?id=<%=element._id%>" class="btn btn-md rounded font-sm">Detail</a>
                                         <div class="dropdown">

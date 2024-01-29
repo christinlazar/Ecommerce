@@ -3,6 +3,7 @@ const User = require('../models/userModel')
 const Category = require('../models/categorymodel')
 const Product = require('../models/productModel')
 const Order = require('../models/orderModel')
+const Coupon = require('../models/couponModel')
 const path = require('path')
 
 
@@ -90,7 +91,7 @@ const logOut = async(req,res)=>{
 const loadOrderDetails = async(req,res)=>{
     try {
         
-        const orderDetails = await Order.find({}).populate('userId')
+        const orderDetails = await Order.find({}).populate('userId').sort({createdAt:-1})
        
         res.render('orderdetails',{orderDetails})
     } catch (error) {
@@ -148,6 +149,15 @@ const adminCancelOrder = async(req,res)=>{
         console.log(error.message)
     }
 }
+const loadCoupon = async(req,res)=>{
+    try {
+        const couponDetails = await Coupon.find({})
+        res.render('coupon',{couponDetails})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     loadLogin,
     postLoadLogin,
@@ -159,5 +169,8 @@ module.exports = {
     logOut,
     loadOrderDetails,
     loadOrderDetailView,
-    adminCancelOrder
+    adminCancelOrder,
+    loadCoupon,
+    // loadAddbanner,
+    // addBannerDetails
 }

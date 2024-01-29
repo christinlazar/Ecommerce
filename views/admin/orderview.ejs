@@ -182,6 +182,12 @@
                                                                 <%if(singleorder.status == "Confirmed"){%>
                                                             <span  class="badge rounded-pill alert-success text-success"><%=locals.singleorder.status%></span>
                                                             <%}}%>
+                                                            <%if(locals.singleorder){%>
+                                                                <%if(singleorder.status == "returned"){%>
+                                                            <span  class="badge rounded-pill alert-danger text-danger"><%=locals.singleorder.status%></span>
+                                                            <%}}%>
+                                                            
+                                                            
 
                                                         </dd>
                                                     </dl>
@@ -230,50 +236,75 @@
         const status = document.getElementById('selected')
             const order =document.getElementById('orderId')
             const product = document.getElementById('productId')
-          status.addEventListener('change',()=>{
+         
+           
+                status.addEventListener('change',()=>{
             const statusvalue = status.value
             const ordervalue = order.value
             const productId = product.value
             changeStatus(statusvalue,ordervalue,productId)
           })
-        function changeStatus(statusvalue,ordervalue,productId){
-           
+        
+            function changeStatus(statusvalue,ordervalue,productId){
+          if(statusvalue=="cancelled"){
             Swal.fire({
-  title: "Are you sure?",
-  text: " Are you sure you want to cancel the order!",
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "#3085d6",
-  cancelButtonColor: "#d33",
-  confirmButtonText: "Yes, Cancel it!"
+title: "Are you sure?",
+text: " Are you sure you want to cancel the order!",
+icon: "warning",
+showCancelButton: true,
+confirmButtonColor: "#3085d6",
+cancelButtonColor: "#d33",
+confirmButtonText: "Yes, Cancel it!"
 }).then((result) => {
-  if (result.isConfirmed) {
-    Swal.fire({
-      title: "Cancelled!",
-      text: "You Cancelled the Order.",
-      icon: "success"
-    }).then((result)=>{
-        if(result.isConfirmed){
-            fetch('/admin/orderdetailview',{
-                 method:"POST",
-                headers:{
-                     "Content-Type":"application/json"
-                 },
-                 body:JSON.stringify({statusvalue,ordervalue,productId})
-             }).then(response =>{
-                 return response.json()})
-             .then(data=>{
-                if(data.success)
-                {
-                 window.location.reload()
+if (result.isConfirmed) {
+  Swal.fire({
+    title: "Cancelled!",
+    text: "You Cancelled the Order.",
+    icon: "success"
+  }).then((result)=>{
+      if(result.isConfirmed){
+          fetch('/admin/orderdetailview',{
+               method:"POST",
+              headers:{
+                   "Content-Type":"application/json"
+               },
+               body:JSON.stringify({statusvalue,ordervalue,productId})
+           }).then(response =>{
+               return response.json()})
+           .then(data=>{
+              if(data.success)
+              {
+               window.location.reload()
 
-                 }
-            })
-        }
-    })
-  }
+               }
+          })
+      }
+  })
+}
 });
-        }
+          }else{
+            fetch('/admin/orderdetailview',{
+               method:"POST",
+              headers:{
+                   "Content-Type":"application/json"
+               },
+               body:JSON.stringify({statusvalue,ordervalue,productId})
+           }).then(response =>{
+               return response.json()})
+           .then(data=>{
+              if(data.success)
+              {
+               window.location.reload()
+
+               }
+          })
+          }
+ 
+      }
+       
+  
+          
+          
 
        
     </script>

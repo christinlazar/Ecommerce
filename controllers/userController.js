@@ -3,12 +3,15 @@ const Product = require('../models/productModel')
 const myCart = require('../models/cartModel')
 const nodemailer = require('nodemailer')
 const Order = require('../models/orderModel')
+const Wallet = require('../models/walletModel')
 const Address = require('../models/addressModel')
 const otpGenerator = require('otp-generator')
 const bcrypt = require('bcrypt')
 require('dotenv').config();
 const Category = require('../models/categorymodel');
 const category = require('../models/categorymodel');
+const product = require('../models/productModel')
+const Banner = require('../models/bannerModel')
 const transporter = nodemailer.createTransport({
     service:'gmail',
     auth:{
@@ -88,78 +91,7 @@ const verifyOtp = async(req,res) =>{
       console.log(error)            
         }
     }
-
-
-//   const verifiedOtp = async(req,res)=>{
-//     try {
-//         const timer = req.session.timer;
-//         const tim   = Date.now()
-
-//         if(tim-timer >60000){
-//             console.log("set")
-           
-//             res.render('registration',{error:"Otp expired, Please try again!"})
-//         }else{
-//             const userotp = req.body.otp
-//             const globalOtp = req.session.globalOtp
-//             console.log(userotp,globalOtp)
-
-//         if(userotp==globalOtp){
-//            const udata =  req.session.udata
-//             console.log("gonna check pwd")
-//             createUser(udata);
-
-//             res.redirect('/')
-//         } else{
-//             res.render('registration',{error:"Wrong Otp, Please try again!"})    
-//         }
-           
-//     } 
-        
-//     // try again
-
-//     } catch (error) {
-// console.log(error)
-        
-//     }
-//   }  
-//   const verifiedOtp = async (req, res) => {
-//     try {
-//         const timer = req.session.timer;
-//         const currentTime = Date.now();
-
-//         if (currentTime - timer > 60000) {
-//             console.log("set");
-//             res.render('verifyotp', { error: "Otp expired, Please try again!" });
-//         } else {
-//             const userOtp = req.body.otp;
-//             const globalOtp = req.session.globalOtp;
-//             console.log(userOtp, globalOtp);
-
-//             if (userOtp === globalOtp) {
-//                 const udata = req.session.udata;
-//                 console.log("Correct OTP, registering user");
-//                 createUser(udata);
-//                 req.session.otpAttempts = 0;  // Reset attempts
-//                 res.redirect('/');
-//             } else {
-//                 const attempts = (req.session.otpAttempts || 0) + 1;
-//                 req.session.otpAttempts = attempts;
-
-//                 res.render('verifyotp', {
-//                     error: `Wrong OTP. ${3 - attempts} attempts remaining.`,
-//                     remainingAttempts: 3 - attempts,
-//                     email: req.session.email, // You may want to include other necessary data
-//                     otpExpiration: req.session.otpExpiration
-//                 });
-//             }
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).send("Internal Server Error");
-//     }
-// };
-
+    
 const verifiedOtp = async(req,res)=>{
     try {
         
@@ -221,7 +153,7 @@ const userLogin = async (req, res) => {
                 }
                 else{
                     req.session.user = userData._id;
-                    res.redirect('/home');   
+                    res.redirect('/');   
                 }
                 
             }else{
@@ -238,6 +170,17 @@ const userLogin = async (req, res) => {
 
 const loadHome = async(req,res)=>{
     try{
+        var search = ''
+        if(req.query.search){
+            search = req.query.search
+        }
+        if(search){
+            query.$or = [
+                {name:{$regex:'.*'+search+'.*',$options:'i'}},
+                {'category.name':{$regex:'.*'+search+'.*',$options:'i'}}
+            ]
+        }
+        
         const products = await Product.find({is_active:true})
             res.render('home.ejs',{products})
 
@@ -247,6 +190,7 @@ const loadHome = async(req,res)=>{
 }
 const loadSingleProductView = async(req,res)=>{
     try {
+        const userId = req.session.user
         const id = req.query.id
         const totalQuantity = await Product.aggregate([
             {
@@ -266,8 +210,8 @@ const loadSingleProductView = async(req,res)=>{
         ]);
         const product = await Product.findById(id)
         const relatedproducts = await Product.find({category:product.category})
-        // console.log(relatedproducts)
-        res.render('singleproduct',{product,totalQuantity,relatedproducts})
+        console.log(relatedproducts);
+        res.render('singleproduct',{product,totalQuantity,relatedproducts,userId})
 
     } catch (error) {
    console.log(error)     
@@ -275,8 +219,8 @@ const loadSingleProductView = async(req,res)=>{
 }
 const logOut = async(req,res)=>{
     try {
-      req.session.destroy() 
-      res.redirect('/login') 
+      req.session.user=null; 
+      res.redirect('/') 
     } catch (error) {
      console.log(error)   
     }
@@ -318,8 +262,100 @@ const resendOtp = async(req,res)=>{
 }
 const loadRealHome = async(req,res) =>{
    try {
+    const userId = req.session.user
+    const Category = await category.find({is_active:true})
+    const banner = await Banner.findOne({isActive:true})
+    const banner2 = await Banner.findOne({title:"oversizebanner",isActive:true})
+    const bannermain = await Banner.findOne({title:"mainbanner"})
+    const bottombanner = await Banner.findOne({title:"bottombanner2"})
+    console.log(banner2)
+    var search = ''
+    if(req.query.search){
+        search = req.query.search
+    }
 
-    res.render('realhome')
+    var page = 1
+    if(req.query.page){
+        page = req.query.page
+    }
+    const limit = 9
+
+    const catId = req.query.id
+    console.log(catId)
+
+    let query = {
+        is_active:true
+    }
+   
+
+    if(search){
+        query.$or = [
+            {name:{$regex:'.*'+search+'.*',$options:'i'}},
+            {'category.name':{$regex:'.*'+search+'.*',$options:'i'}}
+        ]
+    }
+    if(catId){
+        query['category'] = catId
+    }
+    let sortOptions = {}
+    if(req.query.high){
+        console.log(req.query.high)
+        sortOptions = {'price.saleprice':1}
+    }
+    if(req.query.low){
+        sortOptions = {'price.saleprice':-1}
+    }
+
+    if(req.query.price){
+    switch(req.query.price){
+        case'below300':
+        query['price.saleprice'] = {$gte:300,$lte:700}
+        break;
+        case'below1000':
+        query['price.saleprice'] = {$gte:700,$lte:1000}
+        break;
+        case'below1500':
+        query['price.saleprice'] = {$gte:1000,$lte:1500}
+        break;
+        case'below2000':
+        query['price.saleprice'] = {$gte:1500,$lte:2000}
+        break;
+        case'above2000':
+        query['price.saleprice'] = {$gt:2000}
+        break;
+        default:
+        break;
+    }
+   }
+    const count = await Product.find(query).countDocuments()
+
+    const products = await Product.find(query)
+    .populate('category')
+    .sort(sortOptions)
+    .skip((page-1)*limit)
+    .limit(limit)
+    
+    const high = req.query.high
+    const low = req.query.low
+   const searchh = search
+   const price = req.query.price
+    res.render('realhome', {
+        products: products,
+        Category: Category,
+        totalPages: Math.ceil(count / limit),
+        page: page,
+        high:high,
+        low:low,
+        search:searchh,
+        price:price,
+        catId:catId,
+        userId:userId,
+        banner:banner,
+        banner2:banner2,
+        bannermain:bannermain,
+        bottombanner:bottombanner
+    }) 
+
    } catch (error) {
     console.log(error)
    } 
@@ -368,14 +404,28 @@ const addToCart = async(req,res)=>{
 }
 const loadUserDashboard = async(req,res)=>{
     try {
-        
-        const userId = req.session.user
+        var page =1
+        if(req.query.page){
+            page = req.query.page
+        }
+        const limit = 3
+
+    const userId = req.session.user
+    let query = {
+        userId:userId
+    }
+    const wallet = await Wallet.findOne(query).populate('userId')
+
+    console.log("wallet is"+wallet)
         const address = await Address.find({userId:userId})
         const userDetails = await User.findById(userId)
-        // console.log(address)
-        const order = await Order.find({userId:userId})
+        const order = await Order.find({userId:userId}).sort({createdAt:-1})
+        .skip((page-1)*limit)
+        .limit(limit)
+       
+        const count = await Order.find(query).countDocuments()
         const user = await User.findById(userId)
-        res.render('userdashboard',{user,order,address,user})
+        res.render('userdashboard',{user,order,address,user,wallet, totalPages: Math.ceil(count / limit),page:page})
     } catch (error) {
         console.log(error.message)
     }
@@ -422,6 +472,141 @@ const confirmNewPassword = async(req,res)=>{
         console.log(error.message)
     }
 }
+const loadForgotPassword = async(req,res)=>{
+    try {
+        res.render('forgototp')
+    } catch (error) {
+        console.log(error)
+    }
+}
+const forgotEmail = async(req,res)=>{
+    try {
+        const{email}=req.body;
+        const yesUser = await User.find({email:email})
+        if(yesUser){
+            const otp = Math.floor(100000 + Math.random() * 90000)
+            const mailOptions = {
+                from:process.env.EMAIL,
+                to:email,
+                subject:" Otp to reset password",
+                html:`Otp to reset password is ${otp}`
+            }
+            req.session.forgototp = otp;
+            req.session.timer = Date.now()
+            transporter.sendMail(mailOptions,(error,info)=>{
+                if(error){
+                    console.log(error.message)
+                }else{
+                    console.log("mail send")
+                    req.session.forgotemail = email
+                }
+                const expiration = Date.now() + 60*1000
+                req.session.expiration = expiration 
+                res.redirect('/newforgototp')
+            })
+
+        }else{
+            console.log("email not found")
+        }
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+const newPasswordSetup = async(req,res)=>{
+    try {
+        res.render('newpassword')
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+const verifyForgotOtp = async(req,res)=>{
+try {
+    const {otp} = req.body
+    const globalOtp = req.session.forgototp
+    console.log(otp,globalOtp)
+    if(otp == globalOtp){
+        res.redirect('/newpassword')
+    }else{
+        const forgotemail = req.session.forgotemail
+        const expiration = req.session.expiration
+        res.render('newforgototp',{forgotemail,expiration})
+    }
+} catch (error) {
+    console.log(error)
+}
+}
+const verifyNewPassword = async(req,res)=>{
+    try {
+        const{newpassword,confirmpassword} = req.body
+        console.log(newpassword,confirmpassword)
+       const forgotemail = req.session.forgotemail
+       if(newpassword == confirmpassword){
+        const existingUser = await User.findOne({email:forgotemail})
+        if(existingUser){
+            const hashedpwd = await bcrypt.hash(newpassword,10)
+            await User.findOneAndUpdate({email:forgotemail},{$set:{password:hashedpwd}})
+            console.log("password changed")
+            res.redirect('/login')
+        }else{
+            console.log("not existing user")
+        }
+       }else{
+       res.render('newpassword',{notmatching:"passwords not matching"})
+       }
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+const loadNewForgotOtp = async(req,res)=>{ 
+    try {
+        const forgotemail = req.session.forgotemail
+        const expiration = req.session.expiration
+        res.render('newforgototp',{forgotemail,expiration})
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+const forgotResendOtp = async(req,res)=>{
+    try {
+        const otp = Math.floor(100000 + Math.random() * 900000)
+        const email = req.session.forgotemail
+        const mailOptions = {
+            from:process.env.EMAIL,
+            to:email,
+            subject:"new otp",
+            text:`New otp is ${otp}`
+        }
+            req.session.forgototp = otp;
+            req.session.timer = Date.now()
+        transporter.sendMail(mailOptions,(error,info)=>{
+            if(error){
+                console.log(error)
+            }else{
+                const expiration = Date.now() + 60*1000
+                req.session.expiration = expiration 
+                res.redirect('/newforgototp')
+                res.status(200).json({success:true})
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+const loadWallet = async(req,res)=>{
+    try {
+        res.render('wallet')
+    } catch (error) {
+        console.log(error)
+    }
+}
+const loadAboutUs = async(req,res)=>{
+    try {
+        res.render('aboutus')
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     loadRegister,
     postRegister,
@@ -437,5 +622,14 @@ module.exports = {
     loadUserDashboard,
     updateUserDetails,
     loadChangePassword,
-    confirmNewPassword
+    confirmNewPassword,
+    loadForgotPassword,
+    forgotEmail,
+    newPasswordSetup,
+    verifyNewPassword,
+    loadNewForgotOtp,
+    verifyForgotOtp,
+    forgotResendOtp,
+    loadAboutUs,
+  
 }

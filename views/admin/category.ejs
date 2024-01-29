@@ -46,17 +46,21 @@
                                     <label for="product_name" class="form-label" >categoreies</label>
                                     <input type="text" placeholder="Type here" class="form-control" id="name" name="name"/>
                                     <p class="text text-danger" style="display:none" id="categoryError"></p>
-                                  
                                 </div>
                                
                                 <div class="mb-4">
                                     <label class="form-label">Main</label>
-                                        
                                         <select class="form-select"  id="parent" name="parent">
                                             <option>Clothing</option>
-                                            </select>
-                                        
+                                            </select>    
                                 </div>
+
+                                <div class="mb-4">
+                                    <label for="discount" class="form-label" >Category Discount In %</label>
+                                    <input type="text" value="0" placeholder="Type here" class="form-control" id="" name="categoryDiscount"/>
+                                    <p class="" style="display:none" id=""></p>
+                                </div>
+
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
                                     <textarea placeholder="Type here" class="form-control"  id="description" name="description"></textarea>
@@ -65,8 +69,8 @@
                              
                                 <div class="d-grid">
                                     <button class="btn btn-primary" type="submit">Create category</button>
-                                
                                 </div> 
+
                             </form>
                             <br> 
                            
@@ -84,11 +88,11 @@
                                 </script> -->
     
                                 <p style="display:block;" id="samecategory" class="text text-danger"><%=locals.msg%></p>
-                                <!-- <script>
-                                  
+                                <script>
+                                    setTimeout(() => {
                                         document.getElementById('samecategory').style.display="none"
-                                    
-                                </script> -->
+                                    }, 3000);
+                                </script>
     
                                 <% } %>
 

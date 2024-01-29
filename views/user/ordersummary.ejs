@@ -17,6 +17,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
+    <script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
     <style>
         .blackfoot, .blackfoot a , .blackfoot li, .blackfoot p, .blackfoot h5{
             background-color: black !important;
@@ -30,6 +32,12 @@
             margin: 0;
         }
         #btncancel{
+            background-color: #088178;
+            color:white;
+            border-radius:5px;
+            border:none;
+        }
+        #btncancel2{
             background-color: #088178;
             color:white;
             border-radius:5px;
@@ -210,11 +218,13 @@
                 </div>
             </div>
         </div>
+        
         <section class="mt-50 mb-50">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="table-responsive">
+                            
                             <table class="table shopping-summery text-center clean">
                                 <thead>
                                     <tr class="main-heading">
@@ -242,8 +252,18 @@
                                         <td  data-title="Price"><span class="badge rounded-pill alert-success text-success"><%=orderDetails.status%></span></td>
                                         <%}%>
                                         <%if(orderDetails.status == "cancelled"){%>
+                                        <td  data-title="Price"><span class="badge rounded-pill alert-danger text-danger"><%=orderDetails.status%></span></td>
+                                        <%}%>
+                                        <%if(orderDetails.status == "Shipped"){%>
+                                        <td  data-title="Price"><span class="badge rounded-pill alert-info text-info"><%=orderDetails.status%></span></td>
+                                        <%}%>
+                                        <%if(orderDetails.status == "Delivered"){%>
+                                        <td  data-title="Price"><span class="badge rounded-pill alert-success text-success"><%=orderDetails.status%></span></td>
+                                        <%}%>
+                                        <%if(orderDetails.status == "returned"){%>
                                             <td  data-title="Price"><span class="badge rounded-pill alert-danger text-danger"><%=orderDetails.status%></span></td>
                                             <%}%>
+                                      
                                         <td class="text-center" data-title="Stock">
                                             <div class="detail-qty border radius  m-auto">
                                                 
@@ -259,18 +279,29 @@
                                         <%}else{%>
                                             <td class="action" data-title="Remove"><a href="" >Cancelled</i></a></td>
                                         <%}%>
+                                         
                                     </tr>
                                     <%})}%>
                                     <tr>
-                                        <%if(locals.orderDetails){%>
-                                            <%if(locals.orderDetails.status!= "cancelled" ){%>
+                                        <%if(locals.orderDetails.status=="Delivered"){%>
+                                            <td colspan="6" class="text-end">
+                                                <button onclick="returnOrder(`<%=orderDetails._id%>`)" id="btncancel2">Return Order</button>
+                                                <script>
+                                                    document.getElementById('btncancel').style.display="none"
+                                                </script>
+                                            </td>
+                                        <%}else if(locals.orderDetails.status=="returned"){%>
+                                           <script>
+                                            document.getElementById('btncancel2').style.display="none"
+                                           </script>
+                                        <%}else{%>
                                         <td colspan="6" class="text-end">
-                                            <button onclick="removeOrder(`<%=orderDetails._id%>`)" id="btncancel"  > <i class="fi-rs-cross-small"></i>Cancel order</button>
+                                            <button style="display:block;" onclick="removeOrder(`<%=orderDetails._id%>`)" id="btncancel"  > <i class="fi-rs-cross-small"></i>Cancel order</button>
                                         </td>
-                                        <script>
-
-                                        </script>
-                                    <%}}%>
+                                       
+                                    <%}%>
+                                    
+                                 
                                         
                                     </tr>
                                     
@@ -306,8 +337,11 @@
                         </div>
                         <div class="cart-action text-end">
                             <a href='/userdashboard' class="btn  mr-10 mb-sm-15">Go to dash-board</a>
+                            <button onclick="downloadInvoice(`<%=locals.orderDetails._id%>`)"  class="btn  mr-10 mb-sm-15">Downlaod Invoice</button>
                         </div>
-                        <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
+                        <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i>
+
+                        </div>
                         <div class="row mb-50">
                             
                             
@@ -379,7 +413,50 @@ async function rem(orderId)
                 console.log(error.message)
             }
         }
+
+        function returnOrder(orderId){
+
+            Swal.fire({
+                    title:"Are you sure?",
+                    icon:"info",
+                    confirmButtonText:"OK",
+                    showConfirmButton:true,
+                    showDenyButton:true,
+                    denyButtonText:"cancel"
+                }).then(res=>{
+                    if(res.isConfirmed){
+                        fetch('/returnorder',{
+                            method:"POST",
+                            headers:{
+                                "Content-Type":"application/json"
+                            },
+                            body:JSON.stringify({orderId})
+                        }).then(response =>response.json()).then(data=>{
+                            if(data.success){
+                                window.location.reload()
+                            }
+                        })
+                    }
+                })
+        }
+
+        function downloadInvoice(orderId){
+            fetch('/downloadinvoice',{
+                method:"PATCH",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({orderId})
+            }).then(response=>response.json()).then(data=>{
+                if(data.resPdf){
+                    console.log(data.resPdf)
+                    easyinvoice.download('wildmonkey_Invoice.pdf',data.resPdf)
+                }
+            })
+        }
+
     </script>
+   
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>

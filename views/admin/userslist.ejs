@@ -119,14 +119,14 @@
   cancelButtonColor: "#d33",
   confirmButtonText: "Yes, Block it!"
 }).then((result) => {
-  if (result.isConfirmed) {
+  if(result.isConfirmed) {
     Swal.fire({
       title: "Blocked!",
       text: "You have blocked the user.",
       icon: "success"
     })
     .then((result)=>{
-        if (result.isConfirmed) {
+        if(result.isConfirmed) {
            fetch('/admin/blockuser',{
             method:"PATCH",
             headers:{

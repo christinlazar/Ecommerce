@@ -14,12 +14,15 @@ const productSchema = mongoose.Schema({
         default:true
     },
     price:{
-       saleprice:{type:Number,required:true},
+       saleprice:{type:Number,default:0},
        regularprice:{type:Number,required:true}
     },
     image:{
         type:Array,
         required:true
+    },
+    discount:{
+        type:Number,
     },
     added_at:{
         type:Date,

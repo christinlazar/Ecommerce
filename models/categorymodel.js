@@ -4,11 +4,14 @@ const categorySchema = mongoose.Schema({
     name:{
         type:String,
         required:true,
-    },
-   
+    }, 
     parent:{
         type:String,
         required:true
+    },
+    categoryDiscount:{
+        type:Number,
+        default:0
     },
     is_active:{
         type:Boolean,
