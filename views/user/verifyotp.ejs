@@ -81,7 +81,7 @@ body {
               <input type="hidden" name="email" id="email" value="<%= email %>">
             <div class="d-flex flex-row mt-5"><input id="otpInput" type="text" class="form-control" autofocus="" name="otp"></div>
             <div class="text-center mt-5"><span class="d-block mobile-text"></span><span class="font-weight-bold text-danger cursor"></span></div>
-          
+           
            <% if(locals.error) { %>
             <p style="display:block" id="error" class="error text text-danger"><%= locals.error %></p>
             <!-- <script>

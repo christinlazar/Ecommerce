@@ -7,6 +7,9 @@ const Wallet = require('../models/walletModel')
 const Address = require('../models/addressModel')
 const otpGenerator = require('otp-generator')
 const bcrypt = require('bcrypt')
+const {v4:uuidv4} = require('uuid')
+const express = require('express')
+const session = require('express-session')
 require('dotenv').config();
 const Category = require('../models/categorymodel');
 const category = require('../models/categorymodel');
@@ -22,25 +25,24 @@ const transporter = nodemailer.createTransport({
 
 // let users = {}
 
-const createUser = async(udata)=>{
-
-   return await User.create(udata)
-   
-}
 
 const postRegister = async(req,res)=>{
     try{
         console.log("getting inside post")
-       const{name,email,phone,password,confirm_password} = req.body
-       req.session.email = email
-       req.session.phone = phone
+      
+       const{name,email,phone,password,confirm_password,referal} = req.body
+        req.session.referal = referal;
+        req.session.email = email
+        req.session.phone = phone
        const hashed = await bcrypt.hash(password,10)
        console.log(hashed)
+       const referalCode = generateReferalCode();
        const udata = {
         name,
         email,
         phone,
         password:hashed,
+        referalcode:referalCode,
         confirm_password
        }
        req.session.udata = udata
@@ -80,7 +82,22 @@ const postRegister = async(req,res)=>{
     }
 }
 
+function generateReferalCode(){
+    return uuidv4().substr(0,8) //generating a unique referal code a user
+}
 
+const createUser = async(udata)=>{
+
+    return await User.create(udata)
+    
+ }
+ const createWallet = async(regUserId)=>{
+    const wallet = new Wallet({
+         userId:regUserId,
+    })
+    return await wallet.save();
+ }
+ 
 const verifyOtp = async(req,res) =>{
         try {
             const otpExpiration = req.session.otpExpiration
@@ -104,9 +121,22 @@ const verifiedOtp = async(req,res)=>{
            const globalOtp = req.session.globalOtp
            if(otp==globalOtp){
             const userData = req.session.udata
-            createUser(userData)
+            const createdUser = await createUser(userData)
+            if(createdUser){
+                const createdWallet = await createWallet(createdUser._id)
+                if(createdWallet){
+                    const referal = req.session.referal
+                    const userWithReferal = await User.findOne({referalcode:referal})
+                    if(userWithReferal){
+                        const referalAmount = parseInt(500)
+                        const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
+                        const referalAmount2 = parseInt(200)
+                        const walletOfNewUser = await Wallet.findOneAndUpdate({userId:createdUser._id},{$inc:{balance:referalAmount2}}).populate('userId')
+                        console.log(walletOfNewUser)
+                    }
+                }
+            }
             req.session.uData = userData
-    
             res.redirect('/login')
            }else{
             const email = req.session.email
@@ -119,6 +149,8 @@ const verifiedOtp = async(req,res)=>{
         console.log(error)
     }
 }
+
+
 
 const loadLogin = async(req,res)=>{
     try {
@@ -231,7 +263,7 @@ const resendOtp = async(req,res)=>{
     try {
        const  currentTime = Date.now();
        const timeDiff = (currentTime-lastOtpGeneration/1000)
-       if(timeDiff<60){
+       if(timeDiff<60){ 
         res.send(400).json({message:"please wait before resending"})
        }
        const otp = Math.floor(100000 + Math.random()* 900000)

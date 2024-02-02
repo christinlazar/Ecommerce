@@ -5,6 +5,7 @@ const Product = require('../models/productModel')
 const Order = require('../models/orderModel')
 const Coupon = require('../models/couponModel')
 const path = require('path')
+const { log } = require('util')
 
 
 const loadLogin = async(req,res)=>{
@@ -40,7 +41,68 @@ const postLoadLogin = async(req,res)=>{
 } 
 const loadDashBoard = async(req,res)=>{
     try {
-     res.render('admindash')     
+        const arr=[] 
+        const orderDetails = await Order.find({}).populate('userId').sort({createdAt:-1})
+        const orderCounts = await Order.find({}).count()
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth()+1 
+        const firstDayOfMonth = new Date(currentDate.getFullYear(),currentMonth-1,1)
+        const lastDayOfMonth = new Date(currentDate.getFullYear(),currentMonth,0)
+
+        const totalRevenueArray = await Order.aggregate([
+            {
+            $match:{
+                createdAt: {$gte:firstDayOfMonth,$lte:lastDayOfMonth}
+            }
+        },
+        {
+            $group:{
+                _id:null,
+                totalRevenue:{$sum:'$totalamount'}
+            }
+        }
+    ])
+    
+    let totalrevenue=0
+    totalRevenueArray.forEach(el=>{
+    totalrevenue = el.totalRevenue
+  })
+  
+  const productCount = await Order.aggregate([
+    {
+        $unwind:'$products'
+    },
+    {
+        $group:{
+            _id:'$_id',
+            totalProductsInOrder:{$sum:'$products.quantity'}
+        }
+    },
+    {
+        $group:{
+            _id:null,
+            totalProducts:{$sum:'$totalProductsInOrder'}
+        }
+    }
+  ])
+  let pCount = 0
+  productCount.forEach(el=>{
+ pCount = el.totalProducts
+  })
+
+  const revenue = await Order.aggregate([
+    {
+        $group:{
+            _id:null,
+            revenue : {$sum:'$totalamount'}
+        }
+    }
+  ])
+  let totalRevenue=0
+revenue.forEach(el=>{
+    totalRevenue = el.revenue
+})
+     res.render('admindash',{orderDetails,orderCounts,totalrevenue,pCount,totalRevenue})     
     } catch (error) {
     console.log(error)        
     }

@@ -389,9 +389,9 @@
                             <ul class="categories">
 
                              <%if(locals.Category){%>
-                                <% locals.Category.forEach(element =>{ %>
+                                <%locals.Category.forEach(element =>{%>
                                     <li><a href="?id=<%=element._id%>" ><%= element.name %></a></li>
-                             <% })}%>
+                             <%})}%>
 
                         
                             </ul>
@@ -517,7 +517,7 @@
                                                 </div>
                                                 <div class="product-action-1">
                                                     
-                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist(`<%=products[i]._id%>`)"><i class="fi-rs-heart"></i></a>
                                                   
                                                 </div>
                                                 <div class="product-badges product-badges-position product-badges-mrg">
@@ -1364,7 +1364,19 @@
     </div>
     <!-- Vendor JS-->
     <script> 
-   
+    function addToWishlist(productId){
+        fetch('/addtowishlist',{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({productId})
+        }).then(response =>response.json()).then(data=>{
+            if(data.success){
+                window.location.reload()
+            }
+        })
+    }
 
     </script>
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>

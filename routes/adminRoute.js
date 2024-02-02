@@ -8,6 +8,7 @@ const categoryController = require('../controllers/categoryController')
 const productController = require('../controllers/productController')
 const couponController = require('../controllers/couponController')
 const bannerController = require('../controllers/bannerController')
+const chartController = require('../controllers/chartController')
 const adminAuth = require('../middleware/adminauth')
 // const fs =require('fs')
 adminRoute.set('view engine','ejs')
@@ -62,6 +63,7 @@ adminRoute.patch('/deletebanner',bannerController.deleteBanner)
 adminRoute.post('/editbanner',upload.array('image'),bannerController.verifyEditBanner)
 adminRoute.patch('/blockbanner',bannerController.blockBanner)
 adminRoute.patch('/unblockbanner',bannerController.unBlockBanner)
+adminRoute.post('/fetchSalesData',chartController.fetchsalesdata)
 
 
 module.exports = adminRoute

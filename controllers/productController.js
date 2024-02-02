@@ -1,5 +1,7 @@
 const Category = require('../models/categorymodel')
 const Product = require('../models/productModel')
+const User = require('../models/userModel')
+
 const fs = require('fs')
 const sharp = require('sharp')
 const path = require('path')
@@ -277,6 +279,7 @@ const loadOffers = async(req,res)=>{
         console.log(error)
     }
 }
+
 module.exports = {
     // categorySave,
     // blockCategory,
@@ -291,5 +294,6 @@ module.exports = {
     unblockProduct,
     deleteImage,
     verifyEditProduct,
-    loadOffers
+    loadOffers,
+    
 }

@@ -19,6 +19,7 @@ const cartController = require('../controllers/cartController')
 const orderController = require('../controllers/orderController')
 const couponController = require('../controllers/couponController')
 const productController = require('../controllers/productController')
+const wishlistController = require('../controllers/wishlistController')
 // const isBlock = require('../middleware/isblock');
 
 // userRoute.get('/',userController.loadLogin)
@@ -68,5 +69,8 @@ userRoute.post('/returnorder',orderController.returnOrder)
 userRoute.patch('/downloadinvoice',orderController.downloadInvoice)
 userRoute.get('/aboutus',userController.loadAboutUs)
 userRoute.get('/offers',productController.loadOffers)
+userRoute.post('/addtowishlist',wishlistController.addToWishList)
+userRoute.get('/wishlist',userAuth.isLogout,wishlistController.viewWishList)
+userRoute.get('/removefromwishlist',userAuth.isLogout,wishlistController.removeFromWishlist)
 
 module.exports = userRoute;

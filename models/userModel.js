@@ -21,6 +21,20 @@ const userSchema = mongoose.Schema({
     otp:{
         type:String,
     },
+    referalcode:{
+        type:String
+    },
+    wishlist:{
+        type:[
+            {
+            product_id:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'product'
+                }
+            }
+        ],
+        default:[]
+    },
     is_active:{
         type:Boolean,
         default:true,

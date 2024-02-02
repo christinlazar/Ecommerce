@@ -7,7 +7,7 @@ const Coupon = require('../models/couponModel')
 const loadCart = async(req,res)=>{
     try {
         const id = req.session.user
-        const cartOfUser = await myCart.find({userId:id}).populate('products.productId').exec()
+        const cartOfUser = await myCart.find({userId:id}).populate('products.productId').populate('userId').exec()
         if(cartOfUser&&cartOfUser.length>0){
             res.render('cart',{cartOfUser:cartOfUser})
         }else{
