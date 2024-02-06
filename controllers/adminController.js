@@ -102,7 +102,8 @@ const loadDashBoard = async(req,res)=>{
 revenue.forEach(el=>{
     totalRevenue = el.revenue
 })
-     res.render('admindash',{orderDetails,orderCounts,totalrevenue,pCount,totalRevenue})     
+currentRoute="/admin/admindash"
+     res.render('admindash',{orderDetails,orderCounts,totalrevenue,pCount,totalRevenue,currentRoute})     
     } catch (error) {
     console.log(error)        
     }
@@ -110,7 +111,8 @@ revenue.forEach(el=>{
 const loaduserlist = async(req,res)=>{
         try {
           const users =  await  User.find({})
-            res.render('userslist',{users})
+          const currentRoute="/admin/userlist"
+            res.render('userslist',{users,currentRoute})
         } catch (error) {
             console.log(error)
         }
@@ -137,7 +139,8 @@ const unblockUser = async(req,res)=>{
 const loadCategory = async(req,res)=>{
     try {
         const category = await Category.find({}).sort({createdAt:-1})
-        res.render('category',{category,message:''})
+        const currentRoute="/admin/category"
+        res.render('category',{category,message:'',currentRoute})
     } catch (error) {
     console.log(error)        
     }
@@ -154,8 +157,8 @@ const loadOrderDetails = async(req,res)=>{
     try {
         
         const orderDetails = await Order.find({}).populate('userId').sort({createdAt:-1})
-       
-        res.render('orderdetails',{orderDetails})
+       const currentRoute = "/admin/orderdetails"
+        res.render('orderdetails',{orderDetails,currentRoute})
     } catch (error) {
         console.log(error.message)
     }
@@ -214,7 +217,8 @@ const adminCancelOrder = async(req,res)=>{
 const loadCoupon = async(req,res)=>{
     try {
         const couponDetails = await Coupon.find({})
-        res.render('coupon',{couponDetails})
+        const currentRoute = "/admin/coupon"
+        res.render('coupon',{couponDetails,currentRoute})
     } catch (error) {
         console.log(error)
     }

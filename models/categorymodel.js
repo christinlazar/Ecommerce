@@ -13,6 +13,12 @@ const categorySchema = mongoose.Schema({
         type:Number,
         default:0
     },
+    startDate:{
+        type:Date
+    },
+    endDate:{
+        type:Date
+    },
     is_active:{
         type:Boolean,
         default:true,

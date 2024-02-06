@@ -54,20 +54,56 @@
                                 <button id="but" type="submit" value="search">search</button>
                             </form>
                         </div>
+                       
                         <div class="header-action-right">
                             <div class="header-action-2">
-                                <div class="header-action-icon-2">
-                                    <a href="/wishlist">
-                                        <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
-                                        <!-- <span class="pro-count blue"></span> -->
-                                    </a>
-                                </div>
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="/cart">
-                                        <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                        <!-- <span class="pro-count blue"></span> -->
-                                    </a>
-                                </div>
+                                <%if(locals.userId){%>
+                                    <div class="header-action-icon-2">
+                                        <a href="/wishlist">
+                                            <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
+                                            <span class="position-absolute  top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 30%; padding: 0.25rem;">
+                                                <%if(locals.wishlistCount&&locals.wishlistCount>0){%>
+                                                 <%=locals.wishlistCount%>
+                                                <%}else{%>
+                                                    0
+                                                <%}%>
+                                               </span>
+                                            <!-- <span class="pro-count blue"></span> -->
+                                        </a>
+                                    </div>
+                                    <%}else{%>
+                                        <div class="header-action-icon-2">
+                                            <a href="/wishlist">
+                                                <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
+                                               
+                                                <!-- <span class="pro-count blue"></span> -->
+                                            </a>
+                                        </div>
+                                    <%}%>
+                               
+                                <%if(locals.userId){%>
+                                    <div class="header-action-icon-2">
+                                        <a class="mini-cart-icon" href="/cart">
+                                            <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
+                                            <span class="position-absolute  top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 30%; padding: 0.25rem;">
+                                                <%if(locals.cartCount&&locals.cartCount>0){%>
+                                                 <%=locals.cartCount%>
+                                                <%}else{%>
+                                                    0
+                                                <%}%>
+                                               </span>
+                                            <!-- <span class="pro-count blue"></span> -->
+                                        </a>
+                                    </div>
+                                <%}else{%>
+                                    <div class="header-action-icon-2">
+                                        <a class="mini-cart-icon" href="/cart">
+                                            <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
+                                            <!-- <span class="pro-count blue"></span> -->
+                                        </a>
+                                    </div>
+                                <%}%>
+                                
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/userdashboard">
                                         <i class="fa-solid fa-user"></i>
@@ -288,9 +324,9 @@
                                     </li> 
                                     <!-- <li> -->
                                         <a href="/home">Shop <i class=""></i></a>
-                                    <li>
+                                    <!-- <li>
                                         <a href="/offers">Offers <i class=""></i></a>
-                                    </li>
+                                    </li> -->
                                         <!-- <ul class="sub-menu">
                                             <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
                                             <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>

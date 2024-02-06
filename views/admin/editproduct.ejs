@@ -140,7 +140,23 @@
                                             <p class="text text-danger" style="display:none" id="discountError"></p> 
                                         </div>
                                     </div>
-                                 
+
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label" for="startdate">Off Start Date:</label>
+                                            <input type="date" value="<%= product.startdate ? product.startdate.toISOString().substr(0, 10) : '' %>" id="startdate" name="startdate" class="form-control">
+                                        </div>
+                                    </div>
+                                    
+
+
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label" for="date"> Off End Date:</label>
+                                                <input type="date" value="<%=product.enddate ? product.enddate.toISOString().substr(0,10) : '' %>" id="enddate" name="enddate" class="form-control">
+                                            </div>
+                                            </div>
+
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Small quantity</label>
                                         <input type="text" placeholder="Type here" class="form-control" id="product_name1" name="small" value="<%=product.size.s.quantity%>">

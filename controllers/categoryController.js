@@ -5,7 +5,7 @@ const Product = require('../models/productModel')
 const categorySave = async(req,res)=>{
     try{
      const category = await Category.find({})
-     const{name,parent,description,categoryDiscount} = req.body
+     const{name,parent,description,categoryDiscount,startDate,endDate} = req.body
      console.log(name,parent,description)
      const samedata = await Category.findOne({name:name})
     
@@ -18,6 +18,8 @@ const categorySave = async(req,res)=>{
              name:name,
              parent:parent,
              categoryDiscount:categoryDiscount,
+             startDate:startDate,
+             endDate:endDate,
              description:description
          })
          await category.save();
@@ -64,10 +66,10 @@ const categorySave = async(req,res)=>{
    const name = req.body.name
   const sameCategory = await Category.findOne({name:name})
   if(sameCategory){
-   res.render('editcategory',{samecata:"This category already exists in the category list",category:""})
-   await Category.findByIdAndUpdate({_id:req.query.id},{$set:{parent:req.body.parent,categoryDiscount:req.body.categoryDiscount,description:req.body.description}})
+   res.render('editcategory',{samecata:"This category already exists in the category list,but changes has been made in other fields",category:""})
+   await Category.findByIdAndUpdate({_id:req.query.id},{$set:{parent:req.body.parent,categoryDiscount:req.body.categoryDiscount,startDate:req.body.startDate,endDate:req.body.endDate,description:req.body.description}})
   }else{
-    await Category.findByIdAndUpdate({_id:req.query.id},{$set:{name:req.body.name,parent:req.body.parent,categoryDiscount:req.body.categoryDiscount,description:req.body.description}})
+    await Category.findByIdAndUpdate({_id:req.query.id},{$set:{name:req.body.name,parent:req.body.parent,categoryDiscount:req.body.categoryDiscount,startDate:req.body.startDate,endDate:req.body.endDate,description:req.body.description}})
     
     res.redirect('/admin/category')
 

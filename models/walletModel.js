@@ -8,7 +8,17 @@ const walletSchema = mongoose.Schema({
     balance:{
         type:Number,
         default:0
+    },
+   walletdata:[
+    {
+        history:{
+            type:String
+        },
+        date:{
+            type:Date
+        }
     }
+   ]
 })
 
 const Wallet = mongoose.model('wallet',walletSchema)

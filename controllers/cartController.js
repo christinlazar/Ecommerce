@@ -7,8 +7,23 @@ const Coupon = require('../models/couponModel')
 const loadCart = async(req,res)=>{
     try {
         const id = req.session.user
-        const cartOfUser = await myCart.find({userId:id}).populate('products.productId').populate('userId').exec()
+        const cartOfUser = await myCart.find({userId:id}).populate({path:'products.productId',populate:{ path:'category', model:'category'}}).populate('userId').exec()
         if(cartOfUser&&cartOfUser.length>0){
+           console.log("cart of user is"+cartOfUser)
+           cartOfUser.forEach(element=>{
+            element.products.forEach(async(el)=>{
+                if(el.productId.discount < el.productId.category.categoryDiscount){
+                    console.log(el.productId.discount,el.productId.category.categoryDiscount)
+                    const discount = el.productId.category.categoryDiscount
+                    const discountAmount = el.productId.price.regularprice * (el.productId.category.categoryDiscount/100)
+                    const sellPrice = el.productId.price.regularprice-discountAmount
+                    const sellingPrice = Math.floor(sellPrice)
+                    console.log(discount,discountAmount,sellingPrice);
+                   const dev = await Product.findByIdAndUpdate({_id:el.productId._id},{$set:{'price.saleprice':sellingPrice}},{new:true})
+                    console.log(dev)
+                }
+               })
+           })
             res.render('cart',{cartOfUser:cartOfUser})
         }else{
             res.render('cart',{cartEmpty:"Your cart is empty"})

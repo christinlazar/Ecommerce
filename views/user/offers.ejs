@@ -384,20 +384,20 @@
                         </div>
                                               
                         <div class="row product-grid-3">
-                            <%if(locals.offerProducts){%>
-                                <%for(let i=0;i<offerProducts.length;i++){%>  
+                            <%if(locals.products){%>
+                                <%for(let i=0;i<products.length;i++){%>  
                             <div class="col-lg-3 col-md-4">
                                 <div class="product-cart-wrap mb-30">
                                     <div class="product-img-action-wrap">
                                         <div class="product-img product-img-zoom" width="500">
-                                            <a href="/userproductdetail?id=<%=offerProducts[i]._id%>">
-                                                <img class="default-img" src="/uploads/<%=offerProducts[i].image[0]%>" alt="">
-                                                <img class="hover-img" src="/uploads/<%=offerProducts[i].image[0]%>" alt="">
+                                            <a href="/userproductdetail?id=<%=products[i]._id%>">
+                                                <img class="default-img" src="/uploads/<%=products[i].image[0]%>" alt="">
+                                                <img class="hover-img" src="/uploads/<%=products[i].image[0]%>" alt="">
                                             </a>
                                         </div>
                                         <div class="product-action-1">
                                             
-                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist(`<%=offerProducts[i]._id%>`)"><i class="fi-rs-heart"></i></a>
+                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist(`<%=products[i]._id%>`)"><i class="fi-rs-heart"></i></a>
                                            
                                         </div>
                                         <div class="product-badges product-badges-position product-badges-mrg">
@@ -408,21 +408,28 @@
                                         <div class="product-category">
                                             <!-- <a href="shop-grid-right.html">Music</a> -->
                                         </div>
-                                        <h2><a href="shop-product-right.html"><%=offerProducts[i].name%></a></h2>
+                                        <h2><a href="shop-product-right.html"><%=products[i].name%></a></h2>
                                         <div class="rating-result" title="90%">
                                             <span>
                                                 <span>90%</span>
                                             </span>
                                         </div>
                                         <div class="product-price">
-                                            <%if(offerProducts[i].discount==0){%>
-                                                <span  class="old-price-only" >Rs.<%=offerProducts[i].price.regularprice%></span>
+                                            <%if(products[i].discount==0&&products[i].category.categoryDiscount==0){%>
+                                                <span  class="old-price-only" >Rs.<%=products[i].price.regularprice%></span>
+                                            <%}else if(products[i].category.categoryDiscount>products[i].discount){%>
+                                                <%const discount = products[i].category.categoryDiscount%>
+                                                <%const discountAmount = products[i].price.regularprice * (products[i].category.categoryDiscount/100)%>
+                                                <%const sellPrice = products[i].price.regularprice-discountAmount%>
+                                                <%const sellingPrice = Math.floor(sellPrice)%>
+                                                <span id="sale">Rs.<%=sellingPrice%></span>
+                                                <span  class="old-price">Rs.<%=products[i].price.regularprice%></span>
+                                                <span   id="disc" class="text text-danger">-<%=discount%>%</span>
                                             <%}else{%>
-                                                <span id="sale">Rs.<%=offerProducts[i].price.saleprice%></span>
-                                                <span  class="old-price">Rs.<%=offerProducts[i].price.regularprice%></span>
-                                                <span   id="disc" class="text text-danger">-<%=offerProducts[i].discount%>%</span>
+                                                <span id="sale">Rs.<%=products[i].price.saleprice%></span>
+                                                <span  class="old-price">Rs.<%=products[i].price.regularprice%></span>
+                                                <span   id="disc" class="text text-danger">-<%=products[i].discount%>%</span>
                                             <%}%>
-                                          
                                         </div>
                                         <div class="product-action-1 show">
                                             <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
@@ -432,20 +439,10 @@
                             </div>
                             <%}}%>
                         </div>
+                        
                        
                         <!--pagination-->
-                        <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-start">
-                                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                                    <li class="page-item"><a class="page-link" href="#"><i class="fi-rs-angle-double-small-right"></i></a></li>
-                                </ul>
-                            </nav>
-                        </div>
+                        
                     </div>
                 </div>
             </div>

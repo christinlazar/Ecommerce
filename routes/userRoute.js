@@ -68,9 +68,10 @@ userRoute.post('/payment-success',orderController.paymentSuccess)
 userRoute.post('/returnorder',orderController.returnOrder)
 userRoute.patch('/downloadinvoice',orderController.downloadInvoice)
 userRoute.get('/aboutus',userController.loadAboutUs)
-userRoute.get('/offers',productController.loadOffers)
+// userRoute.get('/offers',productController.loadOffers)
 userRoute.post('/addtowishlist',wishlistController.addToWishList)
 userRoute.get('/wishlist',userAuth.isLogout,wishlistController.viewWishList)
 userRoute.get('/removefromwishlist',userAuth.isLogout,wishlistController.removeFromWishlist)
+userRoute.get('/orders',userAuth.isLogout,userController.loadOrders)
 
 module.exports = userRoute;

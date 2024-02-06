@@ -86,13 +86,14 @@ loadAddProduct = async(req,res)=>{
     }
 
 }
+
 const addProductDetials = async(req,res)=>{
     try {
         console.log(req.body)
         // console.log("image :",req.file)
         const images = req.files
         const imagefilenames = images.map(image =>image.filename)
-       const {name,description,saleprice,regularprice,category,small,medium,large} = req.body
+       const {name,description,saleprice,regularprice,category,small,medium,large,startdate,enddate} = req.body
         
         const regPrice = parseInt(regularprice)
         const discount = parseInt(req.body.discount)
@@ -110,6 +111,8 @@ const addProductDetials = async(req,res)=>{
             regularprice:regPrice,
         },
         discount:discount,
+        startdate:startdate,
+        enddate:enddate,
         image:imagefilenames,
         category:category,
         size:{
@@ -146,12 +149,21 @@ const addProductDetials = async(req,res)=>{
         console.log(error)
     }
 }
+
+function toGetBackFromCatOffer(discount){
+    try {
+        
+    } catch (error) {
+        console.log(console.log(error));
+    }
+}
 const productList = async(req,res)=>{
    try {
     const category = await Category.find({is_active:true}).sort({createdAt:-1})
     const product = await Product.find({}).sort({added_at:-1})
     console.log("hi"+product)
-    res.render('productlist',{category,product})
+    const currentRoute="/admin/productlist"
+    res.render('productlist',{category,product,currentRoute})
    } catch (error) {
 console.log(error)    
    }
@@ -224,7 +236,7 @@ try {
     console.log("id is:"+id)
     const images = req.files
     const newImages = images.map(image=>image.filename)
-   const {name,description,saleprice,category,regularprice,small,medium,large} = req.body
+   const {name,description,saleprice,category,regularprice,small,medium,large,startdate,enddate} = req.body
 
    const regPrice = parseInt(regularprice)
    const discount = parseInt(req.body.discount)
@@ -260,6 +272,8 @@ try {
         },
         category:category,
         discount:discount,
+        startdate:startdate,
+        enddate:enddate,
         size:{
             s:{quantity:small},
             m:{quantity:medium},
@@ -273,8 +287,29 @@ try {
 }
 const loadOffers = async(req,res)=>{
     try {
-        const offerProducts = await Product.find({discount:{$gt:0}})
-        res.render('offers',{offerProducts})
+        
+        const today = Date.now()
+        const products = await Product.find({discount:{$gt:0},enddate:{$gt:today}}).populate('category')
+        const categoryProducts = await Category.find({categoryDiscount:{$gt:0},endDate:{$gt:today}})
+        if(products||categoryProducts){
+            res.render('offers',{products,categoryProducts})
+        }
+
+
+        const offerProductsToexpire =  await Product.find({discount:{$gt:0},enddate:{$lt:today}})
+        if(offerProductsToexpire){
+           offerProductsToexpire.forEach(async(el)=>{
+            await Product.updateMany({_id:el._id},{$set:{discount:0,startdate:today,endDate:today}})
+           })
+        }
+
+        // const categoryOffToExpire = await Category.find({categoryDiscount:{$gt:0},endDate:{$lt:today}})
+        // if(categoryOffToExpire){
+        //    categoryOffToExpire.forEach(async(el)=>{
+        //     await Category.updateMany({_id:el._id},{$set:{categoryDiscount:0,'price.saleprice':''}})
+        //    })
+        // }
+       
     } catch (error) {
         console.log(error)
     }
@@ -294,6 +329,6 @@ module.exports = {
     unblockProduct,
     deleteImage,
     verifyEditProduct,
-    loadOffers,
+    // loadOffers,
     
 }

@@ -408,15 +408,23 @@
                                         <div class="product-category">
                                             <!-- <a href="shop-grid-right.html">Music</a> -->
                                         </div>
-                                        <h2><a href="shop-product-right.html"><%=products[i].name%></a></h2>
+                                        <h2><a href=""><%=products[i].name%></a></h2>
                                         <div class="rating-result" title="90%">
                                             <span>
                                                 <span>90%</span>
                                             </span>
                                         </div>
                                         <div class="product-price">
-                                            <%if(products[i].discount==0){%>
+                                            <%if(products[i].discount==0&&products[i].category.categoryDiscount==0){%>
                                                 <span  class="old-price-only" >Rs.<%=products[i].price.regularprice%></span>
+                                            <%}else if(products[i].category.categoryDiscount>products[i].discount){%>
+                                                <%const discount = products[i].category.categoryDiscount%>
+                                                <%const discountAmount = products[i].price.regularprice * (products[i].category.categoryDiscount/100)%>
+                                                <%const sellPrice = products[i].price.regularprice-discountAmount%>
+                                                <%const sellingPrice = Math.floor(sellPrice)%>
+                                                <span id="sale">Rs.<%=sellingPrice%></span>
+                                                <span  class="old-price">Rs.<%=products[i].price.regularprice%></span>
+                                                <span   id="disc" class="text text-danger">-<%=discount%>%</span>
                                             <%}else{%>
                                                 <span id="sale">Rs.<%=products[i].price.saleprice%></span>
                                                 <span  class="old-price">Rs.<%=products[i].price.regularprice%></span>
@@ -434,18 +442,7 @@
                         </div>
                        
                         <!--pagination-->
-                        <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-start">
-                                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                                    <li class="page-item"><a class="page-link" href="#"><i class="fi-rs-angle-double-small-right"></i></a></li>
-                                </ul>
-                            </nav>
-                        </div>
+                        
                     </div>
                 </div>
             </div>

@@ -28,8 +28,12 @@
                                 <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
                               
                             </li>
-                          
-                            <li><i class="fi-rs-user"></i><a href="/logout">Log Out</a></li>
+                            <%if(locals.userId){%>
+                                <li><i class="fi-rs-user"></i><a href="/logout">Log Out</a></li>
+                            <%}else{%>
+                                <li><i class="fi-rs-user"></i><a href="/login">Log In</a></li>
+                            <%}%>
+                           
                         </ul>
                     </div>
                 </div>
@@ -63,18 +67,53 @@
                     </div>
                     <div class="header-action-right">
                         <div class="header-action-2">
-                            <div class="header-action-icon-2">
-                                <a href="/wishlist">
-                                    <img class="svgInject " alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
-                                    <!-- <span class="pro-count blue">4</span> -->
-                                </a>
-                            </div>
-                            <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="/cart">
-                                    <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                    <!-- <span class="pro-count blue">2</span> -->
-                                </a>
-                            </div>
+                            <%if(locals.userId){%>
+                                <div class="header-action-icon-2">
+                                    <a href="/wishlist">
+                                        <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
+                                        <span class="position-absolute  top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 30%; padding: 0.25rem;">
+                                            <%if(locals.wishlistCount&&locals.wishlistCount>0){%>
+                                             <%=locals.wishlistCount%>
+                                            <%}else{%>
+                                                0
+                                            <%}%>
+                                           </span>
+                                        <!-- <span class="pro-count blue"></span> -->
+                                    </a>
+                                </div>
+                                <%}else{%>
+                                    <div class="header-action-icon-2">
+                                        <a href="/wishlist">
+                                            <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
+                                           
+                                            <!-- <span class="pro-count blue"></span> -->
+                                        </a>
+                                    </div>
+                                <%}%>
+                           
+                            <%if(locals.userId){%>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="/cart">
+                                        <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
+                                        <span class="position-absolute  top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 30%; padding: 0.25rem;">
+                                            <%if(locals.cartCount&&locals.cartCount>0){%>
+                                             <%=locals.cartCount%>
+                                            <%}else{%>
+                                                0
+                                            <%}%>
+                                           </span>
+                                        <!-- <span class="pro-count blue"></span> -->
+                                    </a>
+                                </div>
+                            <%}else{%>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="/cart">
+                                        <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
+                                        <!-- <span class="pro-count blue"></span> -->
+                                    </a>
+                                </div>
+                            <%}%>
+                            
                             <div class="header-action-icon-2">
                                 <a class="mini-cart-icon" href="/userdashboard">
                                     <i class="fa-solid fa-user"></i>
@@ -286,9 +325,9 @@
                                 </li>
                                 <!-- <li> -->
                                     <a href="/home">Shop<i class=""></i></a>
-                                    <li>
+                                    <!-- <li>
                                         <a href="/offers">Offers<i class=""></i></a>
-                                    </li>
+                                    </li> -->
                                 <li>
                                     <a href="page-contact.html">Contact</a>
                                 </li>

@@ -4,7 +4,8 @@ const fs = require('fs')
 const loadAddbanner = async(req,res)=>{
     try {
         const banner = await Banner.find({})
-        res.render('addbanner',{banner})
+        const currentRoute="/admin/addbanner"
+        res.render('addbanner',{banner,currentRoute})
     } catch (error) {
         console.log(error)
     }

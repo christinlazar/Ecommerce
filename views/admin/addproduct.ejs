@@ -76,10 +76,23 @@
                                         <div class="mb-4">
                                             <label class="form-label" >Discount</label>
                                             <input placeholder="%" name="discount" type="text" id="discount" class="form-control" >
-                                            <p class="text text-danger" style="display:none" id="discountError"></p>
-                                           
+                                            <p class="text text-danger"  id="discountError"></p>
                                         </div>
                                     </div>
+
+                                    <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label" for="date"> Off Start Date:</label>
+                                        <input type="date" id="startdate" name="startdate" class="form-control">
+                                    </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label" for="date"> Off End Date:</label>
+                                            <input type="date" id="enddate" name="enddate" class="form-control">
+                                        </div>
+                                        </div>
                                     
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Small quantity</label>
@@ -175,9 +188,28 @@
         const largeError = document.getElementById("largeError")
         const category = document.getElementById('category').value
         const lesserPriceError = document.getElementById('lesserPriceError')
+        const discount = document.getElementById('discount')
+        const discountError = document.getElementById('discountError')
         // const submitError = document.getElementById("submitError")
         // const button = document.getElementById('btn')
-    
+        
+        function validateDiscount(){
+            const discPattern = /^(?!.*\s)(100|\d{1,2})$/;
+            if(discount.value.trim()===''){
+                discountError.innerHTML="input field cant be empty";
+                setTimeout(() => {
+                    discountError.style.display="none"
+                }, 3000);
+            }else if(!discPattern.test(discount.value)){
+                discountError.innerHTML="discount % must be between 1-100";
+                setTimeout(() => {
+                    discountError.style.display="none"
+                }, 3000);
+            }else{
+                discountError.innerHTML="";
+            }
+
+        }
 
 
 
@@ -187,6 +219,9 @@
             if( regularPriceValue<=salePriceValue){
                 lesserPriceError.innerHTML = 'Regular price must be greater than or equal to sale price.';
             lesserPriceError.style.display = 'block';
+            setTimeout(() => {
+                lesserPriceError.style.display = 'none';
+            }, 3000);
             }
         }
 
@@ -326,11 +361,12 @@ function validateMediumQuantity() {
             validateSmallQuantity();
             validateMediumQuantity();
             validateLargeQuantity();
-            validateBothPrices()
+            validateBothPrices();
+            validateDiscount()
         
 
     
-            if(productError.innerHTML||descriptionError.innerHTML||salepriceError.innerHTML||regularpriceError.innerHTML||smallError.innerHTML||mediumError.innerHTML||largeError.innerHTML||lesserPriceError.innerHTML){
+            if(productError.innerHTML||descriptionError.innerHTML||salepriceError.innerHTML||regularpriceError.innerHTML||smallError.innerHTML||mediumError.innerHTML||largeError.innerHTML||lesserPriceError.innerHTML||discountError.innerHTML){
                 console.log("submitting prevented")
                 event.preventDefault();
               
@@ -348,6 +384,7 @@ function validateMediumQuantity() {
         medium.addEventListener('blur',validateMediumQuantity)
         large.addEventListener('blur',validateLargeQuantity)
         regularprice.addEventListener('blur',validateBothPrices)
+        discount.addEventListener('blur',validateDiscount);
         // validateBothPrices.addEventListener('blur',)
     </script>
     <script>

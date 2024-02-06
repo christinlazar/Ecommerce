@@ -392,27 +392,42 @@ async function rem(orderId)
     }
 }
 
-        async function removeOrder(orderId){
-            try {
-                Swal.fire({
-                    title:"Are you sure?",
-                    icon:"info",
-                    confirmButtonText:"OK",
-                    showConfirmButton:true,
-                    showDenyButton:true,
-                    denyButtonText:"cancel"
-                }).then(res=>{
-                    if(res.isConfirmed){
-                        rem(orderId)
-                    }
-                    else if(res.isDenied){
-                        window.location.reload()
-                    }
-            })
-            } catch (error) {
-                console.log(error.message)
+async function removeOrder(orderId){
+    try {
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "info",
+            confirmButtonText: "OK",
+            showConfirmButton: true,
+            showDenyButton: true,
+            denyButtonText: "cancel"
+        })
+        .then(res1 => {
+            if (res1.isConfirmed) {
+                return Swal.fire({
+                    title: 'Enter cancellation reason',
+                    input: 'text',
+                    inputPlaceholder: 'Type your reason here...',
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit',
+                    showLoaderOnConfirm: true,
+                });
+            } else {
+                window.location.reload(); // Reload the page if the user cancels the first confirmation
             }
-        }
+        })
+        .then(res2 => {
+            if (res2 && res2.isConfirmed) {
+                rem(orderId);
+            } else {
+                window.location.reload(); // Reload the page if the user cancels the second confirmation
+            }
+        });
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 
         function returnOrder(orderId){
 

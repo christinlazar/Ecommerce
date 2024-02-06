@@ -94,6 +94,7 @@ const createUser = async(udata)=>{
  const createWallet = async(regUserId)=>{
     const wallet = new Wallet({
          userId:regUserId,
+         
     })
     return await wallet.save();
  }
@@ -202,6 +203,8 @@ const userLogin = async (req, res) => {
 
 const loadHome = async(req,res)=>{
     try{
+       
+        const userId = req.session.user
         var search = ''
         if(req.query.search){
             search = req.query.search
@@ -213,8 +216,24 @@ const loadHome = async(req,res)=>{
             ]
         }
         
-        const products = await Product.find({is_active:true})
-            res.render('home.ejs',{products})
+        const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+        console.log(cartProducts);
+        let cartCount
+        if(cartProducts){
+         cartCount = cartProducts.products.length
+        }
+
+
+        const WishlistProduct = await User.findById(userId)
+        let WishlistProductCount
+        if(WishlistProduct){
+              WishlistProductCount = WishlistProduct.wishlist.length
+        }
+        const products = await Product.find({is_active:true}).populate('category')
+        
+            res.render('home.ejs',{products,cartCount:cartCount,wishlistCount:WishlistProductCount,userId:userId})
+
+
 
     }catch(error){
         console.log(error)
@@ -240,13 +259,31 @@ const loadSingleProductView = async(req,res)=>{
                 }
             }
         ]);
-        const product = await Product.findById(id)
+        const product = await Product.findById(id).populate('category')
         const relatedproducts = await Product.find({category:product.category})
         console.log(relatedproducts);
-        res.render('singleproduct',{product,totalQuantity,relatedproducts,userId})
+
+        const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+        console.log(cartProducts);
+        let cartCount
+        if(cartProducts){
+         cartCount = cartProducts.products.length
+        }
+
+        
+        const WishlistProduct = await User.findById(userId)
+        let WishlistProductCount
+        if(WishlistProduct){
+              WishlistProductCount = WishlistProduct.wishlist.length
+        }
+        const products = await Product.find({is_active:true}).populate('category')
+        
+            // res.render('home.ejs',{products,cartCount:cartCount,wishlistCount:WishlistProductCount,userId:userId})
+
+        res.render('singleproduct',{product,totalQuantity,relatedproducts,userId,cartCount,WishlistProductCount})
 
     } catch (error) {
-   console.log(error)     
+   console.log(error.message)     
     }
 }
 const logOut = async(req,res)=>{
@@ -294,13 +331,15 @@ const resendOtp = async(req,res)=>{
 }
 const loadRealHome = async(req,res) =>{
    try {
+    const today = new Date()
+    console.log(today);
     const userId = req.session.user
     const Category = await category.find({is_active:true})
     const banner = await Banner.findOne({isActive:true})
     const banner2 = await Banner.findOne({title:"oversizebanner",isActive:true})
     const bannermain = await Banner.findOne({title:"mainbanner"})
     const bottombanner = await Banner.findOne({title:"bottombanner2"})
-    console.log(banner2)
+    
     var search = ''
     if(req.query.search){
         search = req.query.search
@@ -366,7 +405,30 @@ const loadRealHome = async(req,res) =>{
     .sort(sortOptions)
     .skip((page-1)*limit)
     .limit(limit)
-    
+
+    console.log("products arr is"+products);
+    products.forEach(async(el)=>{
+        if(el.enddate < today){
+            await Product.update({_id:el._id},{$set:{discount:0}})
+        }
+    })
+
+    const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+    console.log(cartProducts);
+    let cartCount
+    if(cartProducts){
+     cartCount = cartProducts.products.length
+    }
+   
+
+
+    const WishlistProduct = await User.findById(userId)
+    let WishlistProductCount
+    if(WishlistProduct){
+          WishlistProductCount = WishlistProduct.wishlist.length
+    }
+
+   console.log("wishcount is"+WishlistProductCount)
     const high = req.query.high
     const low = req.query.low
    const searchh = search
@@ -385,7 +447,10 @@ const loadRealHome = async(req,res) =>{
         banner:banner,
         banner2:banner2,
         bannermain:bannermain,
-        bottombanner:bottombanner
+        bottombanner:bottombanner,
+        cartCount:cartCount,
+        wishlistCount:WishlistProductCount,
+        today:today
     }) 
 
    } catch (error) {
@@ -397,6 +462,7 @@ const loadCart = async(req,res)=>{
         const id = req.session.user
         const cartOfUser = await myCart.find({userId:id}).populate('products.productId').exec()
         if(cartOfUser){
+            console.log(cartOfUser);
             // cartOfUser.forEach(element => {
             //   console.log(element.products)  
             // });
@@ -457,7 +523,23 @@ const loadUserDashboard = async(req,res)=>{
        
         const count = await Order.find(query).countDocuments()
         const user = await User.findById(userId)
-        res.render('userdashboard',{user,order,address,user,wallet, totalPages: Math.ceil(count / limit),page:page})
+
+        const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+        console.log(cartProducts);
+        let cartCount
+        if(cartProducts){
+         cartCount = cartProducts.products.length
+        }
+
+
+        const WishlistProduct = await User.findById(userId)
+        let WishlistProductCount
+        if(WishlistProduct){
+              WishlistProductCount = WishlistProduct.wishlist.length
+        }
+
+
+        res.render('userdashboard',{user,order,address,user,wallet, totalPages: Math.ceil(count / limit),page:page,WishlistProductCount,cartCount})
     } catch (error) {
         console.log(error.message)
     }
@@ -638,7 +720,30 @@ const loadAboutUs = async(req,res)=>{
         console.log(error)
     }
 }
+const loadOrders = async(req,res)=>{
+    try{
+        const userId = req.session.user
 
+        var page =1
+        if(req.query.page){
+            page = req.query.page
+        }
+        const limit = 3
+
+        const query = {
+            userId:userId
+        }
+        const order = await Order.find(query).sort({createdAt:-1})
+        .skip((page-1)*limit)
+        .limit(limit)
+
+        const count = await Order.find(query).countDocuments()
+
+        res.render('orders',{order,totalPages: Math.ceil(count / limit),page:page})
+    }catch(error){
+        console.log(error)
+    }
+}
 module.exports = {
     loadRegister,
     postRegister,
@@ -663,5 +768,5 @@ module.exports = {
     verifyForgotOtp,
     forgotResendOtp,
     loadAboutUs,
-  
+    loadOrders
 }

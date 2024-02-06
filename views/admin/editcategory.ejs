@@ -127,6 +127,18 @@
                                 </div>
 
                                 <div class="mb-4">
+                                    <label for="discount" class="form-label" >Category Discount Start Date In %</label>
+                                    <input type="date" value="<%= category.startDate ? category.startDate.toISOString().substr(0, 10) : '' %>"  placeholder="Type here" class="form-control" id="" name="startDate"/>
+                                    <p class="" style="display:none" id=""></p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="discount" class="form-label" >Category Discount End Date In %</label>
+                                    <input type="date" value="<%= category.endDate ? category.endDate.toISOString().substr(0, 10) : '' %>"  placeholder="Type here" class="form-control" id="" name="endDate"/>
+                                    <p class="" style="display:none" id=""></p>
+                                </div>
+
+                                <div class="mb-4">
                                     <label class="form-label">Description</label>
                                     <!-- <textarea value="<%=category.description%>" placeholder="Type here" class="form-control"  id="description"></textarea> -->
                                     <input value="<%=category.description%>" type="text" placeholder="Type here" class="form-control" id="description" name="description" />

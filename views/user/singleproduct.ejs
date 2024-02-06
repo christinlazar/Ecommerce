@@ -66,6 +66,13 @@
         #disccc{
             text-decoration:none;
         }
+        #old1{
+            text-decoration: line-through;
+        }
+        #old2{
+            text-decoration: line-through;
+        }
+        
   </style>
 </head>
 <body>
@@ -221,7 +228,7 @@
         </div>
         </div>
     </div>
-<%- include('shopheader') %>
+<%-include('shopheader')%>
     <div class="mobile-header-active mobile-header-wrapper-style">
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
@@ -437,12 +444,20 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <%if(product.discount==0){%>
-                                                    <ins><span id="reg" class="old-price font-md ml-15">₹<%=product.price.regularprice%></span></ins>
+                                                <%if(product.discount==0&&product.category.categoryDiscount==0){%>
+                                                    <span  class="old-price-only" >Rs.<%=product.price.regularprice%></span>
+                                                <%}else if(product.category.categoryDiscount>product.discount){%>
+                                                    <%const discount = product.category.categoryDiscount%>
+                                                    <%const discountAmount = product.price.regularprice * (product.category.categoryDiscount/100)%>
+                                                    <%const sellPrice = product.price.regularprice-discountAmount%>
+                                                    <%const sellingPrice = Math.floor(sellPrice)%>
+                                                    <span id="sale">Rs.<%=sellingPrice%></span>
+                                                    <span id="old1"  class="old-price">Rs.<%=product.price.regularprice%></span>
+                                                    <span   id="disc2" class="text text-danger">-<%=discount%>%</span>
                                                 <%}else{%>
-                                                <ins><span class="text-brand">₹<%=product.price.saleprice%></span></ins>
-                                                <ins><span class="old-price font-md ml-15">₹<%=product.price.regularprice%></span></ins>
-                                                <span id="disc" class="save-price  font-lg  color3 ml-15 text-danger">-<%=product.discount%>%</span>
+                                                    <span id="sale">Rs.<%=product.price.saleprice%></span>
+                                                    <span is="old2"  class="old-price">Rs.<%=product.price.regularprice%></span>
+                                                    <span   id="disc1" class="text text-danger">-<%=product.discount%>%</span>
                                                 <%}%>
                                             </div>
                                         </div>

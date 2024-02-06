@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/page-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:11:15 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>Evara - eCommerce HTML Template</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
+    <style>
+        .shadecard{
+            box-shadow: 0px 0px 15px #8fad9866;
+            max-height: 30rem;
+            
+        }
+        .shadecard h5 ,.shadecard p{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .editlink1{
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+        .change{
+            text-decoration: none;
+            color: #088178;
+           
+        }
+        .changediv{
+            padding:10px;
+        }
+        .blackfoot, .blackfoot a , .blackfoot li, .blackfoot p, .blackfoot h5{
+            background-color: black !important;
+            color: white !important;
+        }
+        .row{
+            display:flex;
+            justify-content:center;
+        }
+        #odr{
+            color: #088178;
+        }
+    </style>
+</head>
+
+<body>
+
+    <%-include('shopheader')%>
+    <main class="main">
+      
+       
+        <section class="pt-150 pb-150">
+            <div  style="display:flex;justify-content:center;">
+                <h3 id="odr">VIEW ORDERS & ORDER HISTOTY</h3>
+            </div>
+            <br>
+            <br>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                       
+                        <div class="row">
+                            
+                            <div class="col-md-8">
+                                <div class="tab-content dashboard-content">
+                                    
+                                    <div  id="orders"  >
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Your Orders</h5>
+                                            </div>
+                                            <div class="card-body">
+                                               
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Order</th>
+                                                                <th>Date</th>
+                                                                <th>Total</th>
+                                                                <th>payment Status</th>
+                                                                <th>View Order</th>
+                                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <%if(locals.order){%>
+                                                                <%for(let i=0;i<order.length;i++){%>
+                                                            <tr>
+                                                                <td><%=order[i]._id%></td>
+                                                                <td><%= new Date(order[i].createdAt).toLocaleDateString() %></td>
+                                                                <td>Rs.<%=order[i].totalamount%></td>
+                                                                <td><%=order[i].status%></td>
+                                                                <td><a href="/ordersummary?id=<%=order[i]._id%>" class="btn-small d-block">View</a></td>
+                                                            </tr>
+                                                            <%}}%>
+                                                        </tbody>
+                                                     
+                                                    </table>
+                                                            <% if (locals.totalPages > 1) { %>
+                                                                <% if (locals.page > 1) { %>
+                                                                    <a href="?page=<%= parseInt(locals.page) - 1 %>" onclick="page(`<%=parseInt(locals.page) - 1%>`)" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; text-align: center; margin-right: 5px; color: white; background-color: #088178; border-radius: 5px;">Prev</a>
+                                                                <% } %>
+
+                                                                <% let startPage = Math.max(1, locals.page - 2); %>
+                                                                <% let endPage = Math.min(locals.totalPages, startPage + 3); %>
+
+                                                                <% if (endPage - startPage < 3) { %>
+                                                                    <% startPage = Math.max(1, endPage - 3); %>
+                                                                <% } %>
+
+                                                                <% for (let i = startPage; i <= endPage; i++) { %>
+                                                                    <a href="?page=<%= i %>" onclick="page(`<%=locals.page%>`)" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; text-align: center; margin-right: 5px; color: white; background-color: #088178;  border-radius: 5px;"><%= i %></a>
+                                                                <% } %>
+
+                                                                <% if (locals.page < locals.totalPages) { %>
+                                                                    <a href="?page=<%= parseInt(locals.page) + 1 %>" onclick="page(`<%=parseInt(locals.page) + 1%>`)" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; text-align: center; margin-right: 5px; color: white; background-color: #088178; border-radius: 5px;">Next</a>
+                                                                <% } %>
+                                                            <% } %>
+
+                                                    
+                                                </div>
+                                               
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
+                                   
+                                   
+                                    
+                                   
+
+                                    
+
+                                 
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <%-include('footer')%>
+    </main>
+    <!-- Preloader Start -->
+   
+    <!-- Vendor JS-->
+    <script>
+        const name = document.getElementById('name')
+        const nameError = document.getElementById('nameError')
+        const email = document.getElementById('email')
+        const emailError = document.getElementById('emailError')
+
+
+        function page(){
+            
+
+
+        }
+
+
+        
+  function validateName(){
+            const namePattern = /^[A-Za-z\s\-]+$/;
+          if(!namePattern.test(name.value)){
+                nameError.innerHTML = 'Name format is not valid'
+                nameError.style.display="block"
+                setTimeout(() => {
+                    nameError.style.display="none"
+                }, 3000);
+            }else{
+                nameError.innerHTML=''
+            } 
+        }
+
+        
+        function validateEmail(){
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+          if(!emailPattern.test(email.value)){
+                emailError.innerHTML = 'Email format must be a valid format'
+                emailError.style.display="block"
+                setTimeout(() => {
+                    emailError.style.display="none"
+                }, 3000);
+            }else{
+                emailError.innerHTML=''
+            } 
+        }
+        
+        form.addEventListener('submit',function(event){
+            validateName();
+            validateEmail();
+
+            if(nameError.innerHTML||emailError.innerHTML){
+                event.preventDefault()
+            }
+        })
+
+        name.addEventListener('blur',validateName)
+        email.addEventListener('blur',validateEmail)
+
+    </script>
+    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/plugins/slick.js"></script>
+    <script src="assets/js/plugins/jquery.syotimer.min.js"></script>
+    <script src="assets/js/plugins/wow.js"></script>
+    <script src="assets/js/plugins/jquery-ui.js"></script>
+    <script src="assets/js/plugins/perfect-scrollbar.js"></script>
+    <script src="assets/js/plugins/magnific-popup.js"></script>
+    <script src="assets/js/plugins/select2.min.js"></script>
+    <script src="assets/js/plugins/waypoints.js"></script>
+    <script src="assets/js/plugins/counterup.js"></script>
+    <script src="assets/js/plugins/jquery.countdown.min.js"></script>
+    <script src="assets/js/plugins/images-loaded.js"></script>
+    <script src="assets/js/plugins/isotope.js"></script>
+    <script src="assets/js/plugins/scrollup.js"></script>
+    <script src="assets/js/plugins/jquery.vticker-min.js"></script>
+    <script src="assets/js/plugins/jquery.theia.sticky.js"></script>
+    <!-- Template  JS -->
+    <script src="assets/js/maind134.js?v=3.4"></script>
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/page-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:11:15 GMT -->
+</html>
