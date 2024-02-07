@@ -89,7 +89,7 @@ loadAddProduct = async(req,res)=>{
 
 const addProductDetials = async(req,res)=>{
     try {
-        console.log(req.body)
+       
         // console.log("image :",req.file)
         const images = req.files
         const imagefilenames = images.map(image =>image.filename)
@@ -101,8 +101,7 @@ const addProductDetials = async(req,res)=>{
         const sellPrice = regularprice-discountAmount
         const sellingPrice = Math.floor(sellPrice)
 
-        console.log(sellPrice)
-
+      
        const product = new Product({
         name:name,
         description:description,
@@ -128,7 +127,7 @@ const addProductDetials = async(req,res)=>{
         }
        })
        const savedproduct = await product.save()
-       console.log(savedproduct)
+      
        const croppedImages = await Promise.all(
 
         images.map(async(image)=>{
@@ -161,7 +160,7 @@ const productList = async(req,res)=>{
    try {
     const category = await Category.find({is_active:true}).sort({createdAt:-1})
     const product = await Product.find({}).sort({added_at:-1})
-    console.log("hi"+product)
+   
     const currentRoute="/admin/productlist"
     res.render('productlist',{category,product,currentRoute})
    } catch (error) {
@@ -174,7 +173,7 @@ const editProduct = async(req,res)=>{
         const id = req.query.id
         const productData = await Product.findById({_id:id})
         .populate('category').lean()
-        console.log(productData)
+      
         const product = await Product.findOne({_id:id})
        
         const category = await Category.find({is_active:true})
@@ -186,11 +185,11 @@ const editProduct = async(req,res)=>{
 }
 const blockProduct = async(req,res)=>{
     try {
-        console.log('hi')
+        
         const productid = req.body.productId
         // console.log(productid)
         const productdata = await Product.findOneAndUpdate({_id:productid},{$set:{is_active:false}})
-        console.log(productdata)
+        
         res.status(200).json({message:"successully blocked"})
     } catch (error) {
         console.log(error)
@@ -198,10 +197,10 @@ const blockProduct = async(req,res)=>{
 }
 const unblockProduct = async(req,res)=>{
     try {
-        console.log('unblock')
+       
         const productid = req.body.productId
         const productdata = await Product.findOneAndUpdate({_id:productid},{$set:{is_active:true}})
-        console.log(productdata)
+        
         res.status(200).json({message:"unblocked successfully"})
     } catch (error) {
      console.log(error)   
@@ -211,8 +210,7 @@ const deleteImage = async(req,res)=>{
     try {
        const index = req.body.index
        const productid = req.body.productId
-       console.log("hi")
-        console.log(productid)
+      
        const product = await Product.findById(productid)
         const imageToDelete = product.image[index]
         fs.unlink(imageToDelete, (err) => {
@@ -231,9 +229,9 @@ const deleteImage = async(req,res)=>{
 }
 const verifyEditProduct = async(req,res)=>{   
 try {
-    console.log("entered inside verify edit product")
+   
     const id = req.query.id
-    console.log("id is:"+id)
+   
     const images = req.files
     const newImages = images.map(image=>image.filename)
    const {name,description,saleprice,category,regularprice,small,medium,large,startdate,enddate} = req.body
@@ -244,7 +242,7 @@ try {
    const sellPrice = regularprice-discountAmount
    const sellingPrice = Math.floor(sellPrice)
 
-   console.log(sellPrice)
+   
 
    const croppedImages = await Promise.all(
     images.map(async (image) => {
@@ -259,7 +257,7 @@ try {
 )
     
    if(newImages.length>0){
-    console.log("gonna update")
+   
     await Product.updateOne({_id:id},{$push:{image:{$each:croppedImages}}})
    }
   

@@ -16,9 +16,12 @@ const walletSchema = mongoose.Schema({
         },
         date:{
             type:Date
+        },
+        paymentmethod:{
+            type:String,
         }
     }
-   ]
+   ],
 })
 
 const Wallet = mongoose.model('wallet',walletSchema)

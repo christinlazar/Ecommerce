@@ -43,6 +43,7 @@ const postRegister = async(req,res)=>{
         phone,
         password:hashed,
         referalcode:referalCode,
+        typedreferal:referal,
         confirm_password
        }
        req.session.udata = udata
@@ -125,17 +126,17 @@ const verifiedOtp = async(req,res)=>{
             const createdUser = await createUser(userData)
             if(createdUser){
                 const createdWallet = await createWallet(createdUser._id)
-                if(createdWallet){
-                    const referal = req.session.referal
-                    const userWithReferal = await User.findOne({referalcode:referal})
-                    if(userWithReferal){
-                        const referalAmount = parseInt(500)
-                        const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
-                        const referalAmount2 = parseInt(200)
-                        const walletOfNewUser = await Wallet.findOneAndUpdate({userId:createdUser._id},{$inc:{balance:referalAmount2}}).populate('userId')
-                        console.log(walletOfNewUser)
-                    }
-                }
+                // if(createdWallet){
+                //     const referal = req.session.referal
+                //     const userWithReferal = await User.findOne({referalcode:referal})
+                //     if(userWithReferal){
+                //         const referalAmount = parseInt(500)
+                //         const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
+                //         const referalAmount2 = parseInt(200)
+                //         const walletOfNewUser = await Wallet.findOneAndUpdate({userId:createdUser._id},{$inc:{balance:referalAmount2}}).populate('userId')
+                //         console.log(walletOfNewUser)
+                //     }
+                // }
             }
             req.session.uData = userData
             res.redirect('/login')
@@ -524,22 +525,22 @@ const loadUserDashboard = async(req,res)=>{
         const count = await Order.find(query).countDocuments()
         const user = await User.findById(userId)
 
-        const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+        const cartProducts = await myCart.findOne({userId:user._id}).populate('userId')
         console.log(cartProducts);
         let cartCount
         if(cartProducts){
-         cartCount = cartProducts.products.length
+        cartCount = cartProducts.products.length
         }
-
 
         const WishlistProduct = await User.findById(userId)
         let WishlistProductCount
         if(WishlistProduct){
-              WishlistProductCount = WishlistProduct.wishlist.length
+              WishlistProductCount = WishlistProduct.wishlist.length   
         }
 
-
-        res.render('userdashboard',{user,order,address,user,wallet, totalPages: Math.ceil(count / limit),page:page,WishlistProductCount,cartCount})
+        console.log("wish is"+WishlistProductCount)
+        console.log("cart is"+cartCount);
+        res.render('userdashboard',{user,order,address,user,wallet, totalPages: Math.ceil(count / limit),page:page,WishlistCount:WishlistProductCount,cartCount,userId})
     } catch (error) {
         console.log(error.message)
     }
@@ -739,7 +740,18 @@ const loadOrders = async(req,res)=>{
 
         const count = await Order.find(query).countDocuments()
 
-        res.render('orders',{order,totalPages: Math.ceil(count / limit),page:page})
+        const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+        console.log(cartProducts);
+        let cartCount
+        if(cartProducts){
+         cartCount = cartProducts.products.length
+        }
+        const WishlistProduct = await User.findById(userId)
+        let WishlistProductCount
+        if(WishlistProduct){
+            WishlistProductCount = WishlistProduct.wishlist.length
+        }
+        res.render('orders',{cartCount,wishlistCount:WishlistProductCount,userId,order,totalPages: Math.ceil(count / limit),page:page})
     }catch(error){
         console.log(error)
     }

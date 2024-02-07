@@ -7,17 +7,25 @@ const moment = require('moment')
 
 const addCoupon = async(req,res)=>{
     try {
-        const {name,purchase,code,discount,expirationDate} = req.body
-        const coupon = new Coupon({
-            name:name,
-            code:code,
-            discount:discount,
-            expirationDate:expirationDate,
-            minimumPurchase:purchase,
-        })
-        const savedCoupon = await coupon.save()
-        console.log(savedCoupon)
-        res.redirect('/admin/coupon')
+        const couponDetails = await Coupon.find({})
+        const {name,purchase,code,discount,mindiscount,expirationDate} = req.body
+        const existingCoupon = await Coupon.findOne({code:code})
+            if(existingCoupon){
+                res.render('coupon',{couponExists:"A coupon with this code already exists",couponDetails })
+            }
+            else{
+                const coupon = new Coupon({
+                    name:name,
+                    code:code,
+                    discount:discount,
+                    minDiscount:mindiscount,
+                    expirationDate:expirationDate,
+                    minimumPurchase:purchase,
+                })
+                const savedCoupon = await coupon.save()
+                console.log(savedCoupon)
+                res.redirect('/admin/coupon')
+            }
     } catch (error) {
         console.log(error)
     }
@@ -57,7 +65,11 @@ const applyCoupon = async(req,res)=>{
         
 
         const minpurchase = parseInt(couponWithThisCode.minimumPurchase)
-        const discountAmount = parseInt(couponWithThisCode.discount) 
+        const maxdiscountPercentage = parseInt(couponWithThisCode.discount) 
+        const mindiscountPercentage =  parseInt(couponWithThisCode.minDiscount) 
+        const discountPercentage = Math.floor(Math.random() * (maxdiscountPercentage - mindiscountPercentage + 1)) + mindiscountPercentage;
+        const discountAmount = minpurchase * (discountPercentage/100)
+        console.log(discountAmount);
 
         if(couponWithThisCode){
         const timeStamp = Date.now()

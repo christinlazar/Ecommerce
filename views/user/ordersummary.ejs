@@ -47,7 +47,7 @@
 </head>
 
 <body>
-    <%-include('header')%>
+    <%-include('shopheader')%>
     <div class="mobile-header-active mobile-header-wrapper-style">
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
@@ -294,15 +294,15 @@
                                            <script>
                                             document.getElementById('btncancel2').style.display="none"
                                            </script>
-                                        <%}else{%>
+                                        <%}else if(locals.orderDetails.status=="cancelled"){%>
+                                            <script>
+                                                document.getElementById('btncancel2').style.display="none"
+                                               </script>
+                                    <%}else{%>
                                         <td colspan="6" class="text-end">
                                             <button style="display:block;" onclick="removeOrder(`<%=orderDetails._id%>`)" id="btncancel"  > <i class="fi-rs-cross-small"></i>Cancel order</button>
                                         </td>
-                                       
                                     <%}%>
-                                    
-                                 
-                                        
                                     </tr>
                                     
                                

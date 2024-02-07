@@ -249,8 +249,22 @@ const checkOut = async(req,res)=>{
         addressOfUser = await address.find({userId:userId})
         cartOfUser = await myCart.findOne({userId:userId}).populate('products.productId')
         const coupon = await Coupon.find({is_active:true})
+
+        const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+        console.log(cartProducts);
+        let cartCount
+        if(cartProducts){
+         cartCount = cartProducts.products.length
+        }
+
+        const WishlistProduct = await User.findById(userId)
+        let WishlistProductCount
+        if(WishlistProduct){
+          WishlistProductCount = WishlistProduct.wishlist.length
+    }
+
         if(cartOfUser){
-        res.render('checkout',{cartOfUser:cartOfUser,addressOfUser:addressOfUser,coupon:coupon}) 
+        res.render('checkout',{cartOfUser:cartOfUser,addressOfUser:addressOfUser,coupon:coupon,userId,cartCount,wishlistCount:WishlistProductCount}) 
         }else{
         res.render('cart',{cantMoveToCheckout:"Your cart has No proudcts,So cant proceed to checkout",cartEmpty:"Your cart is empty"})  
         }

@@ -22,7 +22,7 @@ const createOrder = async (req, res) => {
       currency: "INR",
       receipt: req.session.user,
     });
-    console.log(order);
+    // console.log(order);
     res.json({ orderId: order });
   } catch (error) {
     console.log(error);
@@ -30,7 +30,7 @@ const createOrder = async (req, res) => {
 };
 const paymentSuccess = async (req, res) => {
   try {
-    console.log("successenter");
+  
     const {
       razorpay_payment_id,
       razorpay_order_id,
@@ -45,12 +45,12 @@ const paymentSuccess = async (req, res) => {
     console.log(hash);
     console.log(razorpay_signature);
     if (hash == razorpay_signature) {
-      console.log("verified");
+     
       // Payment successful, process the order
       // Update database, send emails, redirect to success page
       res.json({ message: "Payment successful" });
     } else {
-      console.log("notverified");
+     
 
       res.status(400).json({ errmessage: "Invalid signature" });
     }
@@ -68,12 +68,12 @@ const placeOrder = async (req, res) => {
     const totalprice = parseInt(req.body.totalprice, 10);
 
     if (paymentMethod == "wallet") {
-      console.log("getting inside wallet");
+     
       let query = {
         userId: userId,
       };
       const wallet = await Wallet.findOne(query).populate("userId");
-      console.log("Wallttttttt", +wallet);
+     
       if (totalprice <= wallet.balance) {
         const cart = await myCart.findOne({ _id: cartId });
         const productId = cart.products.map((element) => {
@@ -84,7 +84,7 @@ const placeOrder = async (req, res) => {
           };
           return prodata;
         });
-        console.log("getting here in top of myOrder");
+        
         const myOrder = new Order({
           userId: userId,
           addressId: addressId,
@@ -94,6 +94,21 @@ const placeOrder = async (req, res) => {
         });
 
         const mineOrder = await myOrder.save();
+
+      
+        const userWithTypedreferal = await User.findOne({_id:userId})
+        const referalCode = userWithTypedreferal.typedreferal
+        if(referalCode){
+          const myFirstOrder = await Order.findOne({userId:userId}).populate('userId').count()
+          console.log(myFirstOrder);
+          if(myFirstOrder==1){
+                     const referalAmount = parseInt(500)
+                      const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
+                      const referalAmount2 = parseInt(200)
+                      const walletOfNewUser = await Wallet.findOneAndUpdate({userId:createdUser._id},{$inc:{balance:referalAmount2}}).populate('userId')
+                      console.log(walletOfNewUser)
+          }
+        }
         let productDetArray = [];
 
         mineOrder.products.forEach((element) => {
@@ -119,7 +134,7 @@ const placeOrder = async (req, res) => {
           const today = new Date();
           const walletHistory = await Wallet.findOneAndUpdate(
             { userId: userId },
-            { $push:{walletdata:{ history: -totalprice, date: today }}}
+            { $push:{walletdata:{ history: -totalprice, date: today ,paymentmethod:paymentMethod }}}
           );
         }
         res.status(200).json({ success: true });
@@ -141,8 +156,8 @@ const placeOrder = async (req, res) => {
         };
         return prodata;
       });
-      console.log("getting here");
-      console.log(productId);
+    
+    
       const myOrder = new Order({
         userId: userId,
         addressId: addressId,
@@ -152,9 +167,23 @@ const placeOrder = async (req, res) => {
       });
 
       const mineOrder = await myOrder.save();
-      let productDetArray = [];
 
-      console.log(mineOrder);
+      const userWithTypedreferal = await User.findOne({_id:userId})
+      const referalCode = userWithTypedreferal.typedreferal
+      const userWithOrginalReferal = await User.findOne({referalcode:referalCode})
+      if(referalCode&&userWithOrginalReferal){
+        const myFirstOrder = await Order.find({userId:userId}).populate('userId')
+        console.log(myFirstOrder);
+        if(myFirstOrder.length==1){
+                   const referalAmount = parseInt(500)
+                    const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithOrginalReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
+                    const referalAmount2 = parseInt(200)
+                    const walletOfNewUser = await Wallet.findOneAndUpdate({userId:userWithTypedreferal._id},{$inc:{balance:referalAmount2}}).populate('userId')
+        }
+      }
+
+      let productDetArray = [];
+     
       mineOrder.products.forEach((element) => {
         let pdata = {
           product_id: element.product,
@@ -181,7 +210,7 @@ const placeSuccess = async (req, res) => {
     const paymentMethod = req.session.payment;
     const userId = req.session.user;
     await myCart.findOneAndDelete({ userId: userId });
-    console.log("Success");
+   
     if (
       paymentMethod == "COD" ||
       paymentMethod == "razorpay" ||
@@ -195,12 +224,24 @@ const placeSuccess = async (req, res) => {
 };
 const loadOrderSummary = async (req, res) => {
   try {
+    const userId = req.session.user
     const orderId = req.query.id;
-    const orderDetails = await Order.findById(orderId).populate(
-      "products.product"
-    );
-    console.log(orderDetails);
-    res.render("ordersummary", { orderDetails });
+    const orderDetails = await Order.findById(orderId).populate("products.product");
+    
+    const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+   
+    let cartCount
+    if(cartProducts){
+     cartCount = cartProducts.products.length
+    }
+
+    const WishlistProduct = await User.findById(userId)
+    let WishlistProductCount
+    if(WishlistProduct){
+          WishlistProductCount = WishlistProduct.wishlist.length
+    }
+
+    res.render("ordersummary", { userId,orderDetails ,wishlistCount:WishlistProductCount,cartCount:cartCount});
   } catch (error) {
     console.log(error.messsage);
   }
@@ -245,7 +286,7 @@ const removeOrder = async (req, res) => {
       });
       console.log("remorderis" + remOrderArray);
       remOrderArray.forEach(async (el) => {
-        console.log(el);
+       
         await Product.findByIdAndUpdate(
           { _id: el.product_id },
           { $inc: { [`size.${el.size}.quantity`]: el.qty } }
@@ -269,9 +310,9 @@ const removeOrder = async (req, res) => {
         };
         remOrderArray.push(remdata);
       });
-      console.log("remorderis" + remOrderArray);
+      
       remOrderArray.forEach(async (el) => {
-        console.log(el);
+        
         await Product.findByIdAndUpdate(
           { _id: el.product_id },
           { $inc: { [`size.${el.size}.quantity`]: el.qty } }
@@ -287,7 +328,7 @@ const removeOrder = async (req, res) => {
         if (updatedWallet) {
           const today = new Date();
           const walletHistory = await Wallet.findOneAndUpdate(filter, {
-            $push:{walletdata:{ history: totalAmount, date: today }},
+            $push:{walletdata:{ history: totalAmount, date: today ,paymentmethod:paymentMethod }},
           });
         }
       });
@@ -300,7 +341,7 @@ const removeOrder = async (req, res) => {
 
 const returnOrder = async (req, res) => {
   try {
-    console.log("getting inside return order");
+   
     const order = req.body.orderId;
     const myOrder = await Order.findById(order);
     const totalAmount = myOrder.totalamount;
@@ -330,7 +371,7 @@ const returnOrder = async (req, res) => {
         options
       ).populate("userId");
 
-      console.log(updatedWallet);
+     
     });
     res.status(200).json({ success: true });
   } catch (error) {
@@ -340,7 +381,7 @@ const returnOrder = async (req, res) => {
 const downloadInvoice = async (req, res) => {
   try {
     const orderId = req.body.orderId;
-    console.log(orderId);
+  
 
     const order = await Order.findById(orderId)
       .populate("addressId")

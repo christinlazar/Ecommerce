@@ -61,17 +61,24 @@
                                             <label class="form-label" >Coupon Code</label>
                                             <div class="row gx-2">
                                                 <input  name="code" type="text" id="code" class="form-control" >
-                                               
                                                 <p class="text text-danger" style="display: block;" id="codeError"></p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
-                                            <label class="form-label" >Discount</label>
+                                            <label class="form-label" >Max Discount</label>
                                             <input name="discount" type="text" id="discount" class="form-control" >
                                             <p class="text text-danger" style="display:block" id="discountError"></p>
                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label" >Min Discount</label>
+                                            <input name="mindiscount" type="text" id="mindiscount" class="form-control" >
+                                            <p class="text text-danger" style="display:block" id="mindiscountError"></p>
+                                            <p class="text text-danger" style="display:block" id="bothdiscountError"></p>
                                         </div>
                                     </div>
 
@@ -80,12 +87,20 @@
                                             <label class="form-label" for="expirationDate">Expiration Date</label>
                                             <input name="expirationDate" type="date" id="expirationDate" class="form-control">
                                             <p class="text text-danger" style="display:none" id="expirationDateError"></p>
+                                            
                                         </div>
                                     </div>
 
                                     <button class="btn btn-light rounded font-sm mr-5 text-body hover-up" id="btn" type="submit"  >Add Coupon</button>
                                     <p class="text text-danger" style="display:none" id="submitError"></p>
-                                   
+                                    <%if(locals.couponExists){%>
+                                        <p id="couponExists" class="text text-danger"><%=locals.couponExists%></p>
+                                        <script>
+                                            setTimeout(() => {
+                                                document.getElementById('couponExists').style.display="none"
+                                            }, 3000);
+                                        </script>
+                                    <%}%>
                                 </div>
                               
                         </div>
@@ -104,7 +119,8 @@
                                     <th>Coupon Name</th>
                                     <th>Coupon code</th>
                                     <th>Minimum purchase</th>
-                                    <th>Discount</th>
+                                    <th>Max Discount</th>
+                                    <th>Min Discount</th>
                                     <th > Expiration Date </th>
                                     <th class="text-end"> Action </th>
                                 </tr>
@@ -131,8 +147,8 @@
                                  
                                         <td>Rs.<%=element.minimumPurchase%></td>
                                    
-                                        <td>Rs.<%=element.discount%></td>
-                                   
+                                        <td><%=element.discount%> %</td>
+                                        <td><%=element.minDiscount%> %</td>
                                     <td><%=element.expirationDate%></td>
                                     <td class="text-end">
 
@@ -256,6 +272,22 @@
             const discountError = document.getElementById('discountError')
             const expirationDate = document.getElementById('xpirationDate') 
             const expirationDateError = document.getElementById('xpirationDateError')
+            const mindiscount = document.getElementById('mindiscount')
+            const mindiscountError = document.getElementById('mindiscountError')
+            const bothdiscountError = document.getElementById('bothdiscountError')
+
+            function validateBothDiscount(){
+                const maxdiscountValue = parseInt(discount.value)
+                const mindiscountValue = parseInt(mindiscount.value)
+                if(maxdiscountValue<mindiscountValue){
+                    bothdiscountError.innerHTML="Max discount must be greater than min purchase"
+                    setTimeout(() => {
+                        bothdiscountError.style.display="none"
+                    }, 3000);
+                }else{
+                    bothdiscountError.innerHTML=""
+                }
+            }
 
                 function validateCouponName(){
                     const couponNamePattern = /^[\w\s-]{1,50}$/
@@ -298,7 +330,7 @@
 
 
                 function validateCouponCode(){
-                    const couponPattern =/^[a-zA-Z0-9]{8}$/
+                    const couponPattern =/^[a-zA-Z0-9]+$/
                     if(code.value.trim()==""){
                         codeError.innerHTML="Coupon code is not valid" 
                         setTimeout(() => {
@@ -320,13 +352,13 @@
                 function validateDiscount(){
                     const discountPattern = /^\d+(\.\d{1,2})?$/
                     if(discount.value.trim()==""){
-                        discountError.innerHTML="Discount Amount is not valid" 
+                        discountError.innerHTML="Discount % is not valid" 
                         setTimeout(() => {
                             discountError.style.display="none"
                         }, 3000);
                     }
                     else if(!discountPattern.test(discount.value)){
-                        discountError.innerHTML="Discount Amount is not valid"
+                        discountError.innerHTML="Discount % is not valid"
                         setTimeout(() => {
                             discountError.style.display="none"
                         }, 3000);
@@ -336,14 +368,36 @@
                     }
                 }
 
+                
+                function validateMinDiscount(){
+                    const discountPattern = /^\d+(\.\d{1,2})?$/
+                    if(mindiscount.value.trim()==""){
+                        mindiscountError.innerHTML="Discount % is not valid" 
+                        setTimeout(() => {
+                            mindiscountError.style.display="none"
+                        }, 3000);
+                    }
+                    else if(!discountPattern.test(mindiscount.value)){
+                        mindiscountError.innerHTML="Discount % is not valid"
+                        setTimeout(() => {
+                            mindiscountError.style.display="none"
+                        }, 3000);
+                      
+                    }else{
+                        mindiscountError.innerHTML=""
+                    }
+                }
+
                 form.addEventListener('submit',function(event){
                     validateCouponName();
                     validateMinimumPurchase()
                     validateCouponCode();
                     validateDiscount();
+                    validateMinDiscount();
+                    validateBothDiscount();
 
-                    if(couponError.innerHTML||minError.innerHTML||discountError.innerHTML||codeError){
-                        event.preventDefault;
+                    if(couponError.innerHTML||minError.innerHTML||discountError.innerHTML||codeError.innerHTML||mindiscountError.innerHTML||bothdiscountError.innerHTML){
+                        event.preventDefault();
                     }
                 })
 
@@ -351,6 +405,8 @@
                 min.addEventListener('blur',validateMinimumPurchase)
                 code.addEventListener('blur',validateCouponCode)
                 discount.addEventListener('blur',validateDiscount)
+                mindiscount.addEventListener('blur',validateMinDiscount)
+                mindiscount.addEventListener('blur',validateBothDiscount)
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -50,7 +50,7 @@
 </head>
 
 <body>
-   <%-include('shopheader')%>
+  <%-include('shopheader')%>
     <div class="mobile-header-active mobile-header-wrapper-style">
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
@@ -194,6 +194,7 @@
                         <a  href="page-contact.html"> Our location </a>
                     </div>
                     <div class="single-mobile-header-info">
+
                         <a href="page-login-register.html">Log In / Sign Up </a>
                     </div>
                     <div class="single-mobile-header-info">
@@ -215,7 +216,7 @@
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow">Home</a>
+                    <a href="/" rel="nofollow">Home</a>
                     <span></span> Pages
                     <span></span> Account
                 </div>
@@ -382,7 +383,7 @@
                                                             <tr>
                                                                 <th>Date</th>
                                                                 <th>History</th>
-                                                               
+                                                                <th>Payment Method</th>
                                                                 
                                                             </tr>
                                                         </thead>
@@ -390,7 +391,8 @@
                                                             <% if(locals.wallet && locals.wallet.walletdata.length > 0){ locals.wallet.walletdata.forEach(element => { %>
                                                             <tr>
                                                               <td><%= element.date.toDateString()%></td>
-                                                              <td><%= element.history %></td>       
+                                                              <td><%= element.history %></td>  
+                                                              <td><%=element.paymentmethod%></td>     
                                                             </tr>
                                                            <% }) } %>
                                                           

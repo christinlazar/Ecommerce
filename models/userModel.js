@@ -24,6 +24,9 @@ const userSchema = mongoose.Schema({
     referalcode:{
         type:String
     },
+    typedreferal:{
+        type:String
+    },
     wishlist:{
         type:[
             {

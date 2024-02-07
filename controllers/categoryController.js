@@ -34,7 +34,7 @@ const categorySave = async(req,res)=>{
  const blockCategory = async(req,res)=>{
      try {
          const categoryid = req.body.categoryId;
-         console.log(categoryid)
+       
          await Category.findOneAndUpdate({_id:categoryid},{$set:{is_active:false}})
          res.status(200).json({message:"sucesscategory"})
      } catch (error) {
