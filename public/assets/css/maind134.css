@@ -128,7 +128,7 @@ input:focus::-moz-placeholder {
 }
 
 a {
-  color: #088178;
+  color: #000000;
 }
 .main-menu a{
   color: #000;
@@ -5864,7 +5864,7 @@ h6.post-title {
   background-repeat: no-repeat;
   background-position: center left;
   padding-left: 35px;
-  font-style: italic;
+  font-style:inherit;
 }
 
 .search-style-2 form input::-moz-input-placeholder {
@@ -9823,7 +9823,7 @@ span.fi-rs-apps {
     min-width: 100px;
   }
   .hero-slider-1 .single-slider-img-1 {
-    height: 300px;
+    height: 45px;
   }
   .featured .col-lg-2 {
     width: 50%;

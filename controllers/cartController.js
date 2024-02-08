@@ -7,9 +7,10 @@ const Coupon = require('../models/couponModel')
 const loadCart = async(req,res)=>{
     try {
         const id = req.session.user
+        console.log(id);
         const cartOfUser = await myCart.find({userId:id}).populate({path:'products.productId',populate:{ path:'category', model:'category'}}).populate('userId').exec()
         if(cartOfUser&&cartOfUser.length>0){
-           console.log("cart of user is"+cartOfUser)
+           
            cartOfUser.forEach(element=>{
             element.products.forEach(async(el)=>{
                 if(el.productId.discount < el.productId.category.categoryDiscount){
@@ -24,9 +25,38 @@ const loadCart = async(req,res)=>{
                 }
                })
            })
-            res.render('cart',{cartOfUser:cartOfUser})
+
+           const cartProducts = await myCart.findOne({userId:id}).populate('userId')
+           
+           console.log(cartProducts);
+           let cartCount
+           if(cartProducts){
+            cartCount = cartProducts.products.length
+           }
+           
+           const WishlistProduct = await User.findById(id)
+            let WishlistProductCount
+            if(WishlistProduct){
+          WishlistProductCount = WishlistProduct.wishlist.length
+    }
+
+            res.render('cart',{cartOfUser:cartOfUser,userId:id,wishlistCount:WishlistProductCount,cartCount:cartCount ? cartCount :0})
         }else{
-            res.render('cart',{cartEmpty:"Your cart is empty"})
+            
+           const cartProducts = await myCart.findOne({userId:id}).populate('userId')
+           
+           console.log(cartProducts);
+           let cartCount
+           if(cartProducts){
+            cartCount = cartProducts.products.length
+           }
+           
+           const WishlistProduct = await User.findById(id)
+            let WishlistProductCount
+            if(WishlistProduct){
+          WishlistProductCount = WishlistProduct.wishlist.length
+    }
+            res.render('cart',{cartEmpty:"Your cart is empty",userId:id,cartCount,wishlistCount:WishlistProductCount})
         }
     } catch (error) {
      console.log(error)   
@@ -274,8 +304,19 @@ const checkOut = async(req,res)=>{
 }
 const addAddress = async(req,res)=>{
     try {
-       
-        res.render('add-address')
+       const userId = req.session.user
+       const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+       console.log(cartProducts);
+       let cartCount
+       if(cartProducts){
+        cartCount = cartProducts.products.length
+       }
+       const WishlistProduct = await User.findById(userId)
+    let WishlistProductCount
+    if(WishlistProduct){
+          WishlistProductCount = WishlistProduct.wishlist.length
+    }
+        res.render('add-address',{userId,cartCount,wishlistCount:WishlistProductCount})
     } catch (error) { 
         console.log(error.message)
     }
@@ -284,8 +325,20 @@ const editAddress = async(req,res)=>{
     try {
         const addressId = req.query.id
         const addressDetails = await address.findOne({_id:addressId})
-        console.log("address details is"+addressDetails)
-        res.render('editaddress',{addressDetails})
+        const userId = req.session.user
+        const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+        console.log(cartProducts);
+        let cartCount
+        if(cartProducts){
+         cartCount = cartProducts.products.length
+        }
+    const WishlistProduct = await User.findById(userId)
+        let WishlistProductCount
+        if(WishlistProduct){
+              WishlistProductCount = WishlistProduct.wishlist.length
+        }
+    
+        res.render('editaddress',{addressDetails,userId,cartCount,wishlistCount:WishlistProductCount})
     } catch (error) {
         console.log(error.message)
     }

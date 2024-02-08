@@ -98,17 +98,18 @@ const placeOrder = async (req, res) => {
       
         const userWithTypedreferal = await User.findOne({_id:userId})
         const referalCode = userWithTypedreferal.typedreferal
-        if(referalCode){
-          const myFirstOrder = await Order.findOne({userId:userId}).populate('userId').count()
+        const userWithOrginalReferal = await User.findOne({referalcode:referalCode})
+        if(referalCode&&userWithOrginalReferal){
+          const myFirstOrder = await Order.find({userId:userId}).populate('userId')
           console.log(myFirstOrder);
-          if(myFirstOrder==1){
+          if(myFirstOrder.length==1){
                      const referalAmount = parseInt(500)
-                      const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
+                      const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithOrginalReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
                       const referalAmount2 = parseInt(200)
-                      const walletOfNewUser = await Wallet.findOneAndUpdate({userId:createdUser._id},{$inc:{balance:referalAmount2}}).populate('userId')
-                      console.log(walletOfNewUser)
+                      const walletOfNewUser = await Wallet.findOneAndUpdate({userId:userWithTypedreferal._id},{$inc:{balance:referalAmount2}}).populate('userId')
           }
         }
+        
         let productDetArray = [];
 
         mineOrder.products.forEach((element) => {

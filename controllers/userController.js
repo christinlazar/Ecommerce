@@ -23,9 +23,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// let users = {}
-
-
 const postRegister = async(req,res)=>{
     try{
         console.log("getting inside post")
@@ -464,10 +461,21 @@ const loadCart = async(req,res)=>{
         const cartOfUser = await myCart.find({userId:id}).populate('products.productId').exec()
         if(cartOfUser){
             console.log(cartOfUser);
-            // cartOfUser.forEach(element => {
-            //   console.log(element.products)  
-            // });
-            res.render('cart',{cartOfUser:cartOfUser})
+            
+            const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+            console.log(cartProducts);
+            let cartCount
+            if(cartProducts){
+             cartCount = cartProducts.products.length
+            }
+
+            const WishlistProduct = await User.findById(userId)
+    let WishlistProductCount
+    if(WishlistProduct){
+          WishlistProductCount = WishlistProduct.wishlist.length
+    }
+
+            res.render('cart',{cartOfUser:cartOfUser,userId:id,wishlistCount:WishlistProductCount,cartCount})
         }
     } catch (error) {
      console.log(error)   
@@ -557,7 +565,22 @@ const updateUserDetails = async(req,res)=>{
 }
 const loadChangePassword = async(req,res)=>{
     try {
-        res.render('changepassword')
+        const userId = req.session.user
+        const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+        console.log(cartProducts);
+        let cartCount
+        if(cartProducts){
+         cartCount = cartProducts.products.length
+        }
+    
+    
+    const WishlistProduct = await User.findById(userId)
+        let WishlistProductCount
+        if(WishlistProduct){
+              WishlistProductCount = WishlistProduct.wishlist.length
+        }
+    
+        res.render('changepassword',{userId,cartCount,wishlistCount:WishlistProductCount})
     } catch (error) {
         console.log(error.message)
     }
@@ -716,7 +739,20 @@ const loadWallet = async(req,res)=>{
 }
 const loadAboutUs = async(req,res)=>{
     try {
-        res.render('aboutus')
+        const userId = req.session.user
+        const WishlistProduct = await User.findById(userId)
+    let WishlistProductCount
+    if(WishlistProduct){
+          WishlistProductCount = WishlistProduct.wishlist.length
+    }
+    const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
+    console.log(cartProducts);
+    let cartCount
+    if(cartProducts){
+     cartCount = cartProducts.products.length
+    }
+
+        res.render('aboutus',{userId,cartCount,wishlistCount:WishlistProductCount})
     } catch (error) {
         console.log(error)
     }
@@ -746,6 +782,7 @@ const loadOrders = async(req,res)=>{
         if(cartProducts){
          cartCount = cartProducts.products.length
         }
+        
         const WishlistProduct = await User.findById(userId)
         let WishlistProductCount
         if(WishlistProduct){
