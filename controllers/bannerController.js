@@ -15,8 +15,6 @@ const addBannerDetails = async(req,res)=>{
         const {title,description,startingDate,endingDate} = req.body
         const images = req.files
        const image = images.map(element =>element.filename)
-       console.log(images)
- 
         const banner = new Banner({
             title:title,
             description:description,
@@ -25,7 +23,6 @@ const addBannerDetails = async(req,res)=>{
             endDate:endingDate,
         })
        const savedbanner = await banner.save()
-       console.log(savedbanner)
        res.redirect('/admin/addbanner')
     } catch (error) {
         console.log(error)
@@ -36,7 +33,6 @@ const loadEditBanner = async(req,res)=>{
         const bannerId = req.query.id
         req.session.bannerId = bannerId
         const bannerIs = await Banner.findOne({_id:bannerId})
-        console.log(bannerId)
         res.render('editbanner',{bannerIs})
     } catch (error) {
         console.log(error)
@@ -44,11 +40,8 @@ const loadEditBanner = async(req,res)=>{
 }
 const deleteBanner = async(req,res)=>{
     try {
-        console.log("getting here");
         const bannerId = req.body.bannerId;
         const index = req.body.index
-        console.log(index)
-        console.log(bannerId)
         const banner = await Banner.findById(bannerId)
         const bannerToDelete = banner.image[index]
         fs.unlink(bannerToDelete,(err)=>{
@@ -68,7 +61,6 @@ const deleteBanner = async(req,res)=>{
 const verifyEditBanner = async(req,res)=>{
     try {
         const bannerId = req.session.bannerId
-        console.log("bannerId is "+bannerId)
         const {title,description,startingDate,endingDate} = req.body
         const images = req.files
         const newImages = images.map(el=>el.filename)

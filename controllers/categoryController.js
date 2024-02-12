@@ -6,14 +6,12 @@ const categorySave = async(req,res)=>{
     try{
      const category = await Category.find({})
      const{name,parent,description,categoryDiscount,startDate,endDate} = req.body
-     console.log(name,parent,description)
      const samedata = await Category.findOne({name:name})
     
      if(samedata){
          res.render('category',{msg:"Sorry!..This category already exists",category})
         
      }else{
-             console.log("ok")
          const category = new Category({
              name:name,
              parent:parent,

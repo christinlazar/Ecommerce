@@ -23,7 +23,6 @@ const createOrderToAdd = async (req,res)=>{
       currency: "INR",
       receipt: req.session.user,
     });
-    console.log("order is"+order);
     res.json({ orderId: order });
     } catch (error) {
         console.log(error)
@@ -45,8 +44,6 @@ const paymentSuccess = async (req, res) => {
       const hash = createHmac("sha256", secret)
         .update(orderid + "|" + razorpay_payment_id)
         .digest("hex");
-      console.log(hash);
-      console.log(razorpay_signature);
       if (hash == razorpay_signature) {
        
         // Payment successful, process the order

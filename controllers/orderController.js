@@ -22,7 +22,6 @@ const createOrder = async (req, res) => {
       currency: "INR",
       receipt: req.session.user,
     });
-    // console.log(order);
     res.json({ orderId: order });
   } catch (error) {
     console.log(error);
@@ -42,8 +41,6 @@ const paymentSuccess = async (req, res) => {
     const hash = createHmac("sha256", secret)
       .update(orderid + "|" + razorpay_payment_id)
       .digest("hex");
-    console.log(hash);
-    console.log(razorpay_signature);
     if (hash == razorpay_signature) {
      
       // Payment successful, process the order
@@ -101,7 +98,6 @@ const placeOrder = async (req, res) => {
         const userWithOrginalReferal = await User.findOne({referalcode:referalCode})
         if(referalCode&&userWithOrginalReferal){
           const myFirstOrder = await Order.find({userId:userId}).populate('userId')
-          console.log(myFirstOrder);
           if(myFirstOrder.length==1){
                      const referalAmount = parseInt(500)
                       const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithOrginalReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
@@ -174,7 +170,6 @@ const placeOrder = async (req, res) => {
       const userWithOrginalReferal = await User.findOne({referalcode:referalCode})
       if(referalCode&&userWithOrginalReferal){
         const myFirstOrder = await Order.find({userId:userId}).populate('userId')
-        console.log(myFirstOrder);
         if(myFirstOrder.length==1){
                    const referalAmount = parseInt(500)
                     const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithOrginalReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
@@ -285,7 +280,6 @@ const removeOrder = async (req, res) => {
         };
         remOrderArray.push(remdata);
       });
-      console.log("remorderis" + remOrderArray);
       remOrderArray.forEach(async (el) => {
        
         await Product.findByIdAndUpdate(
@@ -397,10 +391,6 @@ const downloadInvoice = async (req, res) => {
       month: "2-digit",
       day: "2-digit",
     });
-    console.log(formatedDate);
-    console.log(pro);
-
-    console.log(order);
     const client = {
       company: order.addressId.house,
       address: order.addressId.landmark,
@@ -408,7 +398,6 @@ const downloadInvoice = async (req, res) => {
       city: order.addressId.city,
       country: order.addressId.country,
     };
-    console.log(client);
     totalAmount = order.totalamount;
     let prod = [];
     await order.products.forEach((el) => {
@@ -420,8 +409,6 @@ const downloadInvoice = async (req, res) => {
       };
       prod.push(proData);
     });
-    console.log(prod);
-
     const data = {
       images: {
         background:

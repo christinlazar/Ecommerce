@@ -24,15 +24,12 @@ const transporter = nodemailer.createTransport({
 });
 
 const postRegister = async(req,res)=>{
-    try{
-        console.log("getting inside post")
-      
+    try{  
        const{name,email,phone,password,confirm_password,referal} = req.body
         req.session.referal = referal;
         req.session.email = email
         req.session.phone = phone
        const hashed = await bcrypt.hash(password,10)
-       console.log(hashed)
        const referalCode = generateReferalCode();
        const udata = {
         name,
@@ -48,10 +45,7 @@ const postRegister = async(req,res)=>{
          if(user){
            res.render('registration',{exists:"This user already exists"})
          }else{
-            console.log(password,confirm_password)
             if(password==confirm_password){
-
-                console.log("im inside")
                 const otp = Math.floor(100000 + Math.random()* 900000)
 
                 const globalOtp = otp;
@@ -123,17 +117,6 @@ const verifiedOtp = async(req,res)=>{
             const createdUser = await createUser(userData)
             if(createdUser){
                 const createdWallet = await createWallet(createdUser._id)
-                // if(createdWallet){
-                //     const referal = req.session.referal
-                //     const userWithReferal = await User.findOne({referalcode:referal})
-                //     if(userWithReferal){
-                //         const referalAmount = parseInt(500)
-                //         const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
-                //         const referalAmount2 = parseInt(200)
-                //         const walletOfNewUser = await Wallet.findOneAndUpdate({userId:createdUser._id},{$inc:{balance:referalAmount2}}).populate('userId')
-                //         console.log(walletOfNewUser)
-                //     }
-                // }
             }
             req.session.uData = userData
             res.redirect('/login')
@@ -169,10 +152,8 @@ const loadRegister = async(req,res)=>{
 }
 const userLogin = async (req, res) => {
     try {
-        console.log("enterning userlogin")
         const useremail = req.body.email;
         const password = req.body.password;
-    console.log(useremail,password)
         const userData = await User.findOne({ email: useremail });
 
         if (userData) {
@@ -215,7 +196,6 @@ const loadHome = async(req,res)=>{
         }
         
         const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-        console.log(cartProducts);
         let cartCount
         if(cartProducts){
          cartCount = cartProducts.products.length
@@ -259,10 +239,7 @@ const loadSingleProductView = async(req,res)=>{
         ]);
         const product = await Product.findById(id).populate('category')
         const relatedproducts = await Product.find({category:product.category})
-        console.log(relatedproducts);
-
         const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-        console.log(cartProducts);
         let cartCount
         if(cartProducts){
          cartCount = cartProducts.products.length
@@ -330,7 +307,6 @@ const resendOtp = async(req,res)=>{
 const loadRealHome = async(req,res) =>{
    try {
     const today = new Date()
-    console.log(today);
     const userId = req.session.user
     const Category = await category.find({is_active:true})
     const banner = await Banner.findOne({isActive:true})
@@ -350,8 +326,6 @@ const loadRealHome = async(req,res) =>{
     const limit = 9
 
     const catId = req.query.id
-    console.log(catId)
-
     let query = {
         is_active:true
     }
@@ -368,7 +342,6 @@ const loadRealHome = async(req,res) =>{
     }
     let sortOptions = {}
     if(req.query.high){
-        console.log(req.query.high)
         sortOptions = {'price.saleprice':1}
     }
     if(req.query.low){
@@ -403,16 +376,12 @@ const loadRealHome = async(req,res) =>{
     .sort(sortOptions)
     .skip((page-1)*limit)
     .limit(limit)
-
-    console.log("products arr is"+products);
     products.forEach(async(el)=>{
         if(el.enddate < today){
             await Product.update({_id:el._id},{$set:{discount:0}})
         }
     })
-
     const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-    console.log(cartProducts);
     let cartCount
     if(cartProducts){
      cartCount = cartProducts.products.length
@@ -425,8 +394,6 @@ const loadRealHome = async(req,res) =>{
     if(WishlistProduct){
           WishlistProductCount = WishlistProduct.wishlist.length
     }
-
-   console.log("wishcount is"+WishlistProductCount)
     const high = req.query.high
     const low = req.query.low
    const searchh = search
@@ -459,11 +426,8 @@ const loadCart = async(req,res)=>{
     try {
         const id = req.session.user
         const cartOfUser = await myCart.find({userId:id}).populate('products.productId').exec()
-        if(cartOfUser){
-            console.log(cartOfUser);
-            
+        if(cartOfUser){ 
             const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-            console.log(cartProducts);
             let cartCount
             if(cartProducts){
              cartCount = cartProducts.products.length
@@ -487,11 +451,6 @@ const addToCart = async(req,res)=>{
         const quantity = req.body.quantity
         const userId = req.session.user
         const size = req.body.selectedSize
-        console.log(size)
-        console.log(productId)
-        console.log(quantity)
-        console.log(userId)
-
        const cart = new myCart({
             userId:userId,
             products:[{
@@ -501,9 +460,6 @@ const addToCart = async(req,res)=>{
         })
 
        const savedcart = await cart.save()
-       console.log(savedcart)
-        
-
         res.status(200).json({data:"success"})
     } catch (error) {
     console.log(error)    
@@ -522,8 +478,6 @@ const loadUserDashboard = async(req,res)=>{
         userId:userId
     }
     const wallet = await Wallet.findOne(query).populate('userId')
-
-    console.log("wallet is"+wallet)
         const address = await Address.find({userId:userId})
         const userDetails = await User.findById(userId)
         const order = await Order.find({userId:userId}).sort({createdAt:-1})
@@ -534,7 +488,6 @@ const loadUserDashboard = async(req,res)=>{
         const user = await User.findById(userId)
 
         const cartProducts = await myCart.findOne({userId:user._id}).populate('userId')
-        console.log(cartProducts);
         let cartCount
         if(cartProducts){
         cartCount = cartProducts.products.length
@@ -545,9 +498,6 @@ const loadUserDashboard = async(req,res)=>{
         if(WishlistProduct){
               WishlistProductCount = WishlistProduct.wishlist.length   
         }
-
-        console.log("wish is"+WishlistProductCount)
-        console.log("cart is"+cartCount);
         res.render('userdashboard',{user,order,address,user,wallet, totalPages: Math.ceil(count / limit),page:page,WishlistCount:WishlistProductCount,cartCount,userId})
     } catch (error) {
         console.log(error.message)
@@ -567,7 +517,6 @@ const loadChangePassword = async(req,res)=>{
     try {
         const userId = req.session.user
         const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-        console.log(cartProducts);
         let cartCount
         if(cartProducts){
          cartCount = cartProducts.products.length
@@ -592,10 +541,8 @@ const confirmNewPassword = async(req,res)=>{
         const{oldpassword,newpassword,confirmnewpassword} = req.body
         const userData = await User.findById(userId)
         const hashed = userData.password
-        console.log(hashed)
         const isverified = await bcrypt.compare(oldpassword,hashed)
        if(isverified){
-        console.log(isverified)
         if(newpassword == confirmnewpassword){
             const hashednewpassword = await bcrypt.hash(newpassword,10)
             await User.findByIdAndUpdate(userId,{$set:{password:hashednewpassword}})
@@ -661,7 +608,6 @@ const verifyForgotOtp = async(req,res)=>{
 try {
     const {otp} = req.body
     const globalOtp = req.session.forgototp
-    console.log(otp,globalOtp)
     if(otp == globalOtp){
         res.redirect('/newpassword')
     }else{
@@ -676,14 +622,12 @@ try {
 const verifyNewPassword = async(req,res)=>{
     try {
         const{newpassword,confirmpassword} = req.body
-        console.log(newpassword,confirmpassword)
        const forgotemail = req.session.forgotemail
        if(newpassword == confirmpassword){
         const existingUser = await User.findOne({email:forgotemail})
         if(existingUser){
             const hashedpwd = await bcrypt.hash(newpassword,10)
             await User.findOneAndUpdate({email:forgotemail},{$set:{password:hashedpwd}})
-            console.log("password changed")
             res.redirect('/login')
         }else{
             console.log("not existing user")
@@ -730,13 +674,7 @@ const forgotResendOtp = async(req,res)=>{
         console.log(error)
     }
 }
-const loadWallet = async(req,res)=>{
-    try {
-        res.render('wallet')
-    } catch (error) {
-        console.log(error)
-    }
-}
+
 const loadAboutUs = async(req,res)=>{
     try {
         const userId = req.session.user
@@ -746,7 +684,6 @@ const loadAboutUs = async(req,res)=>{
           WishlistProductCount = WishlistProduct.wishlist.length
     }
     const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-    console.log(cartProducts);
     let cartCount
     if(cartProducts){
      cartCount = cartProducts.products.length
@@ -773,11 +710,8 @@ const loadOrders = async(req,res)=>{
         const order = await Order.find(query).sort({createdAt:-1})
         .skip((page-1)*limit)
         .limit(limit)
-
         const count = await Order.find(query).countDocuments()
-
         const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-        console.log(cartProducts);
         let cartCount
         if(cartProducts){
          cartCount = cartProducts.products.length

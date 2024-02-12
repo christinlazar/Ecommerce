@@ -10,14 +10,12 @@ const categorySave = async(req,res)=>{
    try{
     const category = await Category.find({})
     const{name,parent,description} = req.body
-    console.log(name,parent,description)
     const samedata = await Category.findOne({name:name})
    
     if(samedata){
         res.render('category',{msg:"Sorry!..This category already exists",category})
        
     }else{
-            console.log("ok")
         const category = new Category({
             name:name,
             parent:parent,
@@ -35,7 +33,6 @@ const categorySave = async(req,res)=>{
 const blockCategory = async(req,res)=>{
     try {
         const categoryid = req.body.categoryId;
-        console.log(categoryid)
         await Category.findOneAndUpdate({_id:categoryid},{$set:{is_active:false}})
         res.status(200).json({message:"sucesscategory"})
     } catch (error) {
@@ -65,7 +62,6 @@ const editCategory = async(req,res)=>{
 const updateEditCategory = async(req,res)=>{
     try {
   const name = req.body.name
-  console.log(name)
     await Category.findByIdAndUpdate({_id:req.query.id},{$set:{name:req.body.name,parent:req.body.parent,description:req.body.description}})
    
     res.redirect('/admin/category')
@@ -89,8 +85,6 @@ loadAddProduct = async(req,res)=>{
 
 const addProductDetials = async(req,res)=>{
     try {
-       
-        // console.log("image :",req.file)
         const images = req.files
         const imagefilenames = images.map(image =>image.filename)
        const {name,description,saleprice,regularprice,category,small,medium,large,startdate,enddate} = req.body
@@ -148,14 +142,6 @@ const addProductDetials = async(req,res)=>{
         console.log(error)
     }
 }
-
-function toGetBackFromCatOffer(discount){
-    try {
-        
-    } catch (error) {
-        console.log(console.log(error));
-    }
-}
 const productList = async(req,res)=>{
    try {
     const category = await Category.find({is_active:true}).sort({createdAt:-1})
@@ -187,7 +173,6 @@ const blockProduct = async(req,res)=>{
     try {
         
         const productid = req.body.productId
-        // console.log(productid)
         const productdata = await Product.findOneAndUpdate({_id:productid},{$set:{is_active:false}})
         
         res.status(200).json({message:"successully blocked"})
@@ -300,14 +285,6 @@ const loadOffers = async(req,res)=>{
             await Product.updateMany({_id:el._id},{$set:{discount:0,startdate:today,endDate:today}})
            })
         }
-
-        // const categoryOffToExpire = await Category.find({categoryDiscount:{$gt:0},endDate:{$lt:today}})
-        // if(categoryOffToExpire){
-        //    categoryOffToExpire.forEach(async(el)=>{
-        //     await Category.updateMany({_id:el._id},{$set:{categoryDiscount:0,'price.saleprice':''}})
-        //    })
-        // }
-       
     } catch (error) {
         console.log(error)
     }

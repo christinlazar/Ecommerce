@@ -23,7 +23,6 @@ const addCoupon = async(req,res)=>{
                     minimumPurchase:purchase,
                 })
                 const savedCoupon = await coupon.save()
-                console.log(savedCoupon)
                 res.redirect('/admin/coupon')
             }
     } catch (error) {
@@ -61,16 +60,11 @@ const applyCoupon = async(req,res)=>{
         cartOfUser = await cart.findOne({userId:userId}).populate('products.productId')
         addressOfUser = await address.find({userId:userId})
         const coupon = await Coupon.find({is_active:true})
-
-        
-
         const minpurchase = parseInt(couponWithThisCode.minimumPurchase)
         const maxdiscountPercentage = parseInt(couponWithThisCode.discount) 
         const mindiscountPercentage =  parseInt(couponWithThisCode.minDiscount) 
         const discountPercentage = Math.floor(Math.random() * (maxdiscountPercentage - mindiscountPercentage + 1)) + mindiscountPercentage;
         const discountAmount = minpurchase * (discountPercentage/100)
-        console.log(discountAmount);
-
         if(couponWithThisCode){
         const timeStamp = Date.now()
         const dateToFormat = moment(timeStamp)

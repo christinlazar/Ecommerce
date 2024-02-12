@@ -6,7 +6,6 @@ const fetchsalesdata = async(req,res)=>{
          
         const msg = req.body.msg
         if(msg){
-            console.log("hello guys")
             const salesData = await Order.aggregate([
                 {
                     $group: {
@@ -63,7 +62,6 @@ const fetchsalesdata = async(req,res)=>{
                     }
                   }
             ])
-          console.log(pieData);
           let arr1=[]
           let arr2=[]
             pieData.forEach(el=>{

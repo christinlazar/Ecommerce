@@ -7,28 +7,22 @@ const Coupon = require('../models/couponModel')
 const loadCart = async(req,res)=>{
     try {
         const id = req.session.user
-        console.log(id);
         const cartOfUser = await myCart.find({userId:id}).populate({path:'products.productId',populate:{ path:'category', model:'category'}}).populate('userId').exec()
         if(cartOfUser&&cartOfUser.length>0){
            
            cartOfUser.forEach(element=>{
             element.products.forEach(async(el)=>{
                 if(el.productId.discount < el.productId.category.categoryDiscount){
-                    console.log(el.productId.discount,el.productId.category.categoryDiscount)
                     const discount = el.productId.category.categoryDiscount
                     const discountAmount = el.productId.price.regularprice * (el.productId.category.categoryDiscount/100)
                     const sellPrice = el.productId.price.regularprice-discountAmount
                     const sellingPrice = Math.floor(sellPrice)
-                    console.log(discount,discountAmount,sellingPrice);
                    const dev = await Product.findByIdAndUpdate({_id:el.productId._id},{$set:{'price.saleprice':sellingPrice}},{new:true})
-                    console.log(dev)
                 }
                })
            })
 
            const cartProducts = await myCart.findOne({userId:id}).populate('userId')
-           
-           console.log(cartProducts);
            let cartCount
            if(cartProducts){
             cartCount = cartProducts.products.length
@@ -41,11 +35,8 @@ const loadCart = async(req,res)=>{
     }
 
             res.render('cart',{cartOfUser:cartOfUser,userId:id,wishlistCount:WishlistProductCount,cartCount:cartCount ? cartCount :0})
-        }else{
-            
+        }else{ 
            const cartProducts = await myCart.findOne({userId:id}).populate('userId')
-           
-           console.log(cartProducts);
            let cartCount
            if(cartProducts){
             cartCount = cartProducts.products.length
@@ -63,57 +54,6 @@ const loadCart = async(req,res)=>{
     }
 }
 const addToCart = async (req, res) => {
-    // try {
-    //     const productId = req.body.productId;
-    //     const quantity = req.body.quantity;
-    //     const userId = req.session.user;
-    //     const sizee = req.body.selectedSize;
-
-    //     const userHaveCart = await myCart.findOne({ userId: userId }).populate('products.productId');
-
-    //     if (!userHaveCart) {
-    //         const cart = new myCart({
-    //             userId: userId,
-    //             products: [{
-    //                 productId: productId,
-    //                 size: sizee,
-    //                 quantity: quantity
-    //             }]
-    //         });
-    //         await cart.save();
-    //     } else {
-    //         console.log("entering userHaveCart");
-    //         const productIndex = userHaveCart.products.findIndex((product) => product.productId._id == productId && product.size == sizee);
-
-    //         if (productIndex !== -1) {
-    //             const currqty = parseInt(userHaveCart.products[productIndex].quantity);
-    //             const productqty = parseInt(userHaveCart.products[productIndex].productId.size[sizee].quantity);
-    //             const newqty = parseInt(quantity);
-
-    //             if (currqty + newqty <= productqty) {
-    //                 userHaveCart.products[productIndex].quantity += newqty;
-    //             } else {
-    //                 res.status(400).json({ success: false, error: "Can't add more to cart" });
-    //                 return;
-    //             }
-    //         } else {
-    //             console.log("entering userhave cart to save");
-    //             userHaveCart.products.push({
-    //                 productId: productId,
-    //                 size: sizee,
-    //                 quantity: quantity
-    //             });
-    //         }
-
-    //         await userHaveCart.save();
-    //     }
-
-    //     res.status(200).json({ success: true });
-    // } catch (error) {
-    //     console.log(error);
-    //     res.status(500).json({ success: false, error: "Internal server error" });
-    // }
-
     try {
         const productId = req.body.productId;
         const quantity = req.body.quantity;
@@ -135,7 +75,6 @@ const addToCart = async (req, res) => {
             });
             await cart.save();
         } else {
-            console.log("entering userHaveCart");
             const productIndex = userHaveCart.products.findIndex((product) => product.productId._id == productId && product.size == sizee);
 
             if (productIndex !== -1) {
@@ -181,7 +120,6 @@ const removefromcart = async(req,res)=>{
         const userId = req.session.user
         const productId = req.body.productId
         const size = req.body.size
-        console.log("entering")
         await myCart.updateOne({userId:userId},{$pull:{products:{productId:productId,size:size}}})
         res.status(200).json({success:true})
     } catch (error) {
@@ -194,11 +132,9 @@ const incQuantityUpdation = async(req,res)=>{
         const userId = req.session.user
         const productId = req.body.productId
         const sizey = req.body.size
-        console.log("increasing product id"+productId)
        const cartData = await myCart.findOne({userId:userId}).populate('products.productId')
      
         if(cartData){
-            console.log("cartdata is "+cartData)
          const matchProduct = cartData.products.findIndex((product)=>product.productId._id == productId && product.size == sizey)
          if(matchProduct!==-1){
            
@@ -206,7 +142,6 @@ const incQuantityUpdation = async(req,res)=>{
             if(matchprod){
                const maxqty = parseInt(matchprod.productId.size[sizey].quantity)
                const currcartqty = parseInt(matchprod.quantity)
-               console.log("maxqty is:"+maxqty+"and"+ "currqty is:"+currcartqty)
                if(currcartqty<maxqty){
                 matchprod.quantity += 1;
                }else{
@@ -235,7 +170,6 @@ const decQuantityUpdation = async(req,res)=>{
         const userId = req.session.user
         const productId = req.body.productId
         const sizey = req.body.size
-        console.log("decreasing product id"+productId)
        const cartData = await myCart.findOne({userId:userId}).populate('products.productId')
        
         if(cartData){
@@ -248,7 +182,6 @@ const decQuantityUpdation = async(req,res)=>{
                 const minqty = 1;
                const maxqty = parseInt(matchprod.productId.size[sizey].quantity)
                const currcartqty = parseInt(matchprod.quantity)
-               console.log("maxqty is:"+maxqty+"and"+ "currqty is:"+currcartqty)
                if(currcartqty>minqty){
                 const decQuantity = Math.min(1,currcartqty-minqty)
                 matchprod.quantity  -= decQuantity
@@ -275,13 +208,11 @@ const decQuantityUpdation = async(req,res)=>{
 const checkOut = async(req,res)=>{
     try {
         const userId = req.session.user
-        console.log(userId)
         addressOfUser = await address.find({userId:userId})
         cartOfUser = await myCart.findOne({userId:userId}).populate('products.productId')
         const coupon = await Coupon.find({is_active:true})
 
         const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-        console.log(cartProducts);
         let cartCount
         if(cartProducts){
          cartCount = cartProducts.products.length
@@ -306,7 +237,6 @@ const addAddress = async(req,res)=>{
     try {
        const userId = req.session.user
        const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-       console.log(cartProducts);
        let cartCount
        if(cartProducts){
         cartCount = cartProducts.products.length
@@ -327,7 +257,6 @@ const editAddress = async(req,res)=>{
         const addressDetails = await address.findOne({_id:addressId})
         const userId = req.session.user
         const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-        console.log(cartProducts);
         let cartCount
         if(cartProducts){
          cartCount = cartProducts.products.length
@@ -345,7 +274,6 @@ const editAddress = async(req,res)=>{
 }
 const insertAddress = async(req,res)=>{
     try {
-        console.log("getting in")
         const userId= req.session.user
         const{fname,lname,house,landmark,city,pincode,country,email,phone} = req.body
            const userAddress = new address({
@@ -361,7 +289,6 @@ const insertAddress = async(req,res)=>{
             userId:userId,
            }) 
            const savedAddress =  await userAddress.save()
-           console.log(savedAddress)
            res.redirect('/checkout')
 
     } catch (error) {
@@ -372,7 +299,6 @@ const confirmEditAddress =  async(req,res)=>{
     try {
         const userId= req.session.user
         const{fname,lname,house,landmark,city,pincode,country,email,phone,addressId} = req.body
-        console.log(req.body)
         const add = await address.findOneAndUpdate({_id:addressId},{$set:{
             fname:fname,
             lname:lname,
@@ -384,7 +310,6 @@ const confirmEditAddress =  async(req,res)=>{
             email:email,
             phone:phone,
         }},{new:true}) 
-        console.log(add)
         res.redirect('/userdashboard')
     } catch (error) {
         console.log(error.message)
