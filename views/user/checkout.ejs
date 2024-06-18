@@ -219,6 +219,14 @@
                                             },3000);
                                         </script>
                                     <%}%>
+                                    <%if(locals.invalid){%>
+                                        <p id="invalid" style="display: block;" class="text text-danger"><%=locals.invalid%></p>
+                                        <script>
+                                            setTimeout(() => {
+                                                document.getElementById('invalid').style.display="none"
+                                            },3000);
+                                        </script>
+                                    <%}%>
                              
                             </form>
                             <div class="bt-1 border-color-1 mt-30 mb-30"></div>
@@ -287,7 +295,7 @@ async function placeOrder(cartId, radiovalue) {
     if (radiovalue !== undefined) {
         if (paymentMethod == "razorpay") {
             fetch('/createorder', {
-                method: "POST",
+                method: "POST", 
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -305,7 +313,7 @@ async function placeOrder(cartId, radiovalue) {
                     "handler": function (response){
                         // alert(response.razorpay_payment_id);
                         // alert(response.razorpay_order_id);
-                        // alert(response.razorpay_signature)
+                        // alert(response.razorpay_signature)   
                         verify(response,data.orderId.id)
                     },
                     "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
@@ -321,7 +329,7 @@ async function placeOrder(cartId, radiovalue) {
                     }
                 }
 
-               
+                
                 var rzp = new Razorpay(options);
                 rzp.open();
 
@@ -333,7 +341,7 @@ async function placeOrder(cartId, radiovalue) {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
-                        },
+                        },  
                         body: JSON.stringify({
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_order_id: response.razorpay_order_id,

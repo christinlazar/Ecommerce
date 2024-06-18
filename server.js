@@ -46,14 +46,18 @@ app.use((req, res, next) => {
 app.use(nocache())
 
 app.set('view engine','ejs')
-app.set('views','./views/user')
-
-app.use('/',userRoute)
+// app.set('/views',path.join(__dirname,'/views/user'))
 app.use('/admin',adminRoute)
+app.use('/',userRoute)
 
-app.use((req, res, next) => {
-    res.status(404).render('404error'); 
-});
+// app.use("*",(req, res, next) => {
+
+//     res.status(404).render('user/404error');
+// });
+// app.use((err,req, res, next) => {
+
+//     res.status(404).render('user/404error'); 
+// });
 app.listen(3000,()=>{
     console.log("server started running")
 })

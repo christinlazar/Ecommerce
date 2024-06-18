@@ -23,13 +23,12 @@ const createOrder = async (req, res) => {
       receipt: req.session.user,
     });
     res.json({ orderId: order });
-  } catch (error) {
+  } catch (error) { 
     console.log(error);
   }
 };
 const paymentSuccess = async (req, res) => {
   try {
-  
     const {
       razorpay_payment_id,
       razorpay_order_id,
@@ -42,13 +41,10 @@ const paymentSuccess = async (req, res) => {
       .update(orderid + "|" + razorpay_payment_id)
       .digest("hex");
     if (hash == razorpay_signature) {
-     
-      // Payment successful, process the order
-      // Update database, send emails, redirect to success page
+      // Payment successful, process the ord er
+      // Update database, send emails, redirect to success page 
       res.json({ message: "Payment successful" });
     } else {
-     
-
       res.status(400).json({ errmessage: "Invalid signature" });
     }
   } catch (error) {
@@ -65,12 +61,11 @@ const placeOrder = async (req, res) => {
     const totalprice = parseInt(req.body.totalprice, 10);
 
     if (paymentMethod == "wallet") {
-     
       let query = {
         userId: userId,
       };
       const wallet = await Wallet.findOne(query).populate("userId");
-     
+
       if (totalprice <= wallet.balance) {
         const cart = await myCart.findOne({ _id: cartId });
         const productId = cart.products.map((element) => {
@@ -81,7 +76,7 @@ const placeOrder = async (req, res) => {
           };
           return prodata;
         });
-        
+
         const myOrder = new Order({
           userId: userId,
           addressId: addressId,
@@ -92,20 +87,29 @@ const placeOrder = async (req, res) => {
 
         const mineOrder = await myOrder.save();
 
-      
-        const userWithTypedreferal = await User.findOne({_id:userId})
-        const referalCode = userWithTypedreferal.typedreferal
-        const userWithOrginalReferal = await User.findOne({referalcode:referalCode})
-        if(referalCode&&userWithOrginalReferal){
-          const myFirstOrder = await Order.find({userId:userId}).populate('userId')
-          if(myFirstOrder.length==1){
-                     const referalAmount = parseInt(500)
-                      const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithOrginalReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
-                      const referalAmount2 = parseInt(200)
-                      const walletOfNewUser = await Wallet.findOneAndUpdate({userId:userWithTypedreferal._id},{$inc:{balance:referalAmount2}}).populate('userId')
+        const userWithTypedreferal = await User.findOne({ _id: userId });
+        const referalCode = userWithTypedreferal.typedreferal;
+        const userWithOrginalReferal = await User.findOne({
+          referalcode: referalCode,
+        });
+        if (referalCode && userWithOrginalReferal) {
+          const myFirstOrder = await Order.find({ userId: userId }).populate(
+            "userId"
+          );
+          if (myFirstOrder.length == 1) {
+            const referalAmount = parseInt(500);
+            const updatedWallet = await Wallet.findOneAndUpdate(
+              { userId: userWithOrginalReferal._id },
+              { $inc: { balance: referalAmount } }
+            ).populate("userId");
+            const referalAmount2 = parseInt(200);
+            const walletOfNewUser = await Wallet.findOneAndUpdate(
+              { userId: userWithTypedreferal._id },
+              { $inc: { balance: referalAmount2 } }
+            ).populate("userId");
           }
         }
-        
+
         let productDetArray = [];
 
         mineOrder.products.forEach((element) => {
@@ -131,17 +135,23 @@ const placeOrder = async (req, res) => {
           const today = new Date();
           const walletHistory = await Wallet.findOneAndUpdate(
             { userId: userId },
-            { $push:{walletdata:{ history: -totalprice, date: today ,paymentmethod:paymentMethod }}}
+            {
+              $push: {
+                walletdata: {
+                  history: -totalprice,
+                  date: today,
+                  paymentmethod: paymentMethod,
+                },
+              },
+            }
           );
         }
         res.status(200).json({ success: true });
       } else {
-        res
-          .status(400)
-          .json({
-            success: false,
-            error: "Total amount exceeds wallet balance",
-          });
+        res.status(400).json({
+          success: false,
+          error: "Total amount exceeds wallet balance",
+        });
       }
     } else if (paymentMethod == "COD" || paymentMethod == "razorpay") {
       const cart = await myCart.findOne({ _id: cartId });
@@ -153,8 +163,7 @@ const placeOrder = async (req, res) => {
         };
         return prodata;
       });
-    
-    
+
       const myOrder = new Order({
         userId: userId,
         addressId: addressId,
@@ -165,21 +174,31 @@ const placeOrder = async (req, res) => {
 
       const mineOrder = await myOrder.save();
 
-      const userWithTypedreferal = await User.findOne({_id:userId})
-      const referalCode = userWithTypedreferal.typedreferal
-      const userWithOrginalReferal = await User.findOne({referalcode:referalCode})
-      if(referalCode&&userWithOrginalReferal){
-        const myFirstOrder = await Order.find({userId:userId}).populate('userId')
-        if(myFirstOrder.length==1){
-                   const referalAmount = parseInt(500)
-                    const updatedWallet = await Wallet.findOneAndUpdate({userId:userWithOrginalReferal._id},{$inc:{balance:referalAmount}}).populate('userId')
-                    const referalAmount2 = parseInt(200)
-                    const walletOfNewUser = await Wallet.findOneAndUpdate({userId:userWithTypedreferal._id},{$inc:{balance:referalAmount2}}).populate('userId')
+      const userWithTypedreferal = await User.findOne({ _id: userId });
+      const referalCode = userWithTypedreferal.typedreferal;
+      const userWithOrginalReferal = await User.findOne({
+        referalcode: referalCode,
+      });
+      if (referalCode && userWithOrginalReferal) {
+        const myFirstOrder = await Order.find({ userId: userId }).populate(
+          "userId"
+        );
+        if (myFirstOrder.length == 1) {
+          const referalAmount = parseInt(500);
+          const updatedWallet = await Wallet.findOneAndUpdate(
+            { userId: userWithOrginalReferal._id },
+            { $inc: { balance: referalAmount } }
+          ).populate("userId");
+          const referalAmount2 = parseInt(200);
+          const walletOfNewUser = await Wallet.findOneAndUpdate(
+            { userId: userWithTypedreferal._id },
+            { $inc: { balance: referalAmount2 } }
+          ).populate("userId");
         }
       }
 
       let productDetArray = [];
-     
+
       mineOrder.products.forEach((element) => {
         let pdata = {
           product_id: element.product,
@@ -206,7 +225,7 @@ const placeSuccess = async (req, res) => {
     const paymentMethod = req.session.payment;
     const userId = req.session.user;
     await myCart.findOneAndDelete({ userId: userId });
-   
+
     if (
       paymentMethod == "COD" ||
       paymentMethod == "razorpay" ||
@@ -220,24 +239,33 @@ const placeSuccess = async (req, res) => {
 };
 const loadOrderSummary = async (req, res) => {
   try {
-    const userId = req.session.user
+    const userId = req.session.user;
     const orderId = req.query.id;
-    const orderDetails = await Order.findById(orderId).populate("products.product");
-    
-    const cartProducts = await myCart.findOne({userId:userId}).populate('userId')
-   
-    let cartCount
-    if(cartProducts){
-     cartCount = cartProducts.products.length
+    const orderDetails = await Order.findById(orderId).populate(
+      "products.product"
+    );
+
+    const cartProducts = await myCart
+      .findOne({ userId: userId })
+      .populate("userId");
+
+    let cartCount;
+    if (cartProducts) {
+      cartCount = cartProducts.products.length;
     }
 
-    const WishlistProduct = await User.findById(userId)
-    let WishlistProductCount
-    if(WishlistProduct){
-          WishlistProductCount = WishlistProduct.wishlist.length
+    const WishlistProduct = await User.findById(userId);
+    let WishlistProductCount;
+    if (WishlistProduct) {
+      WishlistProductCount = WishlistProduct.wishlist.length;
     }
 
-    res.render("ordersummary", { userId,orderDetails ,wishlistCount:WishlistProductCount,cartCount:cartCount});
+    res.render("ordersummary", {
+      userId,
+      orderDetails,
+      wishlistCount: WishlistProductCount,
+      cartCount: cartCount,
+    });
   } catch (error) {
     console.log(error.messsage);
   }
@@ -281,7 +309,6 @@ const removeOrder = async (req, res) => {
         remOrderArray.push(remdata);
       });
       remOrderArray.forEach(async (el) => {
-       
         await Product.findByIdAndUpdate(
           { _id: el.product_id },
           { $inc: { [`size.${el.size}.quantity`]: el.qty } }
@@ -305,9 +332,8 @@ const removeOrder = async (req, res) => {
         };
         remOrderArray.push(remdata);
       });
-      
+
       remOrderArray.forEach(async (el) => {
-        
         await Product.findByIdAndUpdate(
           { _id: el.product_id },
           { $inc: { [`size.${el.size}.quantity`]: el.qty } }
@@ -323,7 +349,13 @@ const removeOrder = async (req, res) => {
         if (updatedWallet) {
           const today = new Date();
           const walletHistory = await Wallet.findOneAndUpdate(filter, {
-            $push:{walletdata:{ history: totalAmount, date: today ,paymentmethod:paymentMethod }},
+            $push: {
+              walletdata: {
+                history: totalAmount,
+                date: today,
+                paymentmethod: paymentMethod,
+              },
+            },
           });
         }
       });
@@ -336,7 +368,6 @@ const removeOrder = async (req, res) => {
 
 const returnOrder = async (req, res) => {
   try {
-   
     const order = req.body.orderId;
     const myOrder = await Order.findById(order);
     const totalAmount = myOrder.totalamount;
@@ -365,8 +396,6 @@ const returnOrder = async (req, res) => {
         update,
         options
       ).populate("userId");
-
-     
     });
     res.status(200).json({ success: true });
   } catch (error) {
@@ -376,7 +405,6 @@ const returnOrder = async (req, res) => {
 const downloadInvoice = async (req, res) => {
   try {
     const orderId = req.body.orderId;
-  
 
     const order = await Order.findById(orderId)
       .populate("addressId")

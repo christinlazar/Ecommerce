@@ -129,10 +129,10 @@
                                                 <div class="chek-form">
                                                     <div class="custome-checkbox">
                                                         <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox12" value="">
-                                                        <!-- <label class="form-check-label" for="exampleCheckbox12"><span>I agree to terms &amp; Policy.</span></label> -->
+                                                       
                                                     </div>
                                                 </div>
-                                                <!-- <a href="page-privacy-policy.html"><i class="fi-rs-book-alt mr-5 text-muted"></i>Lean more</a> -->
+                                               
                                             </div>
                                             <div class="form-group">
                                                 <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Get Otp</button>
@@ -246,7 +246,7 @@
             }
         }
         function validatePassword(){
-            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,}$/;
             if(password.value.trim() ===''){
                 passwordError.innerHTML='phone number is not valid'
                 passwordError.style.display="block"
@@ -277,7 +277,8 @@
 
 
         function validateConfirmPassword() {
-    const confirmpasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const confirmpasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,}$/
+;
 
     if (confirmpassword.value.trim() === '') {
         confirmpasswordError.innerHTML = 'Confirm password is required';
